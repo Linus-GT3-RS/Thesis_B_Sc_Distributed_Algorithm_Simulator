@@ -1,0 +1,2 @@
+
+export type MilisecsSinceEpoch = number;
