@@ -1,0 +1,15 @@
+{
+  "name": "thesis_b_sc_distributed_algorithm_simulator",
+  "version": "1.0.0",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "type": "module",
+  "dependencies": {
+    "tinyqueue": "^3.0.0",
+    "ts-map": "^1.0.3"
+  }
+}
