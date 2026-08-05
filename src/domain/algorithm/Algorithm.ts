@@ -1,5 +1,5 @@
-import { IAlgorithmActionHandler } from "./actions/ActionHandler";
-import { GenericNode } from "./data/Data";
+import { IAlgorithmActionHandler } from "./actions/ActionHandler.js";
+import { GenericNode } from "./data/Data.js";
 
 // Real-world analogy:
 //

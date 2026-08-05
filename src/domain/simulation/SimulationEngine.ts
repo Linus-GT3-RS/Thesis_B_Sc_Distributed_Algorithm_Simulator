@@ -1,7 +1,7 @@
 import TinyQueue from "tinyqueue";
-import { IAlgorithmActionHandler } from "../algorithm/actions/ActionHandler";
-import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/Data";
-import { GenericAlgorithm } from "../algorithm/Algorithm";
+import { IAlgorithmActionHandler } from "../algorithm/actions/ActionHandler.js";
+import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/Data.js";
+import { GenericAlgorithm } from "../algorithm/Algorithm.js";
 
 export class SimulationEngine {
 

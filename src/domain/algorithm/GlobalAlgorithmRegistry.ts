@@ -1,11 +1,10 @@
-import TsMap from "ts-map";
-import { EchoAlgorithmNodeBuilder } from "../algorithm_impl/echo_algorithm/EchoAlgoBuilder";
-import { EchoAlgoMsgDataRenderer, EchoAlgorithmEdgeRenderer, EchoAlgorithmNodeRenderer } from "../algorithm_impl/echo_algorithm/EchoAlgoRenderer";
-import { EchoAlgorithm } from "../algorithm_impl/echo_algorithm/EchoAlgorithm";
-import { AlgorithmActionHandler, IAlgorithmActionHandler } from "./actions/ActionHandler";
-import { GenericAlgorithm } from "./Algorithm";
-import { IAlgorithmNodeBuilder } from "./data/DataBuilder";
-import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "./rendering/Renderer";
+import { EchoAlgorithmNodeBuilder } from "../algorithm_impl/echo_algorithm/EchoAlgoBuilder.js";
+import { EchoAlgoMsgDataRenderer, EchoAlgorithmEdgeRenderer, EchoAlgorithmNodeRenderer } from "../algorithm_impl/echo_algorithm/EchoAlgoRenderer.js";
+import { EchoAlgorithm } from "../algorithm_impl/echo_algorithm/EchoAlgorithm.js";
+import { AlgorithmActionHandler, IAlgorithmActionHandler } from "./actions/ActionHandler.js";
+import { GenericAlgorithm } from "./Algorithm.js";
+import { IAlgorithmNodeBuilder } from "./data/DataBuilder.js";
+import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "./rendering/Renderer.js";
 
 // lists all existing algorithms
 export enum AlgorithmIdentifier {
@@ -35,7 +34,7 @@ export class AlgorithmRegistryEntry {
 
 // todo readonly
 export const algorithmRegistry =
-    new TsMap<AlgorithmIdentifier, AlgorithmRegistryEntry>([
+    new Map<AlgorithmIdentifier, AlgorithmRegistryEntry>([
 
         //? EchoAlgorithm Entry
         [

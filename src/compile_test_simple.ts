@@ -1,8 +1,8 @@
 import TinyQueue from "tinyqueue";
-import { GenericAlgorithm } from "./domain/algorithm/Algorithm";
-import { GenericEdge, GenericMessage, GenericNode } from "./domain/algorithm/data/Data";
-import { AlgorithmIdentifier, algorithmRegistry } from "./domain/algorithm/GlobalAlgorithmRegistry";
-import { SimulationEngine } from "./domain/simulation/SimulationEngine";
+import { GenericAlgorithm } from "./domain/algorithm/Algorithm.js";
+import { GenericEdge, GenericMessage, GenericNode } from "./domain/algorithm/data/Data.js";
+import { AlgorithmIdentifier, algorithmRegistry } from "./domain/algorithm/GlobalAlgorithmRegistry.js";
+import { SimulationEngine } from "./domain/simulation/SimulationEngine.js";
 
 // get registry entry
 

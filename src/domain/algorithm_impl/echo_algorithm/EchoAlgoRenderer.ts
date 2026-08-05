@@ -1,7 +1,7 @@
-import { GenericEdge, GenericNode } from "../../algorithm/data/Data";
-import { ColorRenderAttr, DataRenderAttr, RenderAttribute, ThicknessRenderAttr } from "../../algorithm/rendering/RenderAttributes";
-import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "../../algorithm/rendering/Renderer";
-import { EchoAlgorithmNode, EchoMessageData, InfoMessageData } from "./EchoAlgoData";
+import { GenericEdge, GenericNode } from "../../algorithm/data/Data.js";
+import { ColorRenderAttr, DataRenderAttr, RenderAttribute, ThicknessRenderAttr } from "../../algorithm/rendering/RenderAttributes.js";
+import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "../../algorithm/rendering/Renderer.js";
+import { EchoAlgorithmNode, EchoMessageData, InfoMessageData } from "./EchoAlgoData.js";
 
 // todo feinschliff
 

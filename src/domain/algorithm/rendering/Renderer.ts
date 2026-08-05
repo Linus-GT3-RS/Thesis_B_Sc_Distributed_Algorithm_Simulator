@@ -1,5 +1,5 @@
-import { GenericEdge, GenericNode } from "../data/Data";
-import { RenderAttribute } from "./RenderAttributes";
+import { GenericEdge, GenericNode } from "../data/Data.js";
+import { RenderAttribute } from "./RenderAttributes.js";
 
 //*
 // A renderer defines which data of an entity

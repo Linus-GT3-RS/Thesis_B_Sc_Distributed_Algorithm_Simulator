@@ -1,4 +1,4 @@
-import { GenericNode } from "../../algorithm/data/Data";
+import { GenericNode } from "../../algorithm/data/Data.js";
 
 //* Node Data
 

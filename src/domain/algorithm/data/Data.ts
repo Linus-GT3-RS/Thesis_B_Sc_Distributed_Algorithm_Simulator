@@ -1,4 +1,4 @@
-import { MilisecsSinceEpoch } from "../../common/Time";
+import { MilisecsSinceEpoch } from "../../common/Time.js";
 
 //* Algorithm Node
 

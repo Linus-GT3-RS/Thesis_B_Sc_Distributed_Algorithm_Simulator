@@ -1,4 +1,4 @@
-import { GenericNode } from "../data/Data";
+import { GenericNode } from "../data/Data.js";
 
 //* Generic Actions
 

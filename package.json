@@ -9,7 +9,6 @@
   },
   "type": "module",
   "dependencies": {
-    "tinyqueue": "^3.0.0",
-    "ts-map": "^1.0.3"
+    "tinyqueue": "^3.0.0"
   }
 }
