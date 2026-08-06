@@ -1,5 +1,5 @@
-import { IAlgorithmActionHandler } from "./actions/ActionHandler.js";
-import { GenericNode } from "./data/Data.js";
+import { IAlgorithmActionHandler } from "../actions/ActionHandler.js";
+import { GenericNode } from "../data/Data.js";
 
 // Real-world analogy:
 //
@@ -30,15 +30,6 @@ export abstract class GenericAlgorithm {
 
 
     //* Inititation Requests
-
-    //* can handle following initiation run types
-    // - one time runs and then finish
-    // - parallel runs
-    // - chained runs but only if previous run is finished:
-    //
-    // that works because
-    // node stores all information it needs (no extra variables are added when cmd is created)... 
-    // algorithm just needs to know which node triggers the initiaton
 
     // throws error
     public abstract onInitiationRequest(

@@ -1,6 +1,6 @@
 import { IAlgorithmActionHandler } from "../../algorithm/actions/ActionHandler.js";
 import { CreateMessageAction, LogAction, UpdateNodeAction } from "../../algorithm/actions/Actions.js";
-import { GenericAlgorithm } from "../../algorithm/Algorithm.js";
+import { GenericAlgorithm } from "../../algorithm/algorithm/Algorithm.js";
 import { GenericNode } from "../../algorithm/data/Data.js";
 import { EchoAlgorithmNode, InfoMessageData, EchoMessageData } from "./EchoAlgoData.js";
 

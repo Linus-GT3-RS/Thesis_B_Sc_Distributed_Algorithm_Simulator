@@ -4,7 +4,12 @@ import { GenericNode } from "./Data.js";
 
 export abstract class IAlgorithmNodeBuilder {
 
-    // throws error
+
+    /** Builds a Node
+     * 
+     * @param json - does stuff
+     * @throws Error
+     */
     public abstract build(json: string): GenericNode;
 
 }
