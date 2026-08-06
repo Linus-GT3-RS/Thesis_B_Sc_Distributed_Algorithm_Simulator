@@ -1,7 +1,9 @@
 import TinyQueue from "tinyqueue";
 import { IAlgorithmActionHandler } from "../algorithm/actions/ActionHandler.js";
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/Data.js";
-import { GenericAlgorithm } from "../algorithm/Algorithm.js";
+import { GenericAlgorithm } from "../algorithm/algorithm/Algorithm.js";
+import { AlgorithmDataWorker } from "../algorithm/data/AlgoDataWorker.js";
+import { LogAction } from "../algorithm/actions/Actions.js";
 
 export class SimulationEngine {
 
@@ -11,8 +13,8 @@ export class SimulationEngine {
         private algorithm: GenericAlgorithm,
         private actionHandler: IAlgorithmActionHandler,
 
-        private nodes: Array<GenericNode>,
-        private edges: Array<GenericEdge>,
+        private nodes: Map<number, GenericNode>,
+        private edges: Map<number, GenericEdge>,
         private messages: TinyQueue<GenericMessage>,
 
 
@@ -43,6 +45,17 @@ export class SimulationEngine {
     //     throw new Error();
     // }
 
+    private handleCreateMessageAction(): void {
+
+    }
+
+    private handleUpdateNodeAction(): void {
+
+    }
+
+    private handleLogAction(act: Readonly<LogAction>): void {
+
+    }
 
 
     //* Command Handling
@@ -60,6 +73,38 @@ export class SimulationEngine {
     //     //     // todo updt queue??
     //     // }
     // }
+
+    //* InitiationRequest Cmd
+    private onInitiationRequestCmd(nodeID: number): void {
+        // check if node exists
+        const node: GenericNode | undefined = this.nodes.get(nodeID);
+        if (node === undefined) {
+            // todo 
+            // emit ErrorEv
+            return;
+        }
+
+        // get node neighbors
+        const worker: AlgorithmDataWorker = new AlgorithmDataWorker();
+        const neighbors: Array<number> = worker.getNeighborIDs(
+            node, this.edges.values()
+        );
+
+        this.algorithm.onInitiationRequest(node, neighbors);
+
+        // todo emit ev?
+    }
+
+
+    //* Stop Cmd
+    private onStopCmd(): void {
+        // todo emit context?
+    }
+
+    // todo run? or start and continue?
+    private onRunCmd(): void {
+
+    }
 
 
     //* Engine Loop
@@ -89,4 +134,6 @@ export class SimulationEngine {
     //     //     // Process generated Actions
     //     //     // todo
     // }
+
+
 }
