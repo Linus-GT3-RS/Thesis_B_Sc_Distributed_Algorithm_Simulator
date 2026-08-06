@@ -2,7 +2,8 @@ import { EchoAlgorithmNodeBuilder } from "../algorithm_impl/echo_algorithm/EchoA
 import { EchoAlgoMsgDataRenderer, EchoAlgorithmEdgeRenderer, EchoAlgorithmNodeRenderer } from "../algorithm_impl/echo_algorithm/EchoAlgoRenderer.js";
 import { EchoAlgorithm } from "../algorithm_impl/echo_algorithm/EchoAlgorithm.js";
 import { AlgorithmActionHandler, IAlgorithmActionHandler } from "./actions/ActionHandler.js";
-import { GenericAlgorithm } from "./Algorithm.js";
+import { AlgorithmInitiationTypes as AlgorithmInitiationType } from "./algorithm/AlgoInitiationTypes.js";
+import { GenericAlgorithm } from "./algorithm/Algorithm.js";
 import { IAlgorithmNodeBuilder } from "./data/DataBuilder.js";
 import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "./rendering/Renderer.js";
 
@@ -20,6 +21,7 @@ export class AlgorithmRegistryEntry {
         public displayName: string,
 
         public getAlgorithm: () => GenericAlgorithm,
+        public initType: AlgorithmInitiationType,
 
         public getNodeBuilder: () => IAlgorithmNodeBuilder,
 
@@ -44,6 +46,7 @@ export const algorithmRegistry =
                 "Echo Algorithmus",
 
                 () => new EchoAlgorithm(new AlgorithmActionHandler()),
+                AlgorithmInitiationType.Single,
 
                 () => new EchoAlgorithmNodeBuilder(),
 
