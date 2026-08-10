@@ -1,4 +1,4 @@
-import { GenericNode, GenericEdge } from "../algorithm/data/Data.js";
+import { GenericNode, GenericEdge } from "../algorithm/data/AlgoData.js";
 
 export class AlgorithmGraphconfig {
 

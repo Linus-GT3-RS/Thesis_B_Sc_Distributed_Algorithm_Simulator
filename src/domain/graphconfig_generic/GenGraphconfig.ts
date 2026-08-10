@@ -1,4 +1,4 @@
-import { GenericEdge, GenericNode } from "../algorithm/data/Data.js";
+import { GenericEdge, GenericNode } from "../algorithm/data/AlgoData.js";
 
 //* Node Capsule
 

@@ -1,6 +1,6 @@
 import TinyQueue from "tinyqueue";
 import { GenericAlgorithm } from "./domain/algorithm/algorithm/Algorithm.js";
-import { GenericEdge, GenericMessage, GenericNode } from "./domain/algorithm/data/Data.js";
+import { GenericEdge, GenericMessage, GenericNode } from "./domain/algorithm/data/AlgoData.js";
 import { AlgorithmIdentifier, algorithmRegistry } from "./domain/algorithm/GlobalAlgorithmRegistry.js";
 import { SimulationEngine } from "./domain/simulation/SimulationEngine.js";
 

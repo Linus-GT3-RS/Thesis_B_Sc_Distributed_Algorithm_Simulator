@@ -1,4 +1,4 @@
-import { GenericEdge, GenericNode } from "../../algorithm/data/Data.js";
+import { GenericEdge, GenericNode } from "../../algorithm/data/AlgoData.js";
 import { ColorRenderAttr, DataRenderAttr, RenderAttribute, ThicknessRenderAttr } from "../../algorithm/rendering/RenderAttributes.js";
 import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "../../algorithm/rendering/Renderer.js";
 import { EchoAlgorithmNode, EchoMessageData, InfoMessageData } from "./EchoAlgoData.js";

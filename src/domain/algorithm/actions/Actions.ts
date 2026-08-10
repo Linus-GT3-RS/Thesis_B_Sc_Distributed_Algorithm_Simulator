@@ -1,10 +1,10 @@
-import { GenericNode } from "../data/Data.js";
+import { GenericNode } from "../data/AlgoData.js";
 
 //* Generic Actions
 
 export class LogAction {
     constructor(
-        public msg: string
+        public logMsg: string
     ) { }
 }
 
@@ -13,7 +13,8 @@ export class LogAction {
 
 export class CreateMessageAction {
     constructor(
-        public receiverID: number,
+        public senderId: number,
+        public receiverId: number,
         public data: unknown,
     ) { }
 }

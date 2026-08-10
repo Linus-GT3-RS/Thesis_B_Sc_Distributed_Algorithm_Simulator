@@ -4,7 +4,7 @@ import { EchoAlgorithm } from "../algorithm_impl/echo_algorithm/EchoAlgorithm.js
 import { AlgorithmActionHandler, IAlgorithmActionHandler } from "./actions/ActionHandler.js";
 import { AlgorithmInitiationTypes as AlgorithmInitiationType } from "./algorithm/AlgoInitiationTypes.js";
 import { GenericAlgorithm } from "./algorithm/Algorithm.js";
-import { IAlgorithmNodeBuilder } from "./data/DataBuilder.js";
+import { IAlgorithmNodeBuilder } from "./data/AlgoDataBuilder.js";
 import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "./rendering/Renderer.js";
 
 // lists all existing algorithms

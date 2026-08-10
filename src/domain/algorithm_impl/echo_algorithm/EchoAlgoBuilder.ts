@@ -1,5 +1,5 @@
-import { GenericNode } from "../../algorithm/data/Data.js";
-import { IAlgorithmNodeBuilder } from "../../algorithm/data/DataBuilder.js";
+import { GenericNode } from "../../algorithm/data/AlgoData.js";
+import { IAlgorithmNodeBuilder } from "../../algorithm/data/AlgoDataBuilder.js";
 
 export class EchoAlgorithmNodeBuilder
     implements IAlgorithmNodeBuilder {

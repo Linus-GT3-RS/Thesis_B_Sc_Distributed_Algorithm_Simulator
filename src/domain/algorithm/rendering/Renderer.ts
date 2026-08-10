@@ -1,4 +1,4 @@
-import { GenericEdge, GenericNode } from "../data/Data.js";
+import { GenericEdge, GenericNode } from "../data/AlgoData.js";
 import { RenderAttribute } from "./RenderAttributes.js";
 
 //*
