@@ -2,6 +2,7 @@
   "name": "thesis_b_sc_distributed_algorithm_simulator",
   "version": "1.0.0",
   "devDependencies": {
+    "@types/node": "^26.2.0",
     "typescript": "^7.0.2"
   },
   "scripts": {
@@ -9,6 +10,7 @@
   },
   "type": "module",
   "dependencies": {
-    "tinyqueue": "^3.0.0"
+    "tinyqueue": "^3.0.0",
+    "yocto-queue": "^1.2.2"
   }
 }

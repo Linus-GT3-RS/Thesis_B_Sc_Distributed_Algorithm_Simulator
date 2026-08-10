@@ -1,16 +1,32 @@
+import Queue from 'yocto-queue';
 
 export abstract class IAlgorithmActionHandler {
 
-    // throws error
     public abstract handleAction(action: unknown): void;
 
 }
 
-export class AlgorithmActionHandler implements IAlgorithmActionHandler {
+export abstract class IAlgorithmActionManager {
+
+    public abstract getDrainIterator(): IterableIterator<unknown>;
+
+}
+
+export class AlgorithmActionHandler
+    implements
+    IAlgorithmActionHandler,
+    IAlgorithmActionManager {
+
+    constructor(
+        private queue: Queue<unknown>,
+    ) { }
 
     public handleAction(action: unknown): void {
-        // todo
-        throw new Error();
+        this.queue.enqueue(action);
+    }
+
+    public getDrainIterator(): IterableIterator<unknown> {
+        return this.queue.drain();
     }
 
 }

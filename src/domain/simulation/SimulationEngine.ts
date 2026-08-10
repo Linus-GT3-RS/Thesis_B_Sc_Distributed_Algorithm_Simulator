@@ -1,51 +1,91 @@
 import TinyQueue from "tinyqueue";
-import { IAlgorithmActionHandler } from "../algorithm/actions/ActionHandler.js";
+import { IAlgorithmActionHandler, IAlgorithmActionManager } from "../algorithm/actions/ActionHandler.js";
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
 import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
 import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
 import { CreateMessageAction, LogAction } from "../algorithm/actions/Actions.js";
 import { InitiationRequestSimulationCmd } from "./Simulation_Commands.js";
+import { Miliseconds as MilisecondsTimestamp, MilisecsSinceEpoch } from "../common/Time.js";
 
 export class UnsupportedActionError extends Error { }
+
+
+// todo move to state
 export class UnsupportedSimulationCommandError extends Error { }
 
+// todo
+// simengine knows ui as eventhandler directly?
+// and calls it
+// state only for cmd validation and handleing
 
-//! enqueing of cmd and actions
 //! dequeing of cmd and actions
 
-//? time
+export class SimulationContext {
+    constructor(
+        public nodes: Map<number, GenericNode>,
+        public edges: Map<number, GenericEdge>,
+        public messages: TinyQueue<GenericMessage>,
+        public simTime: MilisecondsTimestamp,
+    ) { }
+}
 
 export class SimulationEngine {
 
-    //* Constructor
-
-    public constructor(
+    constructor(
         private algorithm: GenericAlgorithm,
-        private actionHandler: IAlgorithmActionHandler,
+        private actionManager: IAlgorithmActionManager,
+        private dataWorker: AlgorithmDataWorker,
+    ) { }
 
-        private nodes: Map<number, GenericNode>,
-        private edges: Map<number, GenericEdge>,
-        private messages: TinyQueue<GenericMessage>,
+    //* Messages
 
-        private worker: AlgorithmDataWorker,
-        // todo time
-        // private now: MilisecsSinceEpoch = -1,
-        // private readonly lastStopTime: MilisecsSinceEpoch,
-    ) {
-        //? init MessageQueue:
-        // Queue is sorted ascending by delivery time.
-        // The first message is always the next to be delivered.
-        if (this.messages.length <= 0) {
-            this.messages = new TinyQueue(messages.data,
-                (a, b) => {
-                    return a.destinationTime - b.destinationTime;
-                }
+    public processMessagesAt(context: SimulationContext) {
+        let next: GenericMessage | null = null;
+
+        // iterate all pending msgs 
+        while (
+            (next = this.getNextPendingMsg(context)) !== null
+        ) {
+            // deliver
+            const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
+                next.receiver, context.edges.values()
             );
+            this.algorithm.onMessageDelivery(
+                next.receiver, next.data, receiverNeighbors
+            );
+
+            // handle actions
+            this.processAllActions();
         }
     }
 
+    // wrapper func
+    private getNextPendingMsg(context: SimulationContext): GenericMessage | null {
+        return this.dataWorker.dequeueNextPendingMessage(
+            context.messages, context.simTime
+        );
+    }
 
-    //* Action Processing
+    //* Initiation 
+
+    public handleInitiationRequest(initiatorId: number, context: SimulationContext) {
+        const initiator: GenericNode = this.dataWorker.getNode(
+            initiatorId, context.nodes
+        );
+        const neighbors: Array<number> = this.dataWorker.getNeighborIds(
+            initiator, context.edges.values()
+        );
+
+        this.algorithm.onInitiationRequest(initiator, neighbors);
+        this.processAllActions();
+    }
+
+    //* Actions
+
+    private processAllActions(): void {
+        // TODO
+    }
+
 
     // todo make it return callback funcs? so that this func only throws one error
     // -> or better a simple wrapper functions that does call
@@ -95,6 +135,18 @@ export class SimulationEngine {
     }
 
 
+}
+
+
+//? time
+
+export class IthinkThisIsState {
+
+    public constructor(
+        // private readonly lastStopTime: MilisecsSinceEpoch,
+    ) { }
+
+
     //* Command Handling
 
     // todo make it return callback funcs? so that this func only throws one error
@@ -117,17 +169,6 @@ export class SimulationEngine {
 
     // InitiationRequest Cmd
     private onInitiationRequestCmd(cmd: InitiationRequestSimulationCmd): void {
-        try {
-            const initiator: GenericNode = this.worker.getNode(
-                cmd.initiatorId, this.nodes
-            );
-            const neighbors: Array<number> = this.worker.getNeighborIDs(
-                initiator, this.edges.values()
-            );
-
-            this.algorithm.onInitiationRequest(initiator, neighbors);
-            // todo emit ev?
-        }
         catch (error: unknown) {
             if (error instanceof NodeNotFoundError) {
                 // todo ev
@@ -150,48 +191,19 @@ export class SimulationEngine {
         throw new Error();
     }
 
-    // private onResumeCmd(): void {
-    //     // const diff_ms: number = this.now - this.lastStopTime;
+// private onResumeCmd(): void {
+//     // const diff_ms: number = this.now - this.lastStopTime;
 
-    //     // for (const msg of this.messageQueue) {
-    //     //     msg.destinationTime += diff_ms;
+//     // for (const msg of this.messageQueue) {
+//     //     msg.destinationTime += diff_ms;
 
-    //     //     // todo updt queue??
-    //     // }
-    // }
-
-
-    //* Engine Loop
-
-    //! todo catch errors in loop?
-    // and handle them there?
-    // -> no code dupl
-
-    // private engineLoop(): void {
-    //     // this.now = Date.now();
-    // }
-
-    // private processMessageQueue(): void {
-    //     // // check if messages have to be delivered
-    //     // while (this.msgQueue.peek().destinationTime <= this.now) {
-    //     //     // Deliver Message
-    //     //     const msg: AlgorithmMessage<MsgData> = this.msgQueue.pop();
-
-    //     //     // todo error check
-    //     //     const receiver = this.nodes.get(msg.receiver);
-
-    //     //     // todo determine neighbors of receiver 
-    //     //     const neighbors = new Array<InternalID>();
-
-    //     //     this.algorithm.onMessageDelivery(
-    //     //         receiver,
-    //     //         msg.data,
-    //     //         neighbors
-    //     //     );
-
-    //     //     // Process generated Actions
-    //     //     // todo
-    // }
+//     //     // todo updt queue??
+//     // }
+// }
 
 
-}
+//* Engine Loop
+
+// private engineLoop(): void {
+//     // this.now = Date.now();
+// }

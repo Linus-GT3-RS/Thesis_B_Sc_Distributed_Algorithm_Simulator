@@ -1,4 +1,7 @@
-import { GenericEdge, GenericNode } from "./AlgoData.js";
+import TinyQueue from "tinyqueue";
+import { GenericEdge, GenericMessage, GenericNode } from "./AlgoData.js";
+import { SimulationContext } from "../../simulation/SimulationEngine.js";
+import { Miliseconds, MilisecsSinceEpoch } from "../../common/Time.js";
 
 export class NodeNotFoundError extends Error { }
 export class EdgeNotFoundError extends Error { }
@@ -6,7 +9,7 @@ export class EdgeNotFoundError extends Error { }
 
 export class AlgorithmDataWorker {
 
-    public getNeighborIDs(
+    public getNeighborIds(
         node: Readonly<GenericNode>,
         edges: Readonly<MapIterator<GenericEdge>>
     ): Array<number> {
@@ -83,5 +86,20 @@ export class AlgorithmDataWorker {
     }
 
 
+    public dequeueNextPendingMessage(
+        messages: TinyQueue<GenericMessage>,
+        simulationTime: Miliseconds,
+    ): GenericMessage | null {
+        const next: GenericMessage | undefined = messages.peek();
+        if (next === undefined) { // if queue empty
+            return null;
+        }
+
+        if (next.destinationTime <= simulationTime) {
+            messages.pop(); // dequeue
+            return next;
+        }
+        return null;
+    }
 
 }

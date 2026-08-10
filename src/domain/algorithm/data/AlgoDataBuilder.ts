@@ -1,4 +1,5 @@
-import { GenericNode } from "./AlgoData.js";
+import TinyQueue from "tinyqueue";
+import { GenericMessage, GenericNode } from "./AlgoData.js";
 
 //* AlgorithmNodeData Builder
 
@@ -11,5 +12,22 @@ export abstract class IAlgorithmNodeBuilder {
      * @throws Error
      */
     public abstract build(json: string): GenericNode;
+
+}
+
+//* GenericMessageQueue Builder
+
+export class MessageQueueBuilder {
+
+    // Queue is sorted ascending by delivery time of msg, 
+    // so that the first message is always the next to be delivered.
+    public build(): TinyQueue<GenericMessage> {
+        return new TinyQueue(
+            [],
+            (a: GenericMessage, b: GenericMessage) => {
+                return a.destinationTime - b.destinationTime;
+            }
+        );
+    }
 
 }
