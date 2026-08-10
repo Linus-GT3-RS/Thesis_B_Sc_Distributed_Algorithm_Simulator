@@ -10,7 +10,7 @@ import { Miliseconds as MilisecondsTimestamp, MilisecsSinceEpoch } from "../comm
 export class UnsupportedActionError extends Error { }
 
 
-// todo move to state
+// todo move to state file
 export class UnsupportedSimulationCommandError extends Error { }
 
 // todo
@@ -28,6 +28,7 @@ export class SimulationContext {
         public simTime: MilisecondsTimestamp,
     ) { }
 }
+
 
 export class SimulationEngine {
 
