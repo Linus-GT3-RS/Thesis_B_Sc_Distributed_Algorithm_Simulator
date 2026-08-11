@@ -49,6 +49,7 @@ export class EchoAlgorithm
         receiver.numberInformedNeighbors++;
 
         if (!receiver.isInformed) {
+            receiver.isInformed = true;
             receiver.parentID = msg.senderID;
 
             for (const neighborId of neighborIDs) {
@@ -56,7 +57,7 @@ export class EchoAlgorithm
 
                     const infoMsgData: InfoMessageData = new InfoMessageData(receiver.id);
                     this.actionHandler.handleAction(
-                        new CreateMessageAction(receiver.id, neighborId, msg)
+                        new CreateMessageAction(receiver.id, neighborId, infoMsgData)
                     );
                 }
             }
@@ -130,10 +131,10 @@ export class EchoAlgorithm
         );
 
         for (const neighborId of neighborIDs) {
-            const msg: InfoMessageData = new InfoMessageData(initiator.id);
+            const infoMsgData: InfoMessageData = new InfoMessageData(initiator.id);
 
             this.actionHandler.handleAction(
-                new CreateMessageAction(initiator.id, neighborId, msg)
+                new CreateMessageAction(initiator.id, neighborId, infoMsgData)
             );
         }
     }

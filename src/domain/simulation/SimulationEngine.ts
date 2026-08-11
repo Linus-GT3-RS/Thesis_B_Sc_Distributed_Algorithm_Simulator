@@ -1,11 +1,10 @@
 import TinyQueue from "tinyqueue";
-import { IAlgorithmActionHandler, IAlgorithmActionManager } from "../algorithm/actions/ActionHandler.js";
+import { IAlgorithmActionManager } from "../algorithm/actions/ActionHandler.js";
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
-import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
-import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
-import { CreateMessageAction, LogAction } from "../algorithm/actions/Actions.js";
-import { InitiationRequestSimulationCmd } from "./Simulation_Commands.js";
-import { Miliseconds as MilisecondsTimestamp, MilisecsSinceEpoch } from "../common/Time.js";
+import { GenericAlgorithm } from "../algorithm/algorithm/Algorithm.js";
+import { AlgorithmDataWorker } from "../algorithm/data/AlgoDataWorker.js";
+import { CreateMessageAction, LogAction, UpdateNodeAction } from "../algorithm/actions/Actions.js";
+import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
 
 export class UnsupportedActionError extends Error { }
 
@@ -34,7 +33,12 @@ export class SimulationEngine {
 
     constructor(
         private algorithm: GenericAlgorithm,
+
+        //! what if exc is thrown and queue not cleared?
+        // decide what happens if exc is thrown... reset sim?
+        // also mb catch excp here... clear cache.. and forwad them egain
         private actionManager: IAlgorithmActionManager,
+
         private dataWorker: AlgorithmDataWorker,
     ) { }
 
@@ -47,16 +51,16 @@ export class SimulationEngine {
         while (
             (next = this.getNextPendingMsg(context)) !== null
         ) {
-            // deliver
             const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
                 next.receiver, context.edges.values()
             );
+
+            // exec algo
             this.algorithm.onMessageDelivery(
                 next.receiver, next.data, receiverNeighbors
             );
-
             // handle actions
-            this.processAllActions();
+            this.processIssuedAlgorithmActions(context);
         }
     }
 
@@ -77,134 +81,146 @@ export class SimulationEngine {
             initiator, context.edges.values()
         );
 
+        // exec algorithm
         this.algorithm.onInitiationRequest(initiator, neighbors);
-        this.processAllActions();
+        // handle actions
+        this.processIssuedAlgorithmActions(context);
     }
 
     //* Actions
 
-    private processAllActions(): void {
-        // TODO
+    private processIssuedAlgorithmActions(context: SimulationContext): void {
+        for (const act of this.actionManager.getDrainIterator()) {
+            if (act instanceof LogAction) {
+                this.processLogAction(act);
+            }
+            else if (act instanceof CreateMessageAction) {
+                this.processCreateMessageAction(act, context);
+            }
+            else if (act instanceof UpdateNodeAction) {
+                this.processUpdateNodeAction(act);
+            }
+            else {
+                throw new UnsupportedActionError(`Cannot handle action: ${act}`); // todo throw?
+            }
+        }
     }
 
 
     // todo make it return callback funcs? so that this func only throws one error
     // -> or better a simple wrapper functions that does call
     // so that caller is responsible for all the other exceptions? 
-    /**
-     * 
-     * @param action 
-     * @throws UnsupportedActionError 
-     */
-    private handleAction(action: unknown): void {
-        if (action instanceof LogAction) {
-            this.processLogAction(action);
-        }
-        else if (action instanceof CreateMessageAction) {
-            this.processCreateMessageAction(action);
-        }
-        else {
-            throw new UnsupportedActionError(`Cannot handle action: ${action}`);
-        }
-    }
+    // /**
+    //  * 
+    //  * @param action 
+    //  * @throws UnsupportedActionError 
+    //  */
+    // private handleAction(action: unknown): void {
+
+    // }
 
     private processLogAction(act: LogAction): void {
-        console.log(act.logMsg); // todo ev
+        console.log(act); // todo ev
     }
 
-    private processCreateMessageAction(act: CreateMessageAction): void {
+    private processCreateMessageAction(act: CreateMessageAction, context: SimulationContext): void {
         // get edge
-        const edge: GenericEdge = this.worker.getEdge(
-            act.senderId, act.receiverId, this.edges.values()
+        const edge: GenericEdge = this.dataWorker.getEdge(
+            act.senderId, act.receiverId, context.edges.values()
         );
 
         // create GenericMsg
         const msg: GenericMessage = new GenericMessage(
             -1, // todo
-            0, // todo
-            this.worker.getNodeFromEdge(act.receiverId, edge),
+            context.simTime + edge.length_ms,
+            this.dataWorker.getNodeFromEdge(act.receiverId, edge),
             act.data
         );
 
         // enqueue msg
-        this.messages.push(msg);
-        console.log("Created GenericMsg"); // todo ev
+        context.messages.push(msg);
+
+        console.log(act); // todo ev
     }
 
-    private processUpdateNodeAction(): void {
-
+    private processUpdateNodeAction(act: UpdateNodeAction): void {
+        console.log(act); // todo ev
     }
-
 
 }
 
 
-//? time
-
-export class IthinkThisIsState {
-
-    public constructor(
-        // private readonly lastStopTime: MilisecsSinceEpoch,
-    ) { }
 
 
-    //* Command Handling
-
-    // todo make it return callback funcs? so that this func only throws one error
-    // -> or better a simple wrapper functions that does call
-    /**
-     * 
-     * @param cmd 
-     * @throws UnsupportedSimulationCommandError
-     */
-    private processCommand(cmd: unknown): void {
-        if (cmd instanceof InitiationRequestSimulationCmd) {
-            this.onInitiationRequestCmd(cmd);
-        }
-        else {
-            throw new UnsupportedSimulationCommandError(
-                `Cannot process command: ${cmd}`
-            );
-        }
-    }
-
-    // InitiationRequest Cmd
-    private onInitiationRequestCmd(cmd: InitiationRequestSimulationCmd): void {
-        catch (error: unknown) {
-            if (error instanceof NodeNotFoundError) {
-                // todo ev
-            }
-            else if (error instanceof UnsupportedNodeTypeError) {
-                // todo ev
-            }
-        }
-    }
 
 
-    // Stop Cmd
-    //? todo emit context?
-    private onStopCmd(): void {
-        throw new Error();
-    }
+// //? time
 
-    //? todo run? or start and continue?
-    private onRunCmd(): void {
-        throw new Error();
-    }
+// export class IthinkThisIsState {
 
-// private onResumeCmd(): void {
-//     // const diff_ms: number = this.now - this.lastStopTime;
+//     public constructor(
+//         // private readonly lastStopTime: MilisecsSinceEpoch,
+//     ) { }
 
-//     // for (const msg of this.messageQueue) {
-//     //     msg.destinationTime += diff_ms;
 
-//     //     // todo updt queue??
+//     //* Command Handling
+
+//     // todo make it return callback funcs? so that this func only throws one error
+//     // -> or better a simple wrapper functions that does call
+//     /**
+//      * 
+//      * @param cmd 
+//      * @throws UnsupportedSimulationCommandError
+//      */
+//     private processCommand(cmd: unknown): void {
+//         if (cmd instanceof InitiationRequestSimulationCmd) {
+//             this.onInitiationRequestCmd(cmd);
+//         }
+//         else {
+//             throw new UnsupportedSimulationCommandError(
+//                 `Cannot process command: ${cmd}`
+//             );
+//         }
+//     }
+
+//     // InitiationRequest Cmd
+//     private onInitiationRequestCmd(cmd: InitiationRequestSimulationCmd): void {
+//         catch (error: unknown) {
+//             if (error instanceof NodeNotFoundError) {
+//                 // todo ev
+//             }
+//             else if (error instanceof UnsupportedNodeTypeError) {
+//                 // todo ev
+//             }
+//         }
+//     }
+
+
+//     // Stop Cmd
+//     //? todo emit context?
+//     private onStopCmd(): void {
+//         throw new Error();
+//     }
+
+//     //? todo run? or start and continue?
+//     private onRunCmd(): void {
+//         throw new Error();
+//     }
+
+//     // private onResumeCmd(): void {
+//     //     // const diff_ms: number = this.now - this.lastStopTime;
+
+//     //     // for (const msg of this.messageQueue) {
+//     //     //     msg.destinationTime += diff_ms;
+
+//     //     //     // todo updt queue??
+//     //     // }
 //     // }
-// }
 
 
-//* Engine Loop
+//     //* Engine Loop
 
-// private engineLoop(): void {
-//     // this.now = Date.now();
+//     // private engineLoop(): void {
+//     //     // this.now = Date.now();
+//     // }
 // }

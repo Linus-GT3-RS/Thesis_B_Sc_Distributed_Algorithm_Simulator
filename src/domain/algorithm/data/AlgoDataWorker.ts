@@ -1,7 +1,6 @@
 import TinyQueue from "tinyqueue";
 import { GenericEdge, GenericMessage, GenericNode } from "./AlgoData.js";
-import { SimulationContext } from "../../simulation/SimulationEngine.js";
-import { Miliseconds, MilisecsSinceEpoch } from "../../common/Time.js";
+import { Miliseconds } from "../../common/Time.js";
 
 export class NodeNotFoundError extends Error { }
 export class EdgeNotFoundError extends Error { }
@@ -76,13 +75,13 @@ export class AlgorithmDataWorker {
         edges: MapIterator<GenericEdge>
     ): GenericEdge {
         for (const edge of edges) {
-            if (edge.nodeA.id === id1 && edge.nodeB.id === id2
-                || edge.nodeA.id === id2 && edge.nodeB.id === id1
+            if ((edge.nodeA.id === id1 && edge.nodeB.id === id2)
+                || (edge.nodeA.id === id2 && edge.nodeB.id === id1)
             ) {
                 return edge;
             }
         }
-        throw new EdgeNotFoundError();
+        throw new EdgeNotFoundError(`Edge with id1=${id1} and id2=${id2} not found in edges=${edges}`);
     }
 
 

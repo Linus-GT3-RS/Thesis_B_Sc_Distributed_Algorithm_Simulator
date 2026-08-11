@@ -1,8 +1,5 @@
-import TinyQueue from "tinyqueue";
-import { GenericAlgorithm } from "./domain/algorithm/algorithm/Algorithm.js";
-import { GenericEdge, GenericMessage, GenericNode } from "./domain/algorithm/data/AlgoData.js";
-import { AlgorithmIdentifier, algorithmRegistry } from "./domain/algorithm/GlobalAlgorithmRegistry.js";
-import { IthinkThisIsState, SimulationContext, SimulationEngine } from "./domain/simulation/SimulationEngine.js";
+import { GenericEdge, GenericNode } from "./domain/algorithm/data/AlgoData.js";
+import { SimulationContext, SimulationEngine } from "./domain/simulation/SimulationEngine.js";
 import { EchoAlgorithmNode } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoData.js";
 import { AlgorithmDataWorker } from "./domain/algorithm/data/AlgoDataWorker.js";
 import { EchoAlgorithm } from "./domain/algorithm_impl/echo_algorithm/EchoAlgorithm.js";
@@ -31,8 +28,10 @@ const nodes = new Map<number, GenericNode>([
 const edges = new Map<number, GenericEdge>([
     [0, new GenericEdge(0, node0, node1, 100)],
     [1, new GenericEdge(1, node0, node2, 110)],
+
     [2, new GenericEdge(2, node2, node3, 120)],
     [3, new GenericEdge(3, node2, node4, 130)],
+
     [4, new GenericEdge(3, node1, node4, 140)],
 ]);
 
@@ -56,8 +55,8 @@ engine.handleInitiationRequest(0, context);
 engine.processMessagesAt(context);
 
 // Run Simulation
-while (context.messages.length > 0) { // code just for demo
-    context.simTime += 5; // code just for demo
+while (context.messages.length > 0) { // code line just for demo
+    context.simTime += 5;            // code line just for demo
 
     engine.processMessagesAt(context);
 }

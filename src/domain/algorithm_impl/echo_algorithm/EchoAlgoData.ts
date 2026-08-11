@@ -24,6 +24,4 @@ export class InfoMessageData {
     ) { }
 }
 
-export class EchoMessageData {
-
-}
+export class EchoMessageData { }

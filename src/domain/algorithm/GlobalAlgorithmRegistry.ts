@@ -1,7 +1,3 @@
-import { EchoAlgorithmNodeBuilder } from "../algorithm_impl/echo_algorithm/EchoAlgoBuilder.js";
-import { EchoAlgoMsgDataRenderer, EchoAlgorithmEdgeRenderer, EchoAlgorithmNodeRenderer } from "../algorithm_impl/echo_algorithm/EchoAlgoRenderer.js";
-import { EchoAlgorithm } from "../algorithm_impl/echo_algorithm/EchoAlgorithm.js";
-import { AlgorithmActionHandler, IAlgorithmActionHandler } from "./actions/ActionHandler.js";
 import { AlgorithmInitiationTypes as AlgorithmInitiationType } from "./algorithm/AlgoInitiationTypes.js";
 import { GenericAlgorithm } from "./algorithm/Algorithm.js";
 import { IAlgorithmNodeBuilder } from "./data/AlgoDataBuilder.js";
@@ -39,22 +35,22 @@ export const algorithmRegistry =
     new Map<AlgorithmIdentifier, AlgorithmRegistryEntry>([
 
         //? EchoAlgorithm Entry
-        [
-            AlgorithmIdentifier.Echo_Algorithm,
-            new AlgorithmRegistryEntry(
-                AlgorithmIdentifier.Echo_Algorithm,
-                "Echo Algorithmus",
+        // [
+        //     AlgorithmIdentifier.Echo_Algorithm,
+        //     new AlgorithmRegistryEntry(
+        //         AlgorithmIdentifier.Echo_Algorithm,
+        //         "Echo Algorithmus",
 
-                () => new EchoAlgorithm(new AlgorithmActionHandler()),
-                AlgorithmInitiationType.Single,
+        //         () => new EchoAlgorithm(new AlgorithmActionHandler()),
+        //         AlgorithmInitiationType.Single,
 
-                () => new EchoAlgorithmNodeBuilder(),
+        //         () => new EchoAlgorithmNodeBuilder(),
 
-                () => new EchoAlgorithmNodeRenderer(),
-                () => new EchoAlgorithmEdgeRenderer(),
-                () => new EchoAlgoMsgDataRenderer(),
-            )
-        ],
+        //         () => new EchoAlgorithmNodeRenderer(),
+        //         () => new EchoAlgorithmEdgeRenderer(),
+        //         () => new EchoAlgoMsgDataRenderer(),
+        //     )
+        // ],
 
         //? AnotherAlgorithm Entry
 
