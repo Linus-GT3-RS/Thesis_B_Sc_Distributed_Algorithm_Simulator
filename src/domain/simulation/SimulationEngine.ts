@@ -12,6 +12,7 @@ export class UnsupportedActionError extends Error { }
 // todo move to state file
 export class UnsupportedSimulationCommandError extends Error { }
 
+
 // todo
 // simengine knows ui as eventhandler directly?
 // and calls it
@@ -24,7 +25,7 @@ export class SimulationContext {
         public nodes: Map<number, GenericNode>,
         public edges: Map<number, GenericEdge>,
         public messages: TinyQueue<GenericMessage>,
-        public simTime: MilisecondsTimestamp,
+        public curSimulationTimestamp: MilisecondsTimestamp,
     ) { }
 }
 
@@ -44,7 +45,7 @@ export class SimulationEngine {
 
     //* Messages
 
-    public processMessagesAt(context: SimulationContext) {
+    public processMessagesAtCurrentSimulationTime(context: SimulationContext) {
         let next: GenericMessage | null = null;
 
         // iterate all pending msgs 
@@ -67,7 +68,7 @@ export class SimulationEngine {
     // wrapper func
     private getNextPendingMsg(context: SimulationContext): GenericMessage | null {
         return this.dataWorker.dequeueNextPendingMessage(
-            context.messages, context.simTime
+            context.messages, context.curSimulationTimestamp
         );
     }
 
@@ -132,7 +133,7 @@ export class SimulationEngine {
         // create GenericMsg
         const msg: GenericMessage = new GenericMessage(
             -1, // todo
-            context.simTime + edge.length_ms,
+            context.curSimulationTimestamp + edge.length_ms,
             this.dataWorker.getNodeFromEdge(act.receiverId, edge),
             act.data
         );
@@ -154,13 +155,7 @@ export class SimulationEngine {
 
 
 
-// //? time
-
 // export class IthinkThisIsState {
-
-//     public constructor(
-//         // private readonly lastStopTime: MilisecsSinceEpoch,
-//     ) { }
 
 
 //     //* Command Handling
@@ -216,11 +211,3 @@ export class SimulationEngine {
 //     //     //     // todo updt queue??
 //     //     // }
 //     // }
-
-
-//     //* Engine Loop
-
-//     // private engineLoop(): void {
-//     //     // this.now = Date.now();
-//     // }
-// }

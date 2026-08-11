@@ -1,11 +1,12 @@
 import { GenericEdge, GenericNode } from "./domain/algorithm/data/AlgoData.js";
-import { SimulationContext, SimulationEngine } from "./domain/simulation/SimulationEngine.js";
 import { EchoAlgorithmNode } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoData.js";
 import { AlgorithmDataWorker } from "./domain/algorithm/data/AlgoDataWorker.js";
 import { EchoAlgorithm } from "./domain/algorithm_impl/echo_algorithm/EchoAlgorithm.js";
 import { AlgorithmActionHandler } from "./domain/algorithm/actions/ActionHandler.js";
 import { MessageQueueBuilder } from "./domain/algorithm/data/AlgoDataBuilder.js";
 import Queue from "yocto-queue";
+import { RealtimeClock } from "./domain/simulation/RealtimeClock.js";
+import { SimulationEngine, SimulationContext } from "./domain/simulation/SimulationEngine.js";
 
 //! todo initiaor false by default
 // only update if it acutally does sth 
@@ -35,10 +36,6 @@ const edges = new Map<number, GenericEdge>([
     [4, new GenericEdge(3, node1, node4, 140)],
 ]);
 
-const context = new SimulationContext(
-    nodes, edges, new MessageQueueBuilder().build(), 0
-);
-
 
 // Setup SimulationEngine
 const actHandler = new AlgorithmActionHandler(new Queue<unknown>());
@@ -51,12 +48,18 @@ const engine = new SimulationEngine(
 
 
 // Start Simulation
-engine.handleInitiationRequest(0, context);
-engine.processMessagesAt(context);
+const initiatorId: number = 0;
+const context = new SimulationContext(
+    nodes, edges, new MessageQueueBuilder().build(), 0
+);
+const rtClock = new RealtimeClock(Date.now); //? purpose in pauseCmd to be shown
+
+engine.handleInitiationRequest(initiatorId, context);
+engine.processMessagesAtCurrentSimulationTime(context);
 
 // Run Simulation
 while (context.messages.length > 0) { // code line just for demo
-    context.simTime += 5;            // code line just for demo
+    context.curSimulationTimestamp += rtClock.getElapsedTime_ms();
 
-    engine.processMessagesAt(context);
+    engine.processMessagesAtCurrentSimulationTime(context);
 }
