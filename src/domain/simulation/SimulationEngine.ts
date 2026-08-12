@@ -6,11 +6,9 @@ import { AlgorithmDataWorker } from "../algorithm/data/AlgoDataWorker.js";
 import { CreateMessageAction, LogAction, UpdateNodeAction } from "../algorithm/actions/Actions.js";
 import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
 
-export class UnsupportedActionError extends Error { }
+export class SimulationErrorInvalidAction extends Error { }
 
 
-// todo move to state file
-export class UnsupportedSimulationCommandError extends Error { }
 
 
 // todo
@@ -22,6 +20,7 @@ export class UnsupportedSimulationCommandError extends Error { }
 
 export class SimulationContext {
     constructor(
+        public algorithm: AlgorithmIdentifier,
         public nodes: Map<number, GenericNode>,
         public edges: Map<number, GenericEdge>,
         public messages: TinyQueue<GenericMessage>,
@@ -90,6 +89,10 @@ export class SimulationEngine {
 
     //* Actions
 
+    // todo make it return callback funcs? so that this func only throws one error
+    // -> or better a simple wrapper functions that does call
+    // so that caller is responsible for all the other exceptions? 
+
     private processIssuedAlgorithmActions(context: SimulationContext): void {
         for (const act of this.actionManager.getDrainIterator()) {
             if (act instanceof LogAction) {
@@ -102,23 +105,10 @@ export class SimulationEngine {
                 this.processUpdateNodeAction(act);
             }
             else {
-                throw new UnsupportedActionError(`Cannot handle action: ${act}`); // todo throw?
+                throw new SimulationErrorInvalidAction(`Cannot handle action: ${act}`); // todo throw?
             }
         }
     }
-
-
-    // todo make it return callback funcs? so that this func only throws one error
-    // -> or better a simple wrapper functions that does call
-    // so that caller is responsible for all the other exceptions? 
-    // /**
-    //  * 
-    //  * @param action 
-    //  * @throws UnsupportedActionError 
-    //  */
-    // private handleAction(action: unknown): void {
-
-    // }
 
     private processLogAction(act: LogAction): void {
         console.log(act); // todo ev
