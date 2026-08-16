@@ -19,7 +19,7 @@ export class RealtimeClock {
     }
 
     // measures time and gives elapsed time since last measurement
-    getElapsedTime_ms(): number {
+    public getElapsedTime_ms(): number {
         // calc elapsed time
         const realtimeNow: MilisecsSinceEpoch = this.getRealtimeTimestamp();
         const elapsedRealtimeTime: number = realtimeNow - this.lastRealtimeTimestamp;

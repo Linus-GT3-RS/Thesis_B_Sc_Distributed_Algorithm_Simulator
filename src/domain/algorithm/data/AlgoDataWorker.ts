@@ -85,16 +85,19 @@ export class AlgorithmDataWorker {
     }
 
 
+    // todo throw error?
+    // dequeues only if a msg is pending!
     public dequeueNextPendingMessage(
         messages: TinyQueue<GenericMessage>,
-        simulationTime: Miliseconds,
+        queryTimestamp: Miliseconds,
     ): GenericMessage | null {
+        // sanity check if queue empty
         const next: GenericMessage | undefined = messages.peek();
-        if (next === undefined) { // if queue empty
+        if (next === undefined) {
             return null;
         }
 
-        if (next.destinationTime <= simulationTime) {
+        if (next.destinationTime <= queryTimestamp) {
             messages.pop(); // dequeue
             return next;
         }

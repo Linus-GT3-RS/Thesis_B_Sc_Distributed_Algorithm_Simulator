@@ -2,7 +2,7 @@ import { GenericNode } from "../data/AlgoData.js";
 
 //* Generic Actions
 
-export class LogAction {
+export class DoLogAction {
     constructor(
         public logMsg: string
     ) { }
@@ -11,7 +11,7 @@ export class LogAction {
 
 //* Message Actions
 
-export class CreateMessageAction {
+export class SendMessageAction {
     constructor(
         public senderId: number,
         public receiverId: number,
@@ -22,10 +22,11 @@ export class CreateMessageAction {
 
 //* Node Actions
 
-// todo
-export class UpdateNodeAction {
+// any property change is allowed
+// except id change
+export class UpdateNodePropsAction {
     constructor(
-        public node: GenericNode
+        public updatedNode: GenericNode
     ) { }
 }
 

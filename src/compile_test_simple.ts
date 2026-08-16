@@ -54,12 +54,12 @@ const context = new SimulationContext(
 );
 const rtClock = new RealtimeClock(Date.now); //? purpose in pauseCmd to be shown
 
-engine.handleInitiationRequest(initiatorId, context);
-engine.processMessagesAtCurrentSimulationTime(context);
+engine.handleInitiation(initiatorId, context);
+engine.processMessagesInstantTillSimTime(context);
 
 // Run Simulation
 while (context.messages.length > 0) { // code line just for demo
-    context.curSimulationTimestamp += rtClock.getElapsedTime_ms();
+    context.curSimTimestamp += rtClock.getElapsedTime_ms();
 
-    engine.processMessagesAtCurrentSimulationTime(context);
+    engine.processMessagesInstantTillSimTime(context);
 }

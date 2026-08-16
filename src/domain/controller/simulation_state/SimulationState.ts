@@ -6,31 +6,72 @@ import { RealtimeClock } from "../../simulation/RealtimeClock.js";
 import { SimulationContext, SimulationEngine } from "../../simulation/SimulationEngine.js";
 
 
+export class CmdDoSimulationStep { }
+
+export abstract class ICmdHandlerDoSimulationStep {
+    public abstract handleCmd(cmd: CmdDoSimulationStep): void;
+}
+
+
+
+
+export class StoppedSimulationState
+    implements
+    ICmdHandlerDoSimulationStep,
+    ICmdHandlerInitAlgorithm {
+
+    constructor(
+        private context: SimulationContext,
+        private engine: SimulationEngine,
+    ) { }
+
+    public handleCmd(cmd: CmdDoSimulationStep): void {
+        this.context.curSimTimestamp += 100;
+        this.engine.processMessagesInstantTillSimTime(this.context);
+        // todo time in sim has to be reworked little
+        // rn engine thinks its directly simTie...
+        // but in this stepping state it should go through
+        // the time step by step... each timeframe can be reached
+        // in this state... so no catch_up because its incr time per step
+
+    }
+
+
+    // todo intiation logic... validate.. set..
+    // todo catch errors
+    public handleCmd(cmd: CmdInitAlgorithm): void {
+        this.engine.handleInitiation(cmd.initiatorId, this.context);
+    }
+
+
+}
+
+
 
 
 
 // with the given nodeID as initiator
-export class AlgorithmInitCmd {
+export class CmdInitAlgorithm {
     constructor(
         public initiatorId: number,
     ) { }
 }
 
 
-export abstract class IHandlerAlgorithmInitCmd {
+export abstract class ICmdHandlerInitAlgorithm {
 
-    public abstract handle(cmd: AlgorithmInitCmd): void;
+    public abstract handleCmd(cmd: CmdInitAlgorithm): void;
 
 }
 
 
 
 
-export class ExecAlgorithmCmd { } // todo name
+export class ContinueAlgorithmExecutionCmd { } // todo name
 
 export abstract class IHandlerExecAlgorithmCmd {
 
-    public abstract handle(cmd: ExecAlgorithmCmd): void;
+    public abstract handleCmd(cmd: ContinueAlgorithmExecutionCmd): void;
 
 }
 
@@ -46,7 +87,7 @@ export abstract class IHandlerExecAlgorithmCmd {
 
 export class RunningSimulationState
     implements
-    IHandlerAlgorithmInitCmd,
+    ICmdHandlerInitAlgorithm,
     IHandlerExecAlgorithmCmd {
 
     constructor(
@@ -57,21 +98,21 @@ export class RunningSimulationState
     ) { }
 
 
-    public handle(cmd: AlgorithmInitCmd): void {
+    public handleCmd(cmd: CmdInitAlgorithm): void {
         // check algorithm init type
         // -> init allowed?
 
         // if no
         // error ev
 
-        // if yes
-        // let sim do initiation
+        // else let sim do initiation
+        this.engine.handleInitiation(cmd.initiatorId, this.context);
 
         // schedule msg processing cmd?
     }
 
 
-    public handle(cmd: ExecAlgorithmCmd): void {
+    public handleCmd(cmd: ContinueAlgorithmExecutionCmd): void {
         // updt rtclock and simtime
 
         // let engine process msgs at cur time
@@ -87,26 +128,5 @@ export class RunningSimulationState
         // log error (should be fine is no enterprise app?)
     }
 
-
-}
-
-//? runs in a WebWorker Thread
-// receives cmds via WebWorker Thread CmdQueue
-export class DomainController {
-
-    private state: unknown;
-
-    // private eventListener: unknown;
-
-    public handleCommand(cmd: unknown) {
-        if (cmd instanceof AlgorithmInitCmd
-            && this.state instanceof IHandlerAlgorithmInitCmd
-        ) {
-            this.state.handle(cmd);
-        }
-        // else if(){}
-
-        throw new Error(`Cannot handle cmd=${cmd}. Current state is: ${this.state}`); // todo ev
-    }
 
 }

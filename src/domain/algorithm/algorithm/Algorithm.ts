@@ -15,37 +15,53 @@ import { GenericNode } from "../data/AlgoData.js";
 export class UnsupportedNodeTypeError extends Error { }
 export class UnsupportedMessageTypeError extends Error { }
 
+
+
+
+/**
+ * Receives a command to execute the algorithm
+ * on the provided node, which is part of the current simulation state.
+ * 
+ * Changes to the simulation state can only be made
+ * by issuing AlgorithmActions to the SimulationEngine.
+ */
 export abstract class GenericAlgorithm {
 
+
     constructor(
-        public actionHandler: IAlgorithmActionHandler, // todo change public
+        protected actionHandler: IAlgorithmActionHandler,
     ) { }
 
 
     /**
+     * Handles incoming Message for a given node
+     * by issueing AlgorithmActions
      * 
      * @param receiver 
      * @param msgData 
      * @param neighborIDs 
-     * @throws UnsupportedNodeTypeError
-     * @throws UnsupportedMessageTypeError
+     * @throws InvalidEntityError if Node or MessageData 
+     *  is of invalid type
      */
-    public abstract onMessageDelivery(
-        receiver: GenericNode, // TODO this is a copy? -> therefore algo has to use action to notify sim if sth changes
-        msgData: unknown,
-        neighborIDs: Array<number>,
+    public abstract execProtocolOnMessage(
+        receiver: Readonly<GenericNode>,
+        msgData: Readonly<unknown>,
+        neighborIDs: ReadonlyArray<number>,
     ): void;
 
 
     /**
+     * Handles Initiation by 
+     * issueing AlgorithmActions
      * 
      * @param initiator 
      * @param neighborIDs 
-     * @throws UnsupportedNodeTypeError
+     * @throws InvalidEntityError if Algorithm cannot 
+     *  handle NodeType of initiator
      */
-    public abstract onInitiationRequest(
-        initiator: GenericNode, // TODO this is a copy? -> therefore algo has to use action to notify sim if sth changes
-        neighborIDs: Array<number>,
+    public abstract execProtocolOnInitiation(
+        initiator: Readonly<GenericNode>,
+        neighborIDs: ReadonlyArray<number>,
     ): void;
 
 }

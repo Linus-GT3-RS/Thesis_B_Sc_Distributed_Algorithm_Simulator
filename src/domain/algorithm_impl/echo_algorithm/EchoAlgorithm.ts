@@ -1,11 +1,8 @@
 import { IAlgorithmActionHandler } from "../../algorithm/actions/ActionHandler.js";
-import { CreateMessageAction, LogAction, UpdateNodeAction } from "../../algorithm/actions/Actions.js";
-import { GenericAlgorithm, UnsupportedMessageTypeError, UnsupportedNodeTypeError } from "../../algorithm/algorithm/Algorithm.js";
+import { SendMessageAction, DoLogAction } from "../../algorithm/actions/Actions.js";
+import { GenericAlgorithm, UnsupportedNodeTypeError as InvalidEntityError } from "../../algorithm/algorithm/Algorithm.js";
 import { GenericNode } from "../../algorithm/data/AlgoData.js";
 import { EchoAlgorithmNode, InfoMessageData, EchoMessageData } from "./EchoAlgoData.js";
-
-//! todo readonly
-
 
 
 export class EchoAlgorithm
@@ -20,15 +17,20 @@ export class EchoAlgorithm
 
     //* Message Handle
 
-    public override onMessageDelivery(
-        receiver: GenericNode, // todo is a copy?
-        msgData: unknown,
-        neighborIDs: Array<number>,
+    public override execProtocolOnMessage(
+        receiver: Readonly<GenericNode>,
+        msgData: Readonly<unknown>,
+        neighborIDs: ReadonlyArray<number>,
     ): void {
+        // sanity check node data
         if (!(receiver instanceof EchoAlgorithmNode)) {
-            throw new UnsupportedNodeTypeError(); // todo msg
+            throw new InvalidEntityError(`
+                Received unknown receiver Node type when trying to exec MsgProtocol. 
+                InvalidEntity is ${receiver}`
+            );
         }
 
+        // sanity check msg data
         if (msgData instanceof InfoMessageData) {
             this.onInfoMsg(receiver, msgData, neighborIDs);
         }
@@ -36,55 +38,61 @@ export class EchoAlgorithm
             this.onEchoMsg(receiver, neighborIDs);
         }
         else {
-            throw new UnsupportedMessageTypeError(); // todo msg
+            throw new InvalidEntityError(
+                `Received unknown MessageData type when trying to exec MsgProtol.
+                InvalidEntity is ${msgData}`
+            );
         }
     }
 
+    //* Message Protocol
+
+    //! todo
 
     private onInfoMsg(
-        receiver: EchoAlgorithmNode,
-        msg: InfoMessageData,
-        neighborIDs: Array<number>,
+        roReceiver: Readonly<EchoAlgorithmNode>,
+        msg: Readonly<InfoMessageData>,
+        neighborIDs: ReadonlyArray<number>,
     ): void {
-        receiver.numberInformedNeighbors++;
+        roReceiver.numberInformedNeighbors++;
 
-        if (!receiver.isInformed) {
-            receiver.isInformed = true;
-            receiver.parentID = msg.senderID;
+        if (!roReceiver.isInformed) {
+            roReceiver.isInformed = true;
+            roReceiver.parentID = msg.senderID;
 
             for (const neighborId of neighborIDs) {
-                if (neighborId != receiver.parentID) {
+                if (neighborId != roReceiver.parentID) {
 
-                    const infoMsgData: InfoMessageData = new InfoMessageData(receiver.id);
+                    const infoMsgData: InfoMessageData = new InfoMessageData(roReceiver.id);
                     this.actionHandler.handleAction(
-                        new CreateMessageAction(receiver.id, neighborId, infoMsgData)
+                        new SendMessageAction(roReceiver.id, neighborId, infoMsgData)
                     );
                 }
             }
         }
 
-        if (receiver.numberInformedNeighbors >= neighborIDs.length) {
-            this.onAllNeighborsInformed(receiver);
+        if (roReceiver.numberInformedNeighbors >= neighborIDs.length) {
+            this.onAllNeighborsInformed(roReceiver);
         }
 
         this.actionHandler.handleAction(
-            new UpdateNodeAction(receiver) // todo
+            new UpdateNodePropertiesAction(roReceiver) // todo
         );
     }
 
 
     private onEchoMsg(
-        receiver: EchoAlgorithmNode,
-        neighborIDs: Array<number>,
+        roReceiver: Readonly<EchoAlgorithmNode>,
+        neighborIDs: ReadonlyArray<number>,
     ): void {
-        receiver.numberInformedNeighbors++;
+        roReceiver.numberInformedNeighbors++;
 
-        if (receiver.numberInformedNeighbors >= neighborIDs.length) {
-            this.onAllNeighborsInformed(receiver);
+        if (roReceiver.numberInformedNeighbors >= neighborIDs.length) {
+            this.onAllNeighborsInformed(roReceiver);
         }
 
         this.actionHandler.handleAction(
-            new UpdateNodeAction(receiver) // todo
+            new UpdateNodePropertiesAction(roReceiver) // todo
         );
     }
 
@@ -94,7 +102,7 @@ export class EchoAlgorithm
     ): void {
         if (receiver.isInitiator) {
             this.actionHandler.handleAction(
-                new LogAction("Algorithm is finished: Result is ...") // todo
+                new DoLogAction("Algorithm is finished: Result is ...") // todo
             );
             return;
         }
@@ -102,41 +110,66 @@ export class EchoAlgorithm
         const echoMsgData: EchoMessageData = new EchoMessageData();
         this.actionHandler.handleAction(
             // todo null check
-            new CreateMessageAction(receiver.id, receiver.parentID!, echoMsgData)
+            new SendMessageAction(receiver.id, receiver.parentID!, echoMsgData)
         );
     }
 
 
     //* Initiation Handle
 
-    public override onInitiationRequest(
-        initiator: GenericNode, // todo is a copy?
-        neighborIDs: Array<number>,
+    public override execProtocolOnInitiation(
+        initiator: Readonly<GenericNode>,
+        neighborIDs: ReadonlyArray<number>,
     ): void {
+        // sanity check
         if (!(initiator instanceof EchoAlgorithmNode)) {
-            throw new UnsupportedNodeTypeError(); // todo msg
-        }
-        this.handleInitRequest(initiator, neighborIDs);
-    }
-
-    private handleInitRequest(
-        initiator: EchoAlgorithmNode,
-        neighborIDs: Array<number>,
-    ): void {
-        initiator.isInitiator = true;
-        initiator.isInformed = true;
-
-        this.actionHandler.handleAction(
-            new UpdateNodeAction(initiator) // todo
-        );
-
-        for (const neighborId of neighborIDs) {
-            const infoMsgData: InfoMessageData = new InfoMessageData(initiator.id);
-
-            this.actionHandler.handleAction(
-                new CreateMessageAction(initiator.id, neighborId, infoMsgData)
+            throw new InvalidEntityError(`
+                Received unknown Node type when trying to exec InitProtocol. 
+                InvalidEntity node is ${initiator}`
             );
         }
+        this.handleInitiation(initiator, neighborIDs);
+    }
+
+    //* Initiation Protocol
+
+    //! todo catch errors here? or just doc via catch rethrow?
+    // s. in ActionHandler.ts
+
+    private handleInitiation(
+        roInitiator: Readonly<EchoAlgorithmNode>,
+        neighborIDs: ReadonlyArray<number>,
+    ): void {
+        const initiator: EchoAlgorithmNode = this.copyNode(roInitiator);
+
+        // update node
+        initiator.isInitiator = true;
+        initiator.isInformed = true;
+        this.actionHandler.issueUpdateNodeAct(
+            new UpdateNodePropertiesAction(initiator)
+        );
+
+        // inform neighbors
+        for (const neighborId of neighborIDs) {
+            const infoMsgData: InfoMessageData = new InfoMessageData(initiator.id);
+            this.actionHandler.issueSendMessageAct(
+                new SendMessageAction(initiator.id, neighborId, infoMsgData)
+            );
+        }
+    }
+
+
+
+
+
+
+
+    private copyNode(roNode: Readonly<EchoAlgorithmNode>): EchoAlgorithmNode {
+        return new EchoAlgorithmNode(
+            roNode.id, roNode.isInitiator, roNode.isInformed,
+            roNode.numberInformedNeighbors,
+            roNode.parentID
+        );
     }
 
 }
