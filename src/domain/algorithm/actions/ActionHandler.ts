@@ -1,32 +1,17 @@
 import { DoLogAction, SendMessageAction, UpdateNodePropsAction } from "./Actions.js";
 
+export type AlgorithmAction =
+    DoLogAction
+    | SendMessageAction
+    | UpdateNodePropsAction
 
-//! todo or stores it??
-// so no error is thrown in AlgoExec ??
-// imm would make sense so that no unnötgie weiterführung wär da
-// aber mb au egal wenn sim so oder so gekilled wird
-
-export abstract class IAlgorithmActionHandler {
-
-    /**
-     * Handles Action immediatly
-     * @param act 
-     */
-    public abstract issueDoLogAct(act: Readonly<DoLogAction>): void;
+export abstract class IAlgorithmActionScheduler {
 
     /**
-     * Handles Action immediatly
+     * Enqueues given action
      * @param act 
-     * @throws stuff is sender or receiver is invalid in any way
      */
-    public abstract issueSendMessageAct(act: Readonly<SendMessageAction>): void;
-
-    /**
-     * Handles Action immediatly
-     * @param act 
-     * @throws error if id is invalid in any way
-     */
-    public abstract issueUpdateNodeAct(act: Readonly<UpdateNodePropsAction>): void;
+    public abstract scheduleAction(act: AlgorithmAction): void;
 
 }
 

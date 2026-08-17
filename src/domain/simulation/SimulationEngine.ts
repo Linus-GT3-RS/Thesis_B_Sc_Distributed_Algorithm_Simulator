@@ -1,5 +1,5 @@
 import TinyQueue from "tinyqueue";
-import { IAlgorithmActionHandler } from "../algorithm/actions/ActionHandler.js"
+import { IAlgorithmActionScheduler } from "../algorithm/actions/ActionHandler.js"
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
 import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
 import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
@@ -38,7 +38,7 @@ export class SimulationContext {
 // rendering? or in state?
 
 export class SimulationEngine
-    implements IAlgorithmActionHandler {
+    implements IAlgorithmActionScheduler {
 
     constructor(
         private algorithm: GenericAlgorithm,
@@ -59,7 +59,7 @@ export class SimulationEngine
     // so its private from outside
     // and can be tested
 
-    public issueDoLogAct(act: Readonly<DoLogAction>): void {
+    public scheduleAction(act: Readonly<DoLogAction>): void {
 
     }
 
@@ -97,7 +97,7 @@ export class SimulationEngine
             );
 
             // exec algo
-            this.algorithm.execProtocolOnMessage(
+            this.algorithm.issueIncomingMessage(
                 next.receiver, next.data, receiverNeighbors
             );
             // handle actions
@@ -128,7 +128,7 @@ export class SimulationEngine
             const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
                 next.receiver, context.edges.values()
             );
-            this.algorithm.execProtocolOnMessage(
+            this.algorithm.issueIncomingMessage(
                 next.receiver, next.data, receiverNeighbors
             );
 
@@ -184,7 +184,7 @@ export class SimulationEngine
             );
 
             // exec algorithm
-            this.algorithm.execProtocolOnInitiation(initiator, neighbors);
+            this.algorithm.issueInitiation(initiator, neighbors);
 
             // processed issued actions
             this.processIssuedAlgorithmActions(context); // todo?
