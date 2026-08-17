@@ -1,6 +1,6 @@
-import { GenericNode } from "../algorithm/data/AlgoData.js";
+import { GenericEdge, GenericNode } from "../algorithm/data/AlgoData.js";
 
-interface MyIdentifiable {
+export interface Identifiable {
     id: number,
 }
 
@@ -11,7 +11,7 @@ export class IdentifiableStoreError extends Error { }
  * satisfies the interface Identifiable
  * while only allowing the data to be of the same type.
  */
-export class IdentifiableStore<T extends MyIdentifiable> {
+export class IdentifiableStore<T extends Identifiable> {
 
     private map: Map<number, T> = new Map();
 
@@ -50,7 +50,7 @@ export class IdentifiableStore<T extends MyIdentifiable> {
      * @param target 
      * @throws IdentifiableStoreError if item with given id does not exist
      */
-    public peek(target: MyIdentifiable): T {
+    public peek(target: Identifiable): T {
         const res: T | undefined = this.map.get(target.id);
         if (res === undefined) {
             throw new IdentifiableStoreError(
@@ -61,8 +61,13 @@ export class IdentifiableStore<T extends MyIdentifiable> {
         return res;
     }
 
+
+    public peekAllValues(): MapIterator<Readonly<T>> {
+        return this.map.values();
+    }
+
 }
 
 
-export type GenericNodeStore = IdentifiableStore<GenericNode>
-export type GenericEdgeStore = IdentifiableStore<GenericNode>
+export type GenericNodeStore = IdentifiableStore<GenericNode>;
+export type GenericEdgeStore = IdentifiableStore<GenericEdge>;

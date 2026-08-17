@@ -1,30 +1,24 @@
 import TinyQueue from "tinyqueue";
-import { IAlgorithmActionScheduler } from "../algorithm/actions/ActionHandler.js"
+import { AlgorithmAction, IAlgorithmActionHandler, IAlgorithmActionScheduler } from "../algorithm/actions/ActionHandler.js"
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
 import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
 import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
 import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
-import { DoLogAction, SendMessageAction, UpdateNodePropsAction } from "../algorithm/actions/Actions.js";
+import { DoLogAction, SendMessageAction, UpdateNodeAction } from "../algorithm/actions/Actions.js";
+import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableStoreError } from "../common/EntityStores.js";
 
-export class SimulationErrorInvalidAction extends Error { }
+export class InvalidSimulationStateError extends Error { }
 
-export class ErrorInvalidSimulationState extends Error { }
 export class ErrorImpossibleInitReq extends Error { }
-
-
-// todo
-// simengine knows ui as eventhandler directly?
-// and calls it
-// state only for cmd validation and handleing
-
-//! dequeing of cmd and actions
 
 export class SimulationContext {
     constructor(
-        public nodes: Map<number, GenericNode>,
-        public edges: Map<number, GenericEdge>,
+        public nodes: GenericNodeStore,
+        public edges: GenericEdgeStore,
+
         public messages: TinyQueue<GenericMessage>,
         public curSimTimestamp: MilisecondsTimestamp,
+
         public algoType: AlgorithmIdentifier,
     ) { }
 }
@@ -36,7 +30,9 @@ export class SimulationContext {
 // init -> msg delivery -> algo exec -> algo action handleing
 // time?
 // rendering? or in state?
-
+/**
+ * 
+ */
 export class SimulationEngine
     implements IAlgorithmActionScheduler {
 
@@ -50,29 +46,6 @@ export class SimulationEngine
 
         private dataWorker: AlgorithmDataWorker,
     ) { }
-
-
-
-
-    //! Actions
-    //? todo make into separate class
-    // so its private from outside
-    // and can be tested
-
-    public scheduleAction(act: Readonly<DoLogAction>): void {
-
-    }
-
-    public issueSendMessageAct(act: Readonly<SendMessageAction>): void {
-
-    }
-
-    public issueUpdateNodeAct(act: Readonly<UpdateNodePropsAction>): void {
-
-    }
-
-
-
 
 
 
@@ -168,7 +141,7 @@ export class SimulationEngine
      * Happens immediately at the current simulation time,
      * therefore simulation time does not get advanced
      * 
-     * @param initiatorId 
+     * @param initiatorId
      * @param context 
      * @throws ErrorImpossibleInitReq if initiator id is invalid
      * @throws ErrorInvalidSimulationState if simulation state is invalid
@@ -204,60 +177,6 @@ export class SimulationEngine
             }
         }
     }
-
-
-
-    //* Actions
-
-    // todo make it return callback funcs? so that this func only throws one error
-    // -> or better a simple wrapper functions that does call
-    // so that caller is responsible for all the other exceptions? 
-
-    private processIssuedAlgorithmActions(context: SimulationContext): void {
-        for (const act of this.actionManager.getDrainIterator()) {
-            if (act instanceof DoLogAction) {
-                this.processLogAction(act);
-            }
-            else if (act instanceof SendMessageAction) {
-                this.processCreateMessageAction(act, context);
-            }
-            else if (act instanceof UpdateNodePropertiesAction) {
-                this.processUpdateNodeAction(act);
-            }
-            else {
-                throw new SimulationErrorInvalidAction(`Cannot handle action: ${act}`); // todo throw?
-            }
-        }
-    }
-
-    private processLogAction(act: DoLogAction): void {
-        console.log(act); // todo ev
-    }
-
-    private processCreateMessageAction(act: SendMessageAction, context: SimulationContext): void {
-        // get edge
-        const edge: GenericEdge = this.dataWorker.getEdge(
-            act.senderId, act.receiverId, context.edges.values()
-        );
-
-        // create GenericMsg
-        const msg: GenericMessage = new GenericMessage(
-            -1, // todo
-            context.curSimTimestamp + edge.length_ms,
-            this.dataWorker.getNodeFromEdge(act.receiverId, edge),
-            act.data
-        );
-
-        // enqueue msg
-        context.messages.push(msg);
-
-        console.log(act); // todo ev
-    }
-
-    private processUpdateNodeAction(act: UpdateNodePropertiesAction): void {
-        console.log(act); // todo ev
-    }
-
 }
 
 

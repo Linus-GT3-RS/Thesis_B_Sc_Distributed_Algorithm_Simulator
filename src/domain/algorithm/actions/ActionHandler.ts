@@ -1,17 +1,28 @@
-import { DoLogAction, SendMessageAction, UpdateNodePropsAction } from "./Actions.js";
+import { Identifiable } from "../../common/EntityStores.js";
+import { DoLogAction, SendMessageAction, UpdateNodeAction } from "./Actions.js";
 
 export type AlgorithmAction =
     DoLogAction
     | SendMessageAction
-    | UpdateNodePropsAction
+    | UpdateNodeAction
 
 export abstract class IAlgorithmActionScheduler {
 
     /**
      * Enqueues given action
-     * @param act 
+     * @param act
      */
     public abstract scheduleAction(act: AlgorithmAction): void;
+
+}
+
+export abstract class IAlgorithmActionHandler {
+
+    /**
+     * 
+     * @param act 
+     * @throws todo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              */
+    public abstract handle(act: AlgorithmAction, issuerNode: Identifiable): void;
 
 }
 

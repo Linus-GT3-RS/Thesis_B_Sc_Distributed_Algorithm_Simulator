@@ -1,5 +1,5 @@
 import { IAlgorithmActionScheduler } from "../../algorithm/actions/ActionHandler.js";
-import { SendMessageAction, DoLogAction, UpdateNodePropsAction } from "../../algorithm/actions/Actions.js";
+import { SendMessageAction, DoLogAction, UpdateNodeAction } from "../../algorithm/actions/Actions.js";
 import { GenericAlgorithm, InvalidAlgorithmState as InvalidAlgorithmStateError, UnsupportedNodeTypeError as InvalidEntityError } from "../../algorithm/algorithm/Algorithm.js";
 import { GenericNode } from "../../algorithm/data/AlgoData.js";
 import { EchoAlgorithmNode, InfoMessageData, EchoMessageData } from "./EchoAlgoData.js";
@@ -75,14 +75,14 @@ export class EchoAlgorithm
         initiator.isInitiator = true;
         initiator.isInformed = true;
         this.actionHandler.scheduleAction(
-            new UpdateNodePropsAction(initiator)
+            new UpdateNodeAction(initiator)
         );
 
         // inform neighbors
         for (const neighborId of neighborIDs) {
             const infoMsgData: InfoMessageData = new InfoMessageData(initiator.id);
             this.actionHandler.scheduleAction(
-                new SendMessageAction(initiator.id, neighborId, infoMsgData)
+                new SendMessageAction(neighborId, infoMsgData)
             );
         }
     }
@@ -104,13 +104,13 @@ export class EchoAlgorithm
                 if (neighborId != activeNode.parentID) {
                     const infoMsgData: InfoMessageData = new InfoMessageData(activeNode.id);
                     this.actionHandler.scheduleAction(
-                        new SendMessageAction(activeNode.id, neighborId, infoMsgData)
+                        new SendMessageAction(neighborId, infoMsgData)
                     );
                 }
             }
         }
         this.actionHandler.scheduleAction(
-            new UpdateNodePropsAction(activeNode)
+            new UpdateNodeAction(activeNode)
         );
 
         if (activeNode.numberInformedNeighbors >= neighborIDs.length) {
@@ -125,7 +125,7 @@ export class EchoAlgorithm
     ): void {
         activeNode.numberInformedNeighbors++;
         this.actionHandler.scheduleAction(
-            new UpdateNodePropsAction(activeNode)
+            new UpdateNodeAction(activeNode)
         );
 
         if (activeNode.numberInformedNeighbors >= neighborIDs.length) {
@@ -152,7 +152,7 @@ export class EchoAlgorithm
             );
         }
         this.actionHandler.scheduleAction(
-            new SendMessageAction(activeNode.id, activeNode.parentID, new EchoMessageData())
+            new SendMessageAction(activeNode.parentID, new EchoMessageData())
         );
     }
 

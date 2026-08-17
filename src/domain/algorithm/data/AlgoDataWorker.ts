@@ -1,6 +1,7 @@
 import TinyQueue from "tinyqueue";
 import { GenericEdge, GenericMessage, GenericNode } from "./AlgoData.js";
 import { Miliseconds } from "../../common/Time.js";
+import { Identifiable } from "../../common/EntityStores.js";
 
 export class NodeNotFoundError extends Error { }
 export class EdgeNotFoundError extends Error { }
@@ -9,16 +10,16 @@ export class EdgeNotFoundError extends Error { }
 export class AlgorithmDataWorker {
 
     public getNeighborIds(
-        node: Readonly<GenericNode>,
-        edges: Readonly<MapIterator<GenericEdge>>
+        targetNode: Identifiable,
+        edges: MapIterator<Readonly<GenericEdge>>
     ): Array<number> {
         const neighbors: Array<number> = new Array();
 
         for (const edge of edges) {
-            if (edge.nodeA.id === node.id) {
+            if (edge.nodeA.id === targetNode.id) {
                 neighbors.push(edge.nodeB.id);
             }
-            else if (edge.nodeB.id === node.id) {
+            else if (edge.nodeB.id === targetNode.id) {
                 neighbors.push(edge.nodeA.id);
             }
         }
@@ -48,31 +49,15 @@ export class AlgorithmDataWorker {
 
 
     /**
-     * 
-     * @param nodeId 
-     * @param nodes 
-     * @throws NodeNotFoundError if nodes doest not contain nodeId
-     */
-    public getNode(nodeId: number, nodes: Map<number, GenericNode>): GenericNode {
-        const node: GenericNode | undefined = nodes.get(nodeId);
-        if (node === undefined) {
-            throw new NodeNotFoundError("Nodes Container does not contain given NodeID");
-        }
-        return node;
-    }
-
-
-    /**
-     * 
+     * Finds the edge connecting the two given node ids
      * @param nodeAId 
      * @param nodeBId 
      * @param edges 
-     * @throws EdgeNotFoundError
+     * @throws EdgeNotFoundError if the edge does not exist
      */
-    public getEdge(
-        id1: number,
-        id2: number,
-        edges: MapIterator<GenericEdge>
+    public findEdge(
+        id1: number, id2: number,
+        edges: MapIterator<Readonly<GenericEdge>>
     ): GenericEdge {
         for (const edge of edges) {
             if ((edge.nodeA.id === id1 && edge.nodeB.id === id2)
@@ -81,12 +66,19 @@ export class AlgorithmDataWorker {
                 return edge;
             }
         }
-        throw new EdgeNotFoundError(`Edge with id1=${id1} and id2=${id2} not found in edges=${edges}`);
+        throw new EdgeNotFoundError(`
+            Edge with id1=${id1} and id2=${id2} not found in edges=${edges}`
+        );
     }
 
 
-    // todo throw error?
-    // dequeues only if a msg is pending!
+
+    /**
+     * dequeues the next pending msg
+     * @param messages 
+     * @param queryTimestamp 
+     * @returns null if no msg is pending
+     */
     public dequeueNextPendingMessage(
         messages: TinyQueue<GenericMessage>,
         queryTimestamp: Miliseconds,

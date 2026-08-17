@@ -13,7 +13,6 @@ export class DoLogAction {
 
 export class SendMessageAction {
     constructor(
-        public senderId: number,
         public receiverId: number,
         public data: unknown,
     ) { }
@@ -24,7 +23,7 @@ export class SendMessageAction {
 
 // any property change is allowed
 // except id change
-export class UpdateNodePropsAction {
+export class UpdateNodeAction {
     constructor(
         public updatedNode: GenericNode
     ) { }
