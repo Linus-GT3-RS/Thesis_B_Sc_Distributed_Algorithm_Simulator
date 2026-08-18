@@ -1,11 +1,11 @@
 import TinyQueue from "tinyqueue";
-import { AlgorithmAction, IAlgorithmActionHandler, IAlgorithmActionScheduler } from "../algorithm/actions/ActionHandler.js"
+import { AlgorithmAction, IAlgorithmActionHandler, IAlgorithmActionScheduler } from "../algorithm/actions/ActionScheduler.js"
 import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
 import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
 import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
 import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
 import { DoLogAction, SendMessageAction, UpdateNodeAction } from "../algorithm/actions/Actions.js";
-import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableStoreError } from "../common/EntityStores.js";
+import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError } from "../common/EntityStores.js";
 
 export class InvalidSimulationStateError extends Error { }
 
@@ -23,7 +23,11 @@ export class SimulationContext {
     ) { }
 }
 
-
+//!
+// on error go to new state: invalid state?
+// cant do anyhting in it besideds resetting... but then user would see
+// and could still see the graph
+// or just go to stopped state? naw right cant be
 
 // todo rephrase
 // manages
@@ -38,11 +42,6 @@ export class SimulationEngine
 
     constructor(
         private algorithm: GenericAlgorithm,
-
-        //! what if exc is thrown and queue not cleared?
-        // decide what happens if exc is thrown... reset sim?
-        // also mb catch excp here... clear cache.. and forwad them egain
-        private actionManager: IAlgorithmActionManager,
 
         private dataWorker: AlgorithmDataWorker,
     ) { }

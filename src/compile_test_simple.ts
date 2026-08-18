@@ -2,7 +2,7 @@ import { GenericEdge, GenericNode } from "./domain/algorithm/data/AlgoData.js";
 import { EchoAlgorithmNode } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoData.js";
 import { AlgorithmDataWorker } from "./domain/algorithm/data/AlgoDataWorker.js";
 import { EchoAlgorithm } from "./domain/algorithm_impl/echo_algorithm/EchoAlgorithm.js";
-import { AlgorithmActionHandler } from "./domain/algorithm/actions/ActionHandler.js";
+import { AlgorithmActionHandler } from "./domain/algorithm/actions/ActionScheduler.js";
 import { MessageQueueBuilder } from "./domain/algorithm/data/AlgoDataBuilder.js";
 import Queue from "yocto-queue";
 import { RealtimeClock } from "./domain/simulation/RealtimeClock.js";

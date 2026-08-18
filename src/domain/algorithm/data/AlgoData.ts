@@ -1,3 +1,4 @@
+import { Identifiable } from "../../common/EntityStores.js";
 import { MilisecsSinceEpoch } from "../../common/Time.js";
 
 //* Algorithm Node
@@ -28,7 +29,7 @@ export class GenericMessage {
         public id: number,
 
         public destinationTime: MilisecsSinceEpoch,
-        public receiver: GenericNode,
+        public receiver: Identifiable,
         public data: unknown,
     ) { }
 }

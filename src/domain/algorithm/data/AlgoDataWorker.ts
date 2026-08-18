@@ -3,10 +3,13 @@ import { GenericEdge, GenericMessage, GenericNode } from "./AlgoData.js";
 import { Miliseconds } from "../../common/Time.js";
 import { Identifiable } from "../../common/EntityStores.js";
 
-export class NodeNotFoundError extends Error { }
-export class EdgeNotFoundError extends Error { }
+export class AlgorithmDataWorkerError extends Error { }
 
-
+/**
+ * Has the authority granted by the SimulationEngine to modify simulation state.
+ *
+ * Performs data operations requested by the SimulationEngine.
+ */
 export class AlgorithmDataWorker {
 
     public getNeighborIds(
@@ -32,7 +35,7 @@ export class AlgorithmDataWorker {
      * 
      * @param id 
      * @param edge
-     * @throws NodeNotFoundError
+     * @throws {AlgorithmDataWorkerError}
      */
     public getNodeFromEdge(
         id: number,
@@ -44,7 +47,7 @@ export class AlgorithmDataWorker {
         else if (edge.nodeB.id === id) {
             return edge.nodeB;
         }
-        throw new NodeNotFoundError();
+        throw new AlgorithmDataWorkerError();
     }
 
 
@@ -53,7 +56,7 @@ export class AlgorithmDataWorker {
      * @param nodeAId 
      * @param nodeBId 
      * @param edges 
-     * @throws EdgeNotFoundError if the edge does not exist
+     * @throws {AlgorithmDataWorkerError} if the edge does not exist
      */
     public findEdge(
         id1: number, id2: number,
@@ -66,7 +69,7 @@ export class AlgorithmDataWorker {
                 return edge;
             }
         }
-        throw new EdgeNotFoundError(`
+        throw new AlgorithmDataWorkerError(`
             Edge with id1=${id1} and id2=${id2} not found in edges=${edges}`
         );
     }

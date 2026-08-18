@@ -1,52 +1,33 @@
 import { Identifiable } from "../../common/EntityStores.js";
-import { DoLogAction, SendMessageAction, UpdateNodeAction } from "./Actions.js";
 
-export type AlgorithmAction =
-    DoLogAction
-    | SendMessageAction
-    | UpdateNodeAction
+/**
+ * Lists all Log Actions
+ * available to Algorithm
+ */
+export abstract class ILogActionHandler {
 
-export abstract class IAlgorithmActionScheduler {
-
-    /**
-     * Enqueues given action
-     * @param act
-     */
-    public abstract scheduleAction(act: AlgorithmAction): void;
+    public abstract log(msg: string): void;
 
 }
 
-export abstract class IAlgorithmActionHandler {
 
-    /**
-     * 
-     * @param act 
-     * @throws todo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              */
-    public abstract handle(act: AlgorithmAction, issuerNode: Identifiable): void;
+/**
+ * Lists all Message Actions
+ * available to Algorithm
+ */
+export abstract class IMessageActionHandler {
+
+    public abstract send(msg: unknown, receiver: Identifiable): void;
 
 }
 
-// export abstract class IAlgorithmActionManager {
 
-//     public abstract getDrainIterator(): IterableIterator<unknown>;
+/**
+ * Lists all Node Actions
+ * available to Algorithm
+ */
+// export abstract class INodeActionHandler {
 
-// }
-
-// export class AlgorithmActionHandler
-//     implements
-//     IHandlerAlgorithmAction,
-//     IAlgorithmActionManager {
-
-//     constructor(
-//         private queue: Queue<unknown>,
-//     ) { }
-
-//     public handleAction(action: unknown): void {
-//         this.queue.enqueue(action);
-//     }
-
-//     public getDrainIterator(): IterableIterator<unknown> {
-//         return this.queue.drain();
-//     }
+//     public abstract set(): void;
 
 // }

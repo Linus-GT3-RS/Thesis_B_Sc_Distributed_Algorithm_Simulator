@@ -1,10 +1,10 @@
 import { GenericEdge, GenericNode } from "../algorithm/data/AlgoData.js";
 
+export class IdentifiableError extends Error { }
+
 export interface Identifiable {
     id: number,
 }
-
-export class IdentifiableStoreError extends Error { }
 
 /**
  * Handles storing and retrieving of data that 
@@ -18,11 +18,11 @@ export class IdentifiableStore<T extends Identifiable> {
     /**
      * Inserts item
      * @param target 
-     * @throws IdentifiableStoreError if item with given id already exists
+     * @throws {IdentifiableError} if item with given id already exists
      */
     public insert(target: T): void {
         if (this.map.has(target.id)) {
-            throw new IdentifiableStoreError(
+            throw new IdentifiableError(
                 `Item with id ${target.id} already exists in map.
                 Insertion failed for target ${target}`
             );
@@ -33,11 +33,11 @@ export class IdentifiableStore<T extends Identifiable> {
     /**
      * Updates stored item by setting it to target
      * @param target 
-     * @throws IdentifiableStoreError if no item with given id exists
+     * @throws {IdentifiableError} if no item with given id exists
      */
     public update(target: T): void {
         if (!this.map.has(target.id)) {
-            throw new IdentifiableStoreError(
+            throw new IdentifiableError(
                 `Item with id ${target.id} does not exist in map.
                 Update failed for target ${target}`
             );
@@ -46,14 +46,15 @@ export class IdentifiableStore<T extends Identifiable> {
     }
 
     /**
-     * Returns item with given id
+     * Returns item with given id.
+     * This allows full access to the item.
      * @param target 
-     * @throws IdentifiableStoreError if item with given id does not exist
+     * @throws {IdentifiableError} if item with given id does not exist
      */
     public peek(target: Identifiable): T {
         const res: T | undefined = this.map.get(target.id);
         if (res === undefined) {
-            throw new IdentifiableStoreError(
+            throw new IdentifiableError(
                 `Item with id ${target.id} does not exist in map.
                 Peeking failed for target ${target}`
             );

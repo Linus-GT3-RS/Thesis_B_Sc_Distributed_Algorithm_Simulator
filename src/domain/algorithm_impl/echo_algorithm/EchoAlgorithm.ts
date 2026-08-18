@@ -1,7 +1,8 @@
-import { IAlgorithmActionScheduler } from "../../algorithm/actions/ActionHandler.js";
+import { IAlgorithmActionScheduler } from "../../algorithm/actions/ActionScheduler.js";
 import { SendMessageAction, DoLogAction, UpdateNodeAction } from "../../algorithm/actions/Actions.js";
-import { GenericAlgorithm, InvalidAlgorithmState as InvalidAlgorithmStateError, UnsupportedNodeTypeError as InvalidEntityError } from "../../algorithm/algorithm/Algorithm.js";
+import { AlgorithmExecutionError, GenericAlgorithm } from "../../algorithm/algorithm/Algorithm.js";
 import { GenericNode } from "../../algorithm/data/AlgoData.js";
+import { InvalidSimulationStateError } from "../../simulation/SimulationEngine.js";
 import { EchoAlgorithmNode, InfoMessageData, EchoMessageData } from "./EchoAlgoData.js";
 
 
@@ -23,7 +24,7 @@ export class EchoAlgorithm
     ): void {
         // sanity check
         if (!(roInitiator instanceof EchoAlgorithmNode)) {
-            throw new InvalidEntityError(`
+            throw new AlgorithmExecutionError(`
                 Received unknown Node type when trying to exec InitProtocol. 
                 InvalidEntity node is ${roInitiator}`
             );
@@ -41,7 +42,7 @@ export class EchoAlgorithm
     ): void {
         // sanity check node data
         if (!(roReceiver instanceof EchoAlgorithmNode)) {
-            throw new InvalidEntityError(`
+            throw new AlgorithmExecutionError(`
                 Received unknown receiver Node type when trying to exec MsgProtocol. 
                 InvalidEntity is ${roReceiver}`
             );
@@ -56,7 +57,7 @@ export class EchoAlgorithm
             this.execProtoclOnEchoMsg(receiver, neighborIDs);
         }
         else {
-            throw new InvalidEntityError(
+            throw new AlgorithmExecutionError(
                 `Received unknown MessageData type when trying to exec MsgProtol.
                 InvalidEntity is ${msgData}`
             );
@@ -146,7 +147,7 @@ export class EchoAlgorithm
 
         // else send echo
         if (activeNode.parentID === null) { // Sanity check
-            throw new InvalidAlgorithmStateError(
+            throw new AlgorithmExecutionError(
                 `Error when trying to send echo message.
                 ParentId is null of activeNode=${activeNode}`
             );

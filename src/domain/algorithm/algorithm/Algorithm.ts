@@ -1,10 +1,6 @@
-import { IAlgorithmActionScheduler } from "../actions/ActionHandler.js";
 import { GenericNode } from "../data/AlgoData.js";
 
-export class UnsupportedNodeTypeError extends Error { }
-export class UnsupportedMessageTypeError extends Error { }
-export class InvalidAlgorithmState extends Error { }
-
+export class AlgorithmExecutionError extends Error { }
 
 /**
  * Receives a command to execute the algorithm
@@ -19,8 +15,21 @@ export class InvalidAlgorithmState extends Error { }
  * to a algorithm in a real distributed system, where IDs typically map
  * to network addresses used for communication.
  */
-export abstract class GenericAlgorithm {
 
+
+//! todo use systems
+
+//! todo figure out first how can be generic 
+// and also be built generic 
+
+//! todo let msgs be generic??
+// or ignore for now for simplicity
+
+
+
+
+
+export abstract class GenericAlgorithm {
 
     constructor(
         protected actionHandler: IAlgorithmActionScheduler,
@@ -34,8 +43,7 @@ export abstract class GenericAlgorithm {
      * @param receiver 
      * @param msgData 
      * @param neighborIDs 
-     * @throws InvalidEntityError if Node or MessageData is of invalid type
-     * @throws InvalidAlgorithmStateError if state of context is invalid
+     * @throws {AlgorithmExecutionError}
      */
     public abstract issueIncomingMessage(
         receiver: Readonly<GenericNode>,
@@ -50,9 +58,7 @@ export abstract class GenericAlgorithm {
      * 
      * @param initiator 
      * @param neighborIDs 
-     * @throws InvalidEntityError if Algorithm cannot 
-     *  handle NodeType of initiator
-     * @throws InvalidAlgorithmStateError if state of context is invalid
+     * @throws {AlgorithmExecutionError}
      */
     public abstract issueInitiation(
         initiator: Readonly<GenericNode>,
