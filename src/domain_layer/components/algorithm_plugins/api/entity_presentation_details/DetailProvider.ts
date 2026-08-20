@@ -25,7 +25,7 @@ export abstract class INodeStatePresentationDetailProvider {
      * @param node 
      * @throws {PresentationDetailProviderError} if type is unknown
      */
-    public abstract provide(state: Readonly<NodeState>): Array<PresentationDetail>
+    public abstract provide(state: Readonly<NodeState>): Array<PresentationDetail>;
 
 }
 
@@ -37,7 +37,7 @@ export abstract class IMsgDataPresentationDetailProvider {
          * @param data 
          * @throws {PresentationDetailProviderError} if type is unknown
          */
-    public abstract provide(data: Readonly<MessageData>): Array<PresentationDetail>
+    public abstract provide(data: Readonly<MessageData>): Array<PresentationDetail>;
 
 }
 
@@ -52,7 +52,7 @@ export abstract class IEdgePresentationDetailProvider {
     public abstract provide(
         node1: Readonly<NodeState>,
         node2: Readonly<NodeState>
-    ): Array<PresentationDetail>
+    ): Array<PresentationDetail>;
 
 }
 

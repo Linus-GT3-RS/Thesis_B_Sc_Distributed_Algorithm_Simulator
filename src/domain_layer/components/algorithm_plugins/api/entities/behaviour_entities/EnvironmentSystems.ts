@@ -21,13 +21,13 @@ export class MessageSystemError extends Error { }
 export abstract class ISystemIncomingMessages {
 
     /**
+     * On first call marks the message as received
+     * If this call does not happen, the message will be delivered
+     * indefinitly
      * 
      * @throws {MessageSystemError} if no message is pending
      */
     public abstract peekPendingMessage(): Readonly<MessageData>;
-
-    //?
-    public abstract markPendingAsDelivered(): ?;
 
 }
 

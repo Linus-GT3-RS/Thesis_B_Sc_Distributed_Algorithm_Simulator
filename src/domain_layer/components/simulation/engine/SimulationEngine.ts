@@ -6,6 +6,31 @@ import { AlgorithmDataWorker, NodeNotFoundError } from "./algorithm_plugin_api/e
 import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
 import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError, IdentifiableStore, RoStore as ReadonlyStore } from "../common/EntityStores.js";
 
+
+/**
+ * If any error occurs in simulation, 
+ * this exception is thrown
+ * 
+ * This Exceptions marks the simulation state as
+ * illegal.
+ * 
+ * A reset should occur
+ */
+export class SimulationEngineError extends Error { }
+
+//! this is what state knows
+export abstract class ISimulationEngine {
+
+    public abstract handleInitiation(): void;
+
+    public abstract handlePendingMessages(): void;
+
+}
+
+export abstract class ISimContextPresenter {
+
+}
+
 export class SimulationSnapshot {
     constructor(
         public curSimTimestamp: MilisecondsTimestamp,
@@ -27,14 +52,12 @@ export class SimulationSnapshot {
 
 
 
-//! this is what state knows
-export abstract class ISimulationEngine {
+//! todo
+// always create new process?
+// always create new env
 
-    public abstract handleInitiation(): void;
-
-    public abstract handlePendingMessages(): void;
-
-}
+//! todo 
+// catch exceptions noted in ipad dennis
 
 
 export class SimulationEngine
