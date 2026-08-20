@@ -1,4 +1,4 @@
-import { GenericNode } from "../../algorithm/data/AlgoData.js";
+import { GenericNode, GenericMessageData } from "../../algorithm/data/AlgoData.js";
 
 //* Node Data
 
@@ -18,10 +18,17 @@ export class EchoAlgorithmNode extends GenericNode {
 
 //* Message Data
 
-export class InfoMessageData {
+export class InfoData extends GenericMessageData {
     constructor(
-        public senderID: number
-    ) { }
+        public senderID: number,
+    ) {
+        super("info");
+    }
 }
 
-export class EchoMessageData { }
+export class EchoData extends GenericMessageData {
+    constructor(
+    ) {
+        super("echo");
+    }
+}

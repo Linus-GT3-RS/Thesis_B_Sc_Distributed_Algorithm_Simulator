@@ -1,12 +1,15 @@
+import { ISystemLocalData, MutableNodeKeys } from "../../algorithm/actions/ActionHandler.js";
 import { GenericNode } from "../../algorithm/data/AlgoData.js";
+import { NodeUpdateListener, SimulationUpdateListener } from "../Updates.js";
 
-type MutableNodeKeys<N extends GenericNode> =
-    Exclude<keyof N, keyof GenericNode> // is union
 
-export class NodeSystem<N extends GenericNode> {
+
+export class NodeSystem<N extends GenericNode>
+    implements ISystemLocalData<N> {
 
     constructor(
         private node: N,
+        private readonly updateListener: NodeUpdateListener,
     ) { }
 
     /**
@@ -14,7 +17,7 @@ export class NodeSystem<N extends GenericNode> {
      * @param property 
      * @returns 
      */
-    get<K extends keyof N>(property: K): Readonly<N[K]> {
+    public get<K extends keyof N>(property: K): Readonly<N[K]> {
         return this.node[property];
     }
 
@@ -22,8 +25,9 @@ export class NodeSystem<N extends GenericNode> {
      * Allows to write mutable node properties
      * @param property 
      */
-    set<K extends MutableNodeKeys<N>>(property: K, value: N[K]) {
+    public set<K extends MutableNodeKeys<N>>(property: K, value: N[K]): void {
         this.node[property] = value;
+        this.updateListener.notifyNodeUpdated(this.node);
     }
 
 }

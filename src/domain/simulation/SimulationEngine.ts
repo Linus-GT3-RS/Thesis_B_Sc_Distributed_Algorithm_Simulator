@@ -1,54 +1,64 @@
 import TinyQueue from "tinyqueue";
-import { AlgorithmAction, IAlgorithmActionHandler, IAlgorithmActionScheduler } from "../algorithm/actions/ActionScheduler.js"
-import { GenericEdge, GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
-import { GenericAlgorithm, UnsupportedNodeTypeError } from "../algorithm/algorithm/Algorithm.js";
+import { IAlgorithmActionScheduler } from "../algorithm/actions/ActionScheduler.js"
+import { GenericMessage, GenericNode } from "../algorithm/data/AlgoData.js";
+import { GenericNodeProcess, UnsupportedNodeTypeError } from "../algorithm/algorithm/AlgorithmProtocol.js";
 import { AlgorithmDataWorker, NodeNotFoundError } from "../algorithm/data/AlgoDataWorker.js";
 import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
-import { DoLogAction, SendMessageAction, UpdateNodeAction } from "../algorithm/actions/Actions.js";
-import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError } from "../common/EntityStores.js";
+import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError, IdentifiableStore, RoStore as ReadonlyStore } from "../common/EntityStores.js";
 
-export class InvalidSimulationStateError extends Error { }
-
-export class ErrorImpossibleInitReq extends Error { }
-
-export class SimulationContext {
+export class NodeLog {
     constructor(
+        public id: number,
+        public issuerNode: Identifiable,
+        public msg: string,
+    ) { }
+}
+
+
+export interface PendingMessage {
+    id: number,
+    destinationTime: number
+}
+
+export class SimulationSnapshot {
+    constructor(
+        public curSimTimestamp: MilisecondsTimestamp,
+
         public nodes: GenericNodeStore,
         public edges: GenericEdgeStore,
 
-        public messages: TinyQueue<GenericMessage>,
-        public curSimTimestamp: MilisecondsTimestamp,
+        //! todo i need to store all
+        // but that could give inconsistencies?
+        public pendingMessages: TinyQueue<PendingMessage>,
+        public allMessages: IdentifiableStore<GenericMessage>,
+
+        public logs: IdentifiableStore<NodeLog>,
+
 
         public algoType: AlgorithmIdentifier,
     ) { }
 }
 
-//!
-// on error go to new state: invalid state?
-// cant do anyhting in it besideds resetting... but then user would see
-// and could still see the graph
-// or just go to stopped state? naw right cant be
 
-// todo rephrase
-// manages
-// init -> msg delivery -> algo exec -> algo action handleing
-// time?
-// rendering? or in state?
-/**
- * 
- */
+
+//! this is what state knows
+export abstract class ISimulationEngine {
+
+    public abstract handleInitiation(): void;
+
+    public abstract handlePendingMessages(): void;
+
+}
+
+
 export class SimulationEngine
     implements IAlgorithmActionScheduler {
 
     constructor(
-        private algorithm: GenericAlgorithm,
+        private nodeProcessImitator: GenericNodeProcess,
 
         private dataWorker: AlgorithmDataWorker,
     ) { }
-
-
-
-
 
     //* Messages
 
@@ -65,12 +75,12 @@ export class SimulationEngine
             (next = this.getNextPendingMsg(context)) !== null
         ) {
             const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
-                next.receiver, context.edges.values()
+                next.receiverNode, context.edges.values()
             );
 
             // exec algo
             this.algorithm.issueIncomingMessage(
-                next.receiver, next.data, receiverNeighbors
+                next.receiverNode, next.data, receiverNeighbors
             );
             // handle actions
             this.processIssuedAlgorithmActions(context);
@@ -86,7 +96,7 @@ export class SimulationEngine
         while (snapshot.curSimTimestamp < targetTime) {
 
             const nextPendingMsg: GenericMessage | null = this.dataWorker.dequeueNextPendingMessage(
-                snapshot.messages, targetTime
+                snapshot.pendingMessages, targetTime
             );
             if (nextPendingMsg === null) {
                 snapshot.curSimTimestamp = targetTime;
@@ -126,7 +136,7 @@ export class SimulationEngine
     // wrapper func
     private getNextPendingMsg(context: SimulationContext): GenericMessage | null {
         return this.dataWorker.dequeueNextPendingMessage(
-            context.messages, context.curSimTimestamp
+            context.pendingMessages, context.curSimTimestamp
         );
     }
 

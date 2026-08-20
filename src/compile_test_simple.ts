@@ -1,7 +1,7 @@
 import { GenericEdge, GenericNode } from "./domain/algorithm/data/AlgoData.js";
 import { EchoAlgorithmNode } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoData.js";
 import { AlgorithmDataWorker } from "./domain/algorithm/data/AlgoDataWorker.js";
-import { EchoAlgorithm } from "./domain/algorithm_impl/echo_algorithm/EchoAlgorithm.js";
+import { EchoAlgoNodeProcess } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoProtocol.js";
 import { AlgorithmActionHandler } from "./domain/algorithm/actions/ActionScheduler.js";
 import { MessageQueueBuilder } from "./domain/algorithm/data/AlgoDataBuilder.js";
 import Queue from "yocto-queue";
@@ -39,7 +39,7 @@ const edges = new Map<number, GenericEdge>([
 
 // Setup SimulationEngine
 const actHandler = new AlgorithmActionHandler(new Queue<unknown>());
-const algo = new EchoAlgorithm(actHandler);
+const algo = new EchoAlgoNodeProcess(actHandler);
 const dataWorker = new AlgorithmDataWorker();
 
 const engine = new SimulationEngine(
@@ -58,7 +58,7 @@ engine.handleInitiation(initiatorId, context);
 engine.processMessagesInstantTillSimTime(context);
 
 // Run Simulation
-while (context.messages.length > 0) { // code line just for demo
+while (context.pendingMessages.length > 0) { // code line just for demo
     context.curSimTimestamp += rtClock.getElapsedTime_ms();
 
     engine.processMessagesInstantTillSimTime(context);

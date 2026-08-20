@@ -1,7 +1,7 @@
 import { GenericEdge, GenericNode } from "../../algorithm/data/AlgoData.js";
 import { ColorRenderAttr, DataRenderAttr, RenderAttribute, ThicknessRenderAttr } from "../../algorithm/rendering/RenderAttributes.js";
 import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "../../algorithm/rendering/Renderer.js";
-import { EchoAlgorithmNode, EchoMessageData, InfoMessageData } from "./EchoAlgoData.js";
+import { EchoAlgorithmNode, EchoData, InfoData } from "./EchoAlgoData.js";
 
 // todo feinschliff
 
@@ -91,16 +91,16 @@ export class EchoAlgoMsgDataRenderer
     implements IAlgorithmMessageDataRenderer {
 
     public provide(msg: unknown): Array<RenderAttribute> {
-        if (msg instanceof EchoMessageData) {
+        if (msg instanceof EchoData) {
             return this.onEchoMessageData(msg);
         }
-        else if (msg instanceof InfoMessageData) {
+        else if (msg instanceof InfoData) {
             return this.onInfoMessageData(msg);
         }
         throw new Error(); // todo
     }
 
-    private onEchoMessageData(data: EchoMessageData): Array<RenderAttribute> {
+    private onEchoMessageData(data: EchoData): Array<RenderAttribute> {
         const res = new Array<RenderAttribute>();
 
         // Data
@@ -116,7 +116,7 @@ export class EchoAlgoMsgDataRenderer
         return res;
     }
 
-    private onInfoMessageData(data: InfoMessageData): Array<RenderAttribute> {
+    private onInfoMessageData(data: InfoData): Array<RenderAttribute> {
         const res = new Array<RenderAttribute>();
 
         // Data

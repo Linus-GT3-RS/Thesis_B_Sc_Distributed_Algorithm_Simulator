@@ -1,7 +1,7 @@
 
 // Requests initiation of the algorithm
 
-import { UnsupportedMessageTypeError, UnsupportedNodeTypeError } from "../../algorithm/algorithm/Algorithm.js";
+import { UnsupportedMessageTypeError, UnsupportedNodeTypeError } from "../../algorithm/algorithm/AlgorithmProtocol.js";
 import { RealtimeClock } from "../../simulation/RealtimeClock.js";
 import { SimulationContext, SimulationEngine } from "../../simulation/SimulationEngine.js";
 

@@ -67,8 +67,14 @@ export class IdentifiableStore<T extends Identifiable> {
         return this.map.values();
     }
 
+    public size(): number {
+        return this.map.size;
+    }
+
 }
 
 
 export type GenericNodeStore = IdentifiableStore<GenericNode>;
 export type GenericEdgeStore = IdentifiableStore<GenericEdge>;
+
+export type ReadonlyStore<I extends Identifiable> = Pick<IdentifiableStore<Readonly<I>>, "peek" | "peekAllValues" | "size">  

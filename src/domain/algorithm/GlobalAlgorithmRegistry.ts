@@ -1,5 +1,5 @@
 import { AlgorithmInitiationTypes as AlgorithmInitiationType } from "./algorithm/AlgoInitiationTypes.js";
-import { GenericAlgorithm } from "./algorithm/Algorithm.js";
+import { GenericNodeProcess } from "./algorithm/AlgorithmProtocol.js";
 import { IAlgorithmNodeBuilder } from "./data/AlgoDataBuilder.js";
 import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "./rendering/Renderer.js";
 
@@ -16,7 +16,7 @@ export class AlgorithmRegistryEntry {
         public algorithm: AlgorithmIdentifier,
         public displayName: string,
 
-        public getAlgorithm: () => GenericAlgorithm,
+        public getAlgorithm: () => GenericNodeProcess,
         public initType: AlgorithmInitiationType,
 
         public getNodeBuilder: () => IAlgorithmNodeBuilder,

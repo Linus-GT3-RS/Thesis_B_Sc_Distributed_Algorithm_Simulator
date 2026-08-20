@@ -24,13 +24,19 @@ export class GenericEdge {
 
 //* Algorithm Message
 
+export class GenericMessageData {
+    constructor(
+        public type: string,
+    ) { }
+}
+
 export class GenericMessage {
     constructor(
         public id: number,
 
         public destinationTime: MilisecsSinceEpoch,
-        public receiver: Identifiable,
-        public data: unknown,
+        public receiverNode: Identifiable,
+        public data: GenericMessageData,
     ) { }
 }
 
