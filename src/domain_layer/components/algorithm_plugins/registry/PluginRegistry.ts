@@ -1,6 +1,6 @@
 
 // lists all existing algorithms
-export enum AlgorithmIdentifier {
+export enum AlgorithmPluginIdentifier {
     Echo_Algorithm
 }
 
@@ -9,7 +9,7 @@ export enum AlgorithmIdentifier {
 
 export class AlgorithmRegistryEntry {
     constructor(
-        public algorithm: AlgorithmIdentifier,
+        public algorithm: AlgorithmPluginIdentifier,
         public displayName: string,
 
         public getAlgorithm: () => GenericNodeProcess,
@@ -28,7 +28,7 @@ export class AlgorithmRegistryEntry {
 
 // todo readonly
 export const algorithmRegistry =
-    new Map<AlgorithmIdentifier, AlgorithmRegistryEntry>([
+    new Map<AlgorithmPluginIdentifier, AlgorithmRegistryEntry>([
 
         //? EchoAlgorithm Entry
         // [

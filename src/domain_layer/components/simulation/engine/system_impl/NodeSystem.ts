@@ -1,6 +1,6 @@
 import { ISystemLocalData, MutableNodeKeys } from "../algorithm_plugin_api/actions/Info.Readme/index.js";
 import { GenericNodeState } from "../algorithm_plugin_api/entities/state_entities/AlgoData.js";
-import { NodeUpdateListener, SimulationUpdateListener } from "../Updates.js";
+import { NodeUpdateListener, SimulationUpdateListener } from "../../presenter/Updates.js";
 
 
 

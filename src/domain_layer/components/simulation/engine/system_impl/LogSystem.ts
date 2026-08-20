@@ -1,7 +1,7 @@
 import { ISystemLogging } from "../algorithm_plugin_api/actions/Info.Readme/index.js";
 import { Identifiable, IdentifiableStore } from "../../common/EntityStores.js";
 import { NodeLog } from "../SimulationEngine.js";
-import { LogUpdateListener } from "../Updates.js";
+import { LogUpdateListener } from "../../presenter/Updates.js";
 
 export class LogSystem implements ISystemLogging {
 

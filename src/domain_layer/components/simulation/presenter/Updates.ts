@@ -1,6 +1,6 @@
 import { GenericMessage, GenericNodeState } from "./algorithm_plugin_api/entities/state_entities/AlgoData.js";
 import { Identifiable, ReadonlyStore } from "../common/EntityStores.js";
-import { NodeLog } from "./SimulationEngine.js";
+import { NodeLog } from "../engine/SimulationEngine.js";
 
 /**
  * stores only latest update
