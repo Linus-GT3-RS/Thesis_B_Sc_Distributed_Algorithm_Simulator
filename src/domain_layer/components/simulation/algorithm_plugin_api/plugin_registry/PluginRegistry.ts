@@ -1,7 +1,3 @@
-import { AlgorithmInitiationTypes as AlgorithmInitiationType } from "./entities/behaviour_entities/InitiationPreferences.js";
-import { GenericNodeProcess } from "./algorithm/AlgorithmProtocol.js";
-import { IAlgorithmNodeBuilder } from "../entity_builder/AlgoDataBuilder.js";
-import { IAlgorithmEdgeRenderer, IAlgorithmMessageDataRenderer, IAlgorithmNodeRenderer } from "../entity_presenter/Renderer.js";
 
 // lists all existing algorithms
 export enum AlgorithmIdentifier {

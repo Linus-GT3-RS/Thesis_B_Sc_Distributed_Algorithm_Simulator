@@ -87,6 +87,7 @@ export abstract class ISystemLocalData<N extends NodeState> {
 export abstract class ISystemLogging {
 
     public abstract logInfo(msg: string): void;
+    public abstract logWarning(msg: string): void;
     public abstract logError(msg: string): void;
 
 }
