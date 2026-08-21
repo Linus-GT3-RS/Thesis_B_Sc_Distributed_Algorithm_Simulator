@@ -3,7 +3,7 @@ import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_p
 import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/state_entities/Edges.js";
 import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { MessageStateObserver } from "../../presenter/SimSnapshotObserver.js";
-import { MessageQueue as PendingMessageQueue, MessageStateStore, EdgeStateStore } from "../../SimulationSnapshot.js";
+import { MessageQueue as PendingMessageQueue, MessageStateStore } from "../../SimulationSnapshot.js";
 import { NeighborStore, NodeNeighbor, SimSnapshotDataWorker as SimSnapshotDataWorker } from "../../worker/EntityWorker.js";
 
 //* Types
@@ -14,7 +14,7 @@ export type ReadonlyEdgeStore = ReadonlyIndexedStore<BiDirectionalEdgeState>;
 //* System
 
 /**
- * The {@link MsgSenderSystem} is part of the SimulationEngine and 
+ * The {@link MessageSenderSystem} is part of the SimulationEngine and 
  * implements a system of the {@link NodeProcessEnvironment}.
  *
  * From the perspective of a NodeProcess, the system behaves as a
@@ -26,7 +26,7 @@ export type ReadonlyEdgeStore = ReadonlyIndexedStore<BiDirectionalEdgeState>;
  * into simulation-specific actions, such as queuing messages, creating log
  * entries, or updating the presentation.
  */
-export class MsgSenderSystem implements IOutgoingMessageSystem {
+export class MessageSenderSystem implements IOutgoingMessageSystem {
 
     // represents neighbors of scoped node
     private scopedNeighborStore: NeighborStore | null = null;

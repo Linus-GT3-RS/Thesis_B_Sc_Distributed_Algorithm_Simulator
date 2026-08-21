@@ -1,6 +1,10 @@
-import { ISystemIncomingMessages } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
+import { ISystemIncomingMessages, MessageSystemError } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
+import { MessageData } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 
 //* System
+
+//? todo make msg only deliverd
+// if it got actively retrieved by node process?
 
 /**
  * The {@link MessageDeliverySystem} is part of the SimulationEngine and 
@@ -19,8 +23,16 @@ export class MessageDeliverySystem
     implements ISystemIncomingMessages {
 
     constructor(
-
+        private pendingMessage: Readonly<MessageData> | null,
     ) { }
+
+
+    public readPendingMessage(): Readonly<MessageData> {
+        if (this.pendingMessage === null) {
+            throw new MessageSystemError('No Pending Message');
+        }
+        return this.pendingMessage;
+    }
 
 
 

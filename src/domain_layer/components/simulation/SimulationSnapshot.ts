@@ -27,15 +27,9 @@ export class SimulationSnapshot<N extends NodeState> {
         public msgStates: MessageStateStore, // contains all msgs
         public pendingMessages: MessageQueue, // contains all pending msgs
 
+        public simulationTimestamp: number,
 
-
-
-
-
-
-        public curSimTimestamp: MilisecondsTimestamp,
-
-        public algoType: AlgorithmIdentifier,
+        // public algoType: AlgorithmIdentifier,
     ) { }
 }
 

@@ -21,7 +21,7 @@ export class EchoAlgorithmNodeProcess
         for (const neighbor of env.out.getNeighborIterator()) {
             const msg: InfoData =
                 new InfoData({ id: env.local.get("id") });
-            env.out.send(msg, neighbor);
+            env.out.send(msg, neighbor.id);
         }
     }
 
@@ -29,7 +29,7 @@ export class EchoAlgorithmNodeProcess
     public onIncomingMessage(
         env: NodeProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
-        const msg: Readonly<MessageData> = env.in.peekPendingMessage();
+        const msg: Readonly<MessageData> = env.in.readPendingMessage();
 
         // check if msg can be handled
         if (msg instanceof InfoData) {
@@ -66,9 +66,7 @@ export class EchoAlgorithmNodeProcess
 
                     const infoMsgData: InfoData =
                         new InfoData({ id: env.local.get("id") });
-                    env.out.send(
-                        infoMsgData, neighbor
-                    );
+                    env.out.send(infoMsgData, neighbor.id);
                 }
             }
         }
@@ -117,7 +115,7 @@ export class EchoAlgorithmNodeProcess
         const parent: Readonly<Identifiable> | null =
             env.local.get("parentID");
         if (parent !== null) {
-            env.out.send(new EchoData(), parent);
+            env.out.send(new EchoData(), parent.id);
         }
         else { // node is in invalid state somehow
             env.up.logError(

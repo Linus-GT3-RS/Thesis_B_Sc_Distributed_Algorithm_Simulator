@@ -13,9 +13,9 @@
         "noImplicitAny": true,
         "sourceMap": true,
         "rootDir": "src",
-        "outDir": ".build/"
+        "outDir": ".build/src"
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
     ]
 }
