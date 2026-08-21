@@ -1,35 +1,35 @@
-import { Identifiable, IdentifiableError } from "../common/EntityStores.js";
+// import { Identifiable, IdentifiableError } from "../common/EntityStores.js";
 
-class MyA {
-    constructor(
-        public id: number,
-        public name: string
-    ) { }
-}
+// class MyA {
+//     constructor(
+//         public id: number,
+//         public name: string
+//     ) { }
+// }
 
-const a: Identifiable = new MyA(10, "peter");
-
-
-function getVal(key: keyof Identifiable): void {
-    console.log(a[key]);
-}
+// const a: Identifiable = new MyA(10, "peter");
 
 
-const keys: string[] = Object.keys(a);
-const myKey: string = "id";
+// function getVal(key: keyof Identifiable): void {
+//     console.log(a[key]);
+// }
 
-function isKey(key: string): boolean {
-    return keys.includes(key);
-}
 
-function keyDataType(key: string): void {
-    if (isKey(key)) {
-        const idk: unknown = ((a as unknown) as Record<string, unknown>)[key];
-        console.log(typeof idk);
-    }
-    else {
-        console.log("this is no key goofy");
-    }
-}
+// const keys: string[] = Object.keys(a);
+// const myKey: string = "id";
 
-keyDataType(myKey);
+// function isKey(key: string): boolean {
+//     return keys.includes(key);
+// }
+
+// function keyDataType(key: string): void {
+//     if (isKey(key)) {
+//         const idk: unknown = ((a as unknown) as Record<string, unknown>)[key];
+//         console.log(typeof idk);
+//     }
+//     else {
+//         console.log("this is no key goofy");
+//     }
+// }
+
+// keyDataType(myKey);

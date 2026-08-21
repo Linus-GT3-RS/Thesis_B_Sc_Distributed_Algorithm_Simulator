@@ -1,6 +1,6 @@
 
-export abstract class DomainCommand { }
+// export abstract class DomainCommand { }
 
-export class LoadGraphconfigCmd extends DomainCommand {
-    // filepath
-}
+// export class LoadGraphconfigCmd extends DomainCommand {
+//     // filepath
+// }

@@ -1,26 +1,26 @@
-import { GenericBiDirectionalEdge, GenericNodeState } from "../simulation/algorithm_plugin_api/entities/state_entities/AlgoData.js";
+// import { GenericBiDirectionalEdge, GenericNodeState } from "../simulation/algorithm_plugin_api/entities/state_entities/AlgoData.js";
 
-//* Node Capsule
+// //* Node Capsule
 
-export class NodeCapsule extends GenericNodeState {
-    constructor(
-        id: number,
+// export class NodeCapsule extends GenericNodeState {
+//     constructor(
+//         id: number,
 
-        public properties: string //? todo
-    ) {
-        super(id);
-    }
+//         public properties: string //? todo
+//     ) {
+//         super(id);
+//     }
 
-}
+// }
 
 
-//* Generic Graphconfig
+// //* Generic Graphconfig
 
-export class GenericGraphconfig {
+// export class GenericGraphconfig {
 
-    public constructor(
-        public nodes: Array<NodeCapsule>,
-        public edges: Array<GenericBiDirectionalEdge>,
-    ) { }
-}
+//     public constructor(
+//         public nodes: Array<NodeCapsule>,
+//         public edges: Array<GenericBiDirectionalEdge>,
+//     ) { }
+// }
 

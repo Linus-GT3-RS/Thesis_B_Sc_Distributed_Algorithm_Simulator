@@ -1,15 +1,15 @@
 
 
-export abstract class IHandlerTestCmd {
+// export abstract class IHandlerTestCmd {
 
-    public abstract handleTest(text: string): void;
-}
+//     public abstract handleTest(text: string): void;
+// }
 
-export class GenericGraphconfigState
-    implements IHandlerTestCmd {
+// export class GenericGraphconfigState
+//     implements IHandlerTestCmd {
 
-    public handleTest(text: string): void {
-        console.log(text);
-    }
+//     public handleTest(text: string): void {
+//         console.log(text);
+//     }
 
-}
+// }

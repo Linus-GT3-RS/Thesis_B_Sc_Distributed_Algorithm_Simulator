@@ -1,55 +1,55 @@
 
-// lists all existing algorithms
-export enum AlgorithmPluginIdentifier {
-    Echo_Algorithm
-}
+// // lists all existing algorithms
+// export enum AlgorithmPluginIdentifier {
+//     Echo_Algorithm
+// }
 
 
-//* Algorithm RegistryEntry
+// //* Algorithm RegistryEntry
 
-export class AlgorithmRegistryEntry {
-    constructor(
-        public algorithm: AlgorithmPluginIdentifier,
-        public displayName: string,
+// export class AlgorithmRegistryEntry {
+//     constructor(
+//         public algorithm: AlgorithmPluginIdentifier,
+//         public displayName: string,
 
-        public getAlgorithm: () => GenericNodeProcess,
-        public initType: AlgorithmInitiationType,
+//         public getAlgorithm: () => GenericNodeProcess,
+//         public initType: AlgorithmInitiationType,
 
-        public getNodeBuilder: () => IAlgorithmNodeBuilder,
+//         public getNodeBuilder: () => IAlgorithmNodeBuilder,
 
-        public getNodeRenderer: () => IAlgorithmNodeRenderer,
-        public getEdgeRenderer: () => IAlgorithmEdgeRenderer,
-        public getMessageDataRenderer: () => IAlgorithmMessageDataRenderer,
-    ) { }
-}
+//         public getNodeRenderer: () => IAlgorithmNodeRenderer,
+//         public getEdgeRenderer: () => IAlgorithmEdgeRenderer,
+//         public getMessageDataRenderer: () => IAlgorithmMessageDataRenderer,
+//     ) { }
+// }
 
 
-//* Algorithm Registry
+// //* Algorithm Registry
 
-// todo readonly
-export const algorithmRegistry =
-    new Map<AlgorithmPluginIdentifier, AlgorithmRegistryEntry>([
+// // todo readonly
+// export const algorithmRegistry =
+//     new Map<AlgorithmPluginIdentifier, AlgorithmRegistryEntry>([
 
-        //? EchoAlgorithm Entry
-        // [
-        //     AlgorithmIdentifier.Echo_Algorithm,
-        //     new AlgorithmRegistryEntry(
-        //         AlgorithmIdentifier.Echo_Algorithm,
-        //         "Echo Algorithmus",
+//         //? EchoAlgorithm Entry
+//         // [
+//         //     AlgorithmIdentifier.Echo_Algorithm,
+//         //     new AlgorithmRegistryEntry(
+//         //         AlgorithmIdentifier.Echo_Algorithm,
+//         //         "Echo Algorithmus",
 
-        //         () => new EchoAlgorithm(new AlgorithmActionHandler()),
-        //         AlgorithmInitiationType.Single,
+//         //         () => new EchoAlgorithm(new AlgorithmActionHandler()),
+//         //         AlgorithmInitiationType.Single,
 
-        //         () => new EchoAlgorithmNodeBuilder(),
+//         //         () => new EchoAlgorithmNodeBuilder(),
 
-        //         () => new EchoAlgorithmNodeRenderer(),
-        //         () => new EchoAlgorithmEdgeRenderer(),
-        //         () => new EchoAlgoMsgDataRenderer(),
-        //     )
-        // ],
+//         //         () => new EchoAlgorithmNodeRenderer(),
+//         //         () => new EchoAlgorithmEdgeRenderer(),
+//         //         () => new EchoAlgoMsgDataRenderer(),
+//         //     )
+//         // ],
 
-        //? AnotherAlgorithm Entry
+//         //? AnotherAlgorithm Entry
 
-    ]);
+//     ]);
 
 

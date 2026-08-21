@@ -1,11 +1,20 @@
-import TinyQueue from "tinyqueue";
-import { IAlgorithmActionScheduler } from "./algorithm_plugin_api/actions/ActionScheduler.js"
-import { GenericMessage, GenericNodeState } from "./algorithm_plugin_api/entities/state_entities/AlgoData.js";
-import { GenericNodeProcess, UnsupportedNodeTypeError } from "./algorithm_plugin_api/algorithm/AlgorithmProtocol.js";
-import { AlgorithmDataWorker, NodeNotFoundError } from "./algorithm_plugin_api/entities/state_entities/AlgoDataWorker.js";
-import { Miliseconds as MilisecondsTimestamp } from "../common/Time.js";
-import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError, IdentifiableStore, RoStore as ReadonlyStore } from "../common/EntityStores.js";
+import { INodeProcess } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
+import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
+import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { EntityStateObserver } from "../presenter/SimSnapshotObserver.js";
+import { PendingMessage, SimulationSnapshot } from "../SimulationSnapshot.js";
+import { SimSnapshotDataWorker } from "../worker/EntityWorker.js";
+import { LogSystem } from "./env_system_impl/LogSystem.js";
+import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
+import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
+import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 
+//! todo full rework
+
+
+//* Errors
 
 /**
  * If any error occurs in simulation, 
@@ -18,226 +27,268 @@ import { GenericEdgeStore, GenericNodeStore, Identifiable, IdentifiableError, Id
  */
 export class SimulationEngineError extends Error { }
 
-//! this is what state knows
+//* Engine
+
 export abstract class ISimulationEngine {
 
-    public abstract handleInitiation(): void;
+    public abstract handleInitiation(id: number): void; // todo move out? not engine task? or doesnt matter
 
     public abstract handlePendingMessages(): void;
 
 }
 
-export abstract class ISimContextPresenter {
-
-}
 
 
-
-
-
-//! todo
-// always create new process?
-// always create new env
-
-//! todo 
-// catch exceptions noted in ipad dennis
-
-
-export class SimulationEngine
-    implements IAlgorithmActionScheduler {
+export class SimEng<N extends NodeState> implements ISimulationEngine {
 
     constructor(
-        private nodeProcessImitator: GenericNodeProcess,
-
-        private dataWorker: AlgorithmDataWorker,
+        private snapshot: SimulationSnapshot<N>,
+        private process: INodeProcess<N>,
+        private worker: SimSnapshotDataWorker,
     ) { }
 
-    //* Messages
+    public handleInitiation(id: number): void {
+        const dummy = new Set<number>();
 
-    //! todo remove then?
-    // just make sim get context at time x and futre time y
-    // and do the sim magic until future time
-    // and if time is stpeped outside or rt we do not care
-    // does that work with catch up?
-    public processMessagesInstantTillSimTime(context: SimulationContext) {
-        let next: GenericMessage | null = null;
+        const env: NodeProcessEnvironment<N> = {
+            up: new LogSystem(
+                this.snapshot.logs,
+                new EntityStateObserver<NodeLog>(dummy),
+                id
+            ),
+            local: new NodeStateSystem<N>(
+                this.snapshot.nodeStates,
+                new EntityStateObserver<NodeState>(dummy),
+                id
+            ),
+            in: new MessageDeliverySystem(
+                null
+            ),
+            out: new MessageSenderSystem(
+                this.snapshot.msgStates,
+                this.snapshot.pendingMessages,
+                this.snapshot.simulationTimestamp,
+                new EntityStateObserver<MessageState>(dummy),
+                this.snapshot.edgeStates,
+                this.worker,
+                id
+            ),
+        };
 
-        // iterate all pending msgs 
-        while (
-            (next = this.getNextPendingMsg(context)) !== null
-        ) {
-            const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
-                next.receiverNode, context.edges.values()
-            );
-
-            // exec algo
-            this.algorithm.issueIncomingMessage(
-                next.receiverNode, next.data, receiverNeighbors
-            );
-            // handle actions
-            this.processIssuedAlgorithmActions(context);
-        }
+        this.process.onInitiationInstruction(env);
     }
 
-
-    //todo or give engine the sim_time obj?
-    /**
-     * go thorugh msgs step by step time till target time
-     */
-    public execStepwiseUntil(snapshot: SimulationContext, targetTime: MilisecondsTimestamp): void {
-        while (snapshot.curSimTimestamp < targetTime) {
-
-            const nextPendingMsg: GenericMessage | null = this.dataWorker.dequeueNextPendingMessage(
-                snapshot.pendingMessages, targetTime
-            );
-            if (nextPendingMsg === null) {
-                snapshot.curSimTimestamp = targetTime;
-                return;
-            }
-
-            // update sim time
-            snapshot.curSimTimestamp = nextPendingMsg.destinationTime;
-
-            // let algo handle msg
-            const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
-                next.receiver, context.edges.values()
-            );
-            this.algorithm.issueIncomingMessage(
-                next.receiver, next.data, receiverNeighbors
+    public handlePendingMessages(): void {
+        let nextPending: PendingMessage | null =
+            this.worker.dequeueNextPendingMessage(
+                this.snapshot.pendingMessages,
+                this.snapshot.simulationTimestamp,
             );
 
-            // process algo actions
-            this.processIssuedAlgorithmActions(context);
-
-
-        }
-
-
-
-        // iterate all pending msgs  until target time
-        while (
-            (next = ) !== null
-        ) {
-            now = next.destinationTime;
-
-            //todo
+        while (nextPending !== null) { // pending messages exist
             // deliver
-        }
-    }
-
-    // wrapper func
-    private getNextPendingMsg(context: SimulationContext): GenericMessage | null {
-        return this.dataWorker.dequeueNextPendingMessage(
-            context.pendingMessages, context.curSimTimestamp
-        );
-    }
-
-
-
-
-    //* Initiation 
-
-    /**
-     * Executes the initiation protocol for the specified node.
-     * Happens immediately at the current simulation time,
-     * therefore simulation time does not get advanced
-     * 
-     * @param initiatorId
-     * @param context 
-     * @throws ErrorImpossibleInitReq if initiator id is invalid
-     * @throws ErrorInvalidSimulationState if simulation state is invalid
-     */
-    public handleInitiation(initiatorId: number, context: SimulationContext) {
-        try {
-            // get data for algorithm
-            const initiator: GenericNodeState = this.dataWorker.getNode(
-                initiatorId, context.nodes
+            const msg: MessageState = this.snapshot.msgStates.read(
+                nextPending
             );
-            const neighbors: Array<number> = this.dataWorker.getNeighborIds(
-                initiator, context.edges.values()
+            const dummy = new Set<number>();
+
+            const env: NodeProcessEnvironment<N> = {
+                up: new LogSystem(
+                    this.snapshot.logs,
+                    new EntityStateObserver<NodeLog>(dummy),
+                    msg.receiverNode.id
+                ),
+                local: new NodeStateSystem<N>(
+                    this.snapshot.nodeStates,
+                    new EntityStateObserver<NodeState>(dummy),
+                    msg.receiverNode.id
+                ),
+                in: new MessageDeliverySystem(
+                    msg.data
+                ),
+                out: new MessageSenderSystem(
+                    this.snapshot.msgStates,
+                    this.snapshot.pendingMessages,
+                    this.snapshot.simulationTimestamp,
+                    new EntityStateObserver<MessageState>(dummy),
+                    this.snapshot.edgeStates,
+                    this.worker,
+                    msg.receiverNode.id
+                ),
+            };
+
+            this.process.onIncomingMessage(env);
+
+            nextPending = this.worker.dequeueNextPendingMessage(
+                this.snapshot.pendingMessages,
+                this.snapshot.simulationTimestamp,
             );
-
-            // exec algorithm
-            this.algorithm.issueInitiation(initiator, neighbors);
-
-            // processed issued actions
-            this.processIssuedAlgorithmActions(context); // todo?
-        }
-        catch (error: unknown) {
-            if (error instanceof NodeNotFoundError) {
-                throw new ErrorImpossibleInitReq(); //? todo msg
-            }
-            else if (error instanceof UnsupportedNodeTypeError) {
-                throw new ErrorInvalidSimulationState(); // todo? msg
-            }
-            else if (/**action error */) {
-
-            }
-            else {
-                throw error;
-            }
         }
     }
+
 }
 
 
 
+// //! todo 
+// // catch exceptions noted in ipad dennis
 
 
+// export class SimulationEngine
+//     implements IAlgorithmActionScheduler {
 
-// export class IthinkThisIsState {
 
+//     //* Messages
 
-//     //* Command Handling
+//     //! todo remove then?
+//     // just make sim get context at time x and futre time y
+//     // and do the sim magic until future time
+//     // and if time is stpeped outside or rt we do not care
+//     // does that work with catch up?
+//     public processMessagesInstantTillSimTime(context: SimulationContext) {
+//         let next: GenericMessage | null = null;
 
-//     // todo make it return callback funcs? so that this func only throws one error
-//     // -> or better a simple wrapper functions that does call
-//     /**
-//      * 
-//      * @param cmd 
-//      * @throws UnsupportedSimulationCommandError
-//      */
-//     private processCommand(cmd: unknown): void {
-//         if (cmd instanceof InitiationRequestSimulationCmd) {
-//             this.onInitiationRequestCmd(cmd);
-//         }
-//         else {
-//             throw new UnsupportedSimulationCommandError(
-//                 `Cannot process command: ${cmd}`
+//         // iterate all pending msgs 
+//         while (
+//             (next = this.getNextPendingMsg(context)) !== null
+//         ) {
+//             const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
+//                 next.receiverNode, context.edges.values()
 //             );
-//         }
-//     }
 
-//     // InitiationRequest Cmd
-//     private onInitiationRequestCmd(cmd: InitiationRequestSimulationCmd): void {
-//         catch (error: unknown) {
-//             if (error instanceof NodeNotFoundError) {
-//                 // todo ev
-//             }
-//             else if (error instanceof UnsupportedNodeTypeError) {
-//                 // todo ev
-//             }
+//             // exec algo
+//             this.algorithm.issueIncomingMessage(
+//                 next.receiverNode, next.data, receiverNeighbors
+//             );
+//             // handle actions
+//             this.processIssuedAlgorithmActions(context);
 //         }
 //     }
 
 
-//     // Stop Cmd
-//     //? todo emit context?
-//     private onStopCmd(): void {
-//         throw new Error();
+//     //todo or give engine the sim_time obj?
+//     /**
+//      * go thorugh msgs step by step time till target time
+//      */
+//     public execStepwiseUntil(snapshot: SimulationContext, targetTime: MilisecondsTimestamp): void {
+//         while (snapshot.curSimTimestamp < targetTime) {
+
+//             const nextPendingMsg: GenericMessage | null = this.dataWorker.dequeueNextPendingMessage(
+//                 snapshot.pendingMessages, targetTime
+//             );
+//             if (nextPendingMsg === null) {
+//                 snapshot.curSimTimestamp = targetTime;
+//                 return;
+//             }
+
+//             // update sim time
+//             snapshot.curSimTimestamp = nextPendingMsg.destinationTime;
+
+//             // let algo handle msg
+//             const receiverNeighbors: Array<number> = this.dataWorker.getNeighborIds(
+//                 next.receiver, context.edges.values()
+//             );
+//             this.algorithm.issueIncomingMessage(
+//                 next.receiver, next.data, receiverNeighbors
+//             );
+
+//             // process algo actions
+//             this.processIssuedAlgorithmActions(context);
+
+
+//         }
+
+
+
+//         // iterate all pending msgs  until target time
+//         while (
+//             (next = ) !== null
+//         ) {
+//             now = next.destinationTime;
+
+//             //todo
+//             // deliver
+//         }
 //     }
 
-//     //? todo run? or start and continue?
-//     private onRunCmd(): void {
-//         throw new Error();
+//     // wrapper func
+//     private getNextPendingMsg(context: SimulationContext): GenericMessage | null {
+//         return this.dataWorker.dequeueNextPendingMessage(
+//             context.pendingMessages, context.curSimTimestamp
+//         );
 //     }
 
-//     // private onResumeCmd(): void {
-//     //     // const diff_ms: number = this.now - this.lastStopTime;
 
-//     //     // for (const msg of this.messageQueue) {
-//     //     //     msg.destinationTime += diff_ms;
 
-//     //     //     // todo updt queue??
-//     //     // }
-//     // }
+
+//     //* Initiation 
+
+//     /**
+//      * Executes the initiation protocol for the specified node.
+//      * Happens immediately at the current simulation time,
+//      * therefore simulation time does not get advanced
+//      */
+//     public handleInitiation(initiatorId: number, context: SimulationContext);
+// }
+
+
+
+
+
+
+// // export class IthinkThisIsState {
+
+
+// //     //* Command Handling
+
+// //     // todo make it return callback funcs? so that this func only throws one error
+// //     // -> or better a simple wrapper functions that does call
+// //     /**
+// //      * 
+// //      * @param cmd 
+// //      * @throws UnsupportedSimulationCommandError
+// //      */
+// //     private processCommand(cmd: unknown): void {
+// //         if (cmd instanceof InitiationRequestSimulationCmd) {
+// //             this.onInitiationRequestCmd(cmd);
+// //         }
+// //         else {
+// //             throw new UnsupportedSimulationCommandError(
+// //                 `Cannot process command: ${cmd}`
+// //             );
+// //         }
+// //     }
+
+// //     // InitiationRequest Cmd
+// //     private onInitiationRequestCmd(cmd: InitiationRequestSimulationCmd): void {
+// //         catch (error: unknown) {
+// //             if (error instanceof NodeNotFoundError) {
+// //                 // todo ev
+// //             }
+// //             else if (error instanceof UnsupportedNodeTypeError) {
+// //                 // todo ev
+// //             }
+// //         }
+// //     }
+
+
+// //     // Stop Cmd
+// //     //? todo emit context?
+// //     private onStopCmd(): void {
+// //         throw new Error();
+// //     }
+
+// //     //? todo run? or start and continue?
+// //     private onRunCmd(): void {
+// //         throw new Error();
+// //     }
+
+// //     // private onResumeCmd(): void {
+// //     //     // const diff_ms: number = this.now - this.lastStopTime;
+
+// //     //     // for (const msg of this.messageQueue) {
+// //     //     //     msg.destinationTime += diff_ms;
+
+// //     //     //     // todo updt queue??
+// //     //     // }
+// //     // }
