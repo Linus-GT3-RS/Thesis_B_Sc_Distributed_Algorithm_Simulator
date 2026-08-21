@@ -15,8 +15,3 @@ export class MessageState {
         public data: MessageData,
     ) { }
 }
-
-export interface PendingMessage {
-    id: number,
-    destinationTime: number
-}

@@ -2,36 +2,6 @@ import { GenericMessage, GenericNodeState } from "./algorithm_plugin_api/entitie
 import { Identifiable, ReadonlyStore } from "../common/EntityStores.js";
 import { NodeLog } from "../engine/SimulationEngine.js";
 
-/**
- * stores only latest update
- * better performance
- */
-export class SimulationUpdateListener {
-
-    constructor(
-        private readonly updatedNodes: Set<number>,
-        private readonly updatedMessages: Set<number>,
-        private readonly updatedLogs: Set<number>,
-    ) { }
-
-    public notifyNodeUpdated(node: Readonly<Identifiable>): void {
-        this.updatedNodes.add(node.id);
-    }
-
-    public notifyMessageUpdated(msg: Readonly<Identifiable>): void {
-        this.updatedMessages.add(msg.id);
-    }
-
-    public notifyLogUpdated(log: Readonly<Identifiable>): void {
-        this.updatedLogs.add(log.id);
-    }
-
-}
-
-export type NodeUpdateListener = Pick<SimulationUpdateListener, "notifyNodeUpdated">;
-export type MessageUpdateListener = Pick<SimulationUpdateListener, "notifyMessageUpdated">;
-export type LogUpdateListener = Pick<SimulationUpdateListener, "notifyLogUpdated">;
-
 
 
 export class SimulationSnapshotPresenter {

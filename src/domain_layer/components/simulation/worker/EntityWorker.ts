@@ -3,31 +3,62 @@ import { Identifiable } from "../../../../../../common/EntityStores.js";
 import { Miliseconds } from "../../../../../../common/Time.js";
 import { GenericNodeState } from "../state_entities/Nodes.js";
 import { GenericBiDirectionalEdgeState } from "../state_entities/Edges.js";
+import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/env_system_impl/MsgSenderSystem.js";
+import { IndexedStore } from "../../../../common/EntityStores.js";
 
 export class SimulationEntityWorkerError extends Error { }
 
+export interface NodeNeighbor {
+    id: number
+    distance_ms: number
+}
+export type NeighborStore = IndexedStore<NodeNeighbor>;
+export type Neighbor = Readonly<IndexedStore<Readonly<NodeNeighbor>>>;
+
 /**
  * Performs data operations
+ * on a SimulationSnapshot
  */
+export class SimSnapshotDataWorker {
+
+    /**
+     * Returns all neighbors of a node
+     * 
+     * @param edgeStates 
+     * @param scopedNode 
+     */
+    public getNodeNeighbors(
+        edgeStates: ReadonlyEdgeStateStore,
+        scopedNode: number,
+    ): NeighborStore {
+        const neighbors: NeighborStore = new IndexedStore<NodeNeighbor>();
+
+        for (const edgeState of edgeStates.readAllValues()) {
+            if (scopedNode === edgeState.nodeA.id) {
+                neighbors.insert({
+                    id: edgeState.nodeB.id,
+                    distance_ms: edgeState.length_ms
+                });
+            }
+            else if (scopedNode === edgeState.nodeB.id) {
+                neighbors.insert({
+                    id: edgeState.nodeA.id,
+                    distance_ms: edgeState.length_ms
+                });
+            }
+        }
+
+        return neighbors;
+    }
+
+
+
+}
+
+
 export class SimulationEntityWorker {
 
-    // public getNeighborIds(
-    //     targetNode: Identifiable,
-    //     edges: MapIterator<Readonly<GenericBiDirectionalEdgeState>>
-    // ): Array<number> {
-    //     const neighbors: Array<number> = new Array();
 
-    //     for (const edge of edges) {
-    //         if (edge.nodeA.id === targetNode.id) {
-    //             neighbors.push(edge.nodeB.id);
-    //         }
-    //         else if (edge.nodeB.id === targetNode.id) {
-    //             neighbors.push(edge.nodeA.id);
-    //         }
-    //     }
-
-    //     return neighbors;
-    // }
 
 
     // /**

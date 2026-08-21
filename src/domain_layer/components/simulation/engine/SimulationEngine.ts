@@ -31,24 +31,7 @@ export abstract class ISimContextPresenter {
 
 }
 
-export class SimulationSnapshot {
-    constructor(
-        public curSimTimestamp: MilisecondsTimestamp,
 
-        public nodes: GenericNodeStore,
-        public edges: GenericEdgeStore,
-
-        //! todo i need to store all
-        // but that could give inconsistencies?
-        public pendingMessages: TinyQueue<PendingMessage>,
-        public allMessages: IdentifiableStore<GenericMessage>,
-
-        public logs: IdentifiableStore<NodeLog>,
-
-
-        public algoType: AlgorithmIdentifier,
-    ) { }
-}
 
 
 

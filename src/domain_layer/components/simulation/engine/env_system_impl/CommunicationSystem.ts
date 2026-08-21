@@ -4,24 +4,12 @@ import { GenericBiDirectionalEdge, GenericMessage, GenericMessageData } from "..
 import { IdentifiableStore, Identifiable, ReadonlyStore } from "../../common/EntityStores.js";
 import { PendingMessage } from "../SimulationEngine.js";
 
-export interface Neighbor {
-    id: number,
-    distance_ms: number,
-}
-export type NeighborStore = IdentifiableStore<Neighbor>
 
-
-export class MessageReceiver {
-
-}
-
-export class MessageSender {
 
 }
 
 
 
-const coms: ComSystem;
 
 export class CommunicationSystem implements ISystemOutgoingMessages {
 

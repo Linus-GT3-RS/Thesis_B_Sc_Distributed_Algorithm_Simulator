@@ -18,7 +18,7 @@ export class EchoAlgorithmNodeProcess
         env.local.set("isInformed", true);
 
         // inform neighbors
-        for (const neighbor of env.out.getNeighborList()) {
+        for (const neighbor of env.out.getNeighborIterator()) {
             const msg: InfoData =
                 new InfoData({ id: env.local.get("id") });
             env.out.send(msg, neighbor);
@@ -61,7 +61,7 @@ export class EchoAlgorithmNodeProcess
             env.local.set("parentID", parent);
 
             // inform all neighbors except parent
-            for (const neighbor of env.out.getNeighborList()) {
+            for (const neighbor of env.out.getNeighborIterator()) {
                 if (neighbor.id != parent.id) {
 
                     const infoMsgData: InfoData =

@@ -39,7 +39,7 @@ export abstract class ISystemIncomingMessages {
  * correctly by the system admin. 
  * 
  */
-export abstract class ISystemOutgoingMessages {
+export abstract class IOutgoingMessageSystem {
 
     /**
      * sends message via udp like communication
@@ -48,22 +48,22 @@ export abstract class ISystemOutgoingMessages {
     * 
      * @param msg 
      * @param receiver 
-     * @throws {MessageSystemError} if no edge to receiver exists
+     * @throws {MessageSystemError} if sender does not know receiver
      */
-    public abstract send(msg: MessageData, receiver: Identifiable): void;
+    public abstract send(msg: MessageData, receiver: number): void;
 
     public abstract getNeighborCount(): number;
-    public abstract getNeighborList(): MapIterator<Readonly<Identifiable>>;
+    public abstract getNeighborIterator(): MapIterator<Readonly<Identifiable>>;
 
 }
 
 
-//* Local Node State
+//* LocalNodeState Data
 
 export type MutableNodeStateKeys<N extends NodeState> =
     Exclude<keyof N, keyof NodeState> // is union
 
-export abstract class ISystemLocalData<N extends NodeState> {
+export abstract class ILocalDataEnvSystem<N extends NodeState> {
 
     /**
      * Allows to read all node properties
@@ -84,7 +84,7 @@ export abstract class ISystemLocalData<N extends NodeState> {
 
 //* Logging
 
-export abstract class ISystemLogging {
+export abstract class ILoggingSystem {
 
     public abstract logInfo(msg: string): void;
     public abstract logWarning(msg: string): void;

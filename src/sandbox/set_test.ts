@@ -1,22 +1,35 @@
+import { Identifiable, IdentifiableError } from "../common/EntityStores.js";
 
-
-const mySet: Set<number> = new Set();
-mySet.add(5);
-console.log(mySet);
-mySet.add(5);
-console.log(mySet);
-mySet.add(4);
-console.log(mySet);
-
-console.log("");
-for (const n of mySet) {
-    console.log(n);
+class MyA {
+    constructor(
+        public id: number,
+        public name: string
+    ) { }
 }
 
-mySet.delete(5);
-console.log(mySet);
-console.log(mySet.has(4));
-console.log(mySet.has(5));
-mySet.clear();
-console.log(mySet);
+const a: Identifiable = new MyA(10, "peter");
 
+
+function getVal(key: keyof Identifiable): void {
+    console.log(a[key]);
+}
+
+
+const keys: string[] = Object.keys(a);
+const myKey: string = "id";
+
+function isKey(key: string): boolean {
+    return keys.includes(key);
+}
+
+function keyDataType(key: string): void {
+    if (isKey(key)) {
+        const idk: unknown = ((a as unknown) as Record<string, unknown>)[key];
+        console.log(typeof idk);
+    }
+    else {
+        console.log("this is no key goofy");
+    }
+}
+
+keyDataType(myKey);

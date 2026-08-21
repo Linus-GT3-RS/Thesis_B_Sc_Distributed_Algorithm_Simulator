@@ -1,6 +1,15 @@
-import { GenericBiDirectionalEdge, GenericNodeState } from "../simulation/algorithm_plugin_api/entities/state_entities/AlgoData.js";
 
+//* Types
+
+export type ReadonlyIndexedStore<T extends Identifiable> =
+    Pick<IndexedStore<T>, "read" | "readAllValues" | "size">
+
+
+//* Errors
 export class IdentifiableError extends Error { }
+
+
+//* Store
 
 export interface Identifiable {
     id: number,
@@ -10,8 +19,11 @@ export interface Identifiable {
  * Handles storing and retrieving of data that 
  * satisfies the interface Identifiable
  * while only allowing the data to be of the same type.
+ * 
+ * Delete operations are intentionally not supported
+ * to ensure that IDs remain valid.
  */
-export class IdentifiableStore<T extends Identifiable> {
+export class IndexedStore<T extends Identifiable> {
 
     private map: Map<number, T> = new Map();
 
@@ -48,10 +60,11 @@ export class IdentifiableStore<T extends Identifiable> {
     /**
      * Returns item with given id.
      * This allows full access to the item.
+     * 
      * @param target 
      * @throws {IdentifiableError} if item with given id does not exist
      */
-    public peek(target: Identifiable): T {
+    public peek(target: Readonly<Identifiable>): T {
         const res: T | undefined = this.map.get(target.id);
         if (res === undefined) {
             throw new IdentifiableError(
@@ -62,8 +75,19 @@ export class IdentifiableStore<T extends Identifiable> {
         return res;
     }
 
+    /**
+    * Returns item with given id
+    * Item is readonly
+    * 
+    * @param target 
+    * @throws {IdentifiableError} if item with given id does not exist
+    */
+    public read(target: Readonly<Identifiable>): Readonly<T> {
+        return this.peek(target);
+    }
 
-    public peekAllValues(): MapIterator<Readonly<T>> {
+
+    public readAllValues(): MapIterator<Readonly<T>> {
         return this.map.values();
     }
 
@@ -72,9 +96,3 @@ export class IdentifiableStore<T extends Identifiable> {
     }
 
 }
-
-
-export type GenericNodeStore = IdentifiableStore<GenericNodeState>;
-export type GenericEdgeStore = IdentifiableStore<GenericBiDirectionalEdge>;
-
-export type ReadonlyStore<I extends Identifiable> = Pick<IdentifiableStore<Readonly<I>>, "peek" | "peekAllValues" | "size">  
