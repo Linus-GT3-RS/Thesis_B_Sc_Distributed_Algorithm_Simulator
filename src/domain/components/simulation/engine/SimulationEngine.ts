@@ -1,17 +1,18 @@
-import { INodeProcess } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
-import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
-import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
-import { EntityStateObserver } from "../presenter/SimSnapshotObserver.js";
-import { PendingMessage, SimulationSnapshot } from "../SimulationSnapshot.js";
-import { SimSnapshotDataWorker } from "../worker/EntityWorker.js";
-import { LogSystem } from "./env_system_impl/LogSystem.js";
-import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
-import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
-import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 
 //! todo full rework
+
+import { INodeProcess } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess";
+import type { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv";
+import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs";
+import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages";
+import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes";
+import { EntityStateObserver } from "../presenter/SimSnapshotObserver";
+import { SimulationSnapshot, type PendingMessage } from "../SimulationSnapshot";
+import { SimSnapshotDataWorker } from "../worker/EntityWorker";
+import { LogSystem } from "./env_system_impl/LogSystem";
+import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem";
+import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem";
+import { NodeStateSystem } from "./env_system_impl/NodeSystem";
 
 
 //* Errors
@@ -109,7 +110,7 @@ export class SimEng<N extends NodeState> implements ISimulationEngine {
                 out: new MessageSenderSystem(
                     this.snapshot.msgStates,
                     this.snapshot.pendingMessages,
-                    this.snapshot.simulationTimestamp,
+                    msg.destinationTime,
                     new EntityStateObserver<MessageState>(dummy),
                     this.snapshot.edgeStates,
                     this.worker,

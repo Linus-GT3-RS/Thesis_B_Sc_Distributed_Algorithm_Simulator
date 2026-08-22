@@ -1,5 +1,4 @@
-import { Identifiable } from "../../../../../../common/EntityStores.js";
-import { MilisecsSinceEpoch } from "../../../../../../common/Time.js";
+import type { Identifiable } from "@/common/EntityStores";
 
 export class MessageData {
     constructor(
@@ -11,7 +10,7 @@ export class MessageState {
     constructor(
         public id: number,
         public receiverNode: Identifiable,
-        public destinationTime: MilisecsSinceEpoch,
+        public destinationTime: number,
         public data: MessageData,
     ) { }
 }

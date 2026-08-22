@@ -11,7 +11,10 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "vue": "^3.5.40"
+    "cytoscape": "^3.34.1",
+    "tinyqueue": "^3.0.0",
+    "vue": "^3.5.40",
+    "yocto-queue": "^1.2.2"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",

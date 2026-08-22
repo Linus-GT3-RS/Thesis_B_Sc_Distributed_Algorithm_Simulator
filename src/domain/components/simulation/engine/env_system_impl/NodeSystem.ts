@@ -1,7 +1,7 @@
-import { ILocalDataEnvSystem, MutableNodeStateKeys } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { NodeState } from "../../../algorithm_plugins/api/entities/state_entities/Nodes.js";
-import { NodeStateObserver } from "../../presenter/SimSnapshotObserver.js";
-import { NodeStateStore } from "../../SimulationSnapshot.js";
+import type { ILocalDataEnvSystem, MutableNodeStateKeys } from "@/domain/components/algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems";
+import type { NodeState } from "@/domain/components/algorithm_plugins/api/entities/state_entities/Nodes";
+import type { NodeStateStore } from "../../SimulationSnapshot";
+import type { NodeStateObserver } from "../../presenter/SimSnapshotObserver";
 
 
 /**

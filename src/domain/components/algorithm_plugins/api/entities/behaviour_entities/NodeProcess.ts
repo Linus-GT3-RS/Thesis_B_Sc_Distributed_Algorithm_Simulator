@@ -1,5 +1,5 @@
 import { NodeState } from "../state_entities/Nodes.js";
-import { NodeProcessEnvironment } from "./NodeProcessEnv.js";
+import type { NodeProcessEnvironment } from "./NodeProcessEnv.js";
 
 //! todo
 // the initiation rules would also be obsolete that way

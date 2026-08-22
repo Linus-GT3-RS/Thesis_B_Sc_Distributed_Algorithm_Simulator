@@ -1,4 +1,4 @@
-import { Identifiable } from "../../../../../../common/EntityStores.js";
+import type { Identifiable } from "@/common/EntityStores.js";
 import { MessageData } from "../state_entities/Messages.js";
 import { NodeState } from "../state_entities/Nodes.js";
 

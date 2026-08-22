@@ -1,7 +1,6 @@
-import TinyQueue from "tinyqueue";
-import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/env_system_impl/MsgSenderSystem.js";
-import { IndexedStore } from "../../../../common/EntityStores.js";
-import { PendingMessage } from "../SimulationSnapshot.js";
+import { IndexedStore } from "@/common/EntityStores.js";
+import type TinyQueue from "tinyqueue";
+import type { PendingMessage } from "../SimulationSnapshot";
 
 export class SimulationEntityWorkerError extends Error { }
 

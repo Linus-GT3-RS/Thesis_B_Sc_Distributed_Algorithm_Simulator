@@ -1,12 +1,13 @@
-import { Identifiable, IdentifiableError, ReadonlyIndexedStore } from "../../../../../common/EntityStores.js";
-import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { MessageStateObserver } from "../../presenter/SimSnapshotObserver.js";
-import { MessageQueue as PendingMessageQueue, MessageStateStore } from "../../SimulationSnapshot.js";
-import { NeighborStore, NodeNeighbor, SimSnapshotDataWorker as SimSnapshotDataWorker } from "../../worker/EntityWorker.js";
 
 //* Types
+
+import { type ReadonlyIndexedStore, IdentifiableError, type Identifiable } from "@/common/EntityStores";
+import { IOutgoingMessageSystem, MessageSystemError } from "@/domain/components/algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems";
+import type { BiDirectionalEdgeState } from "@/domain/components/algorithm_plugins/api/entities/state_entities/Edges";
+import { MessageData, MessageState } from "@/domain/components/algorithm_plugins/api/entities/state_entities/Messages";
+import type { MessageStateObserver } from "../../presenter/SimSnapshotObserver";
+import type { MessageStateStore } from "../../SimulationSnapshot";
+import type { NeighborStore, SimSnapshotDataWorker, NodeNeighbor } from "../../worker/EntityWorker";
 
 export type ReadonlyEdgeStore = ReadonlyIndexedStore<BiDirectionalEdgeState>;
 

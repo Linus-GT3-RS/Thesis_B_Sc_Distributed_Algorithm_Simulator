@@ -1,6 +1,6 @@
 import { NodeState } from "../../api/entities/state_entities/Nodes.js";
 import { INodeStatePresentationDetailProvider, PresentationDetailProviderError } from "../../api/entity_presentation_details/DetailProvider.js";
-import { PresentationDetail } from "../../api/entity_presentation_details/EntityPresentationDetails.js";
+import type { PresentationDetail } from "../../api/entity_presentation_details/EntityPresentationDetails.js";
 import { EchoAlgorithmNodeState } from "./EchoAlgoEntities.js";
 
 //* Node 

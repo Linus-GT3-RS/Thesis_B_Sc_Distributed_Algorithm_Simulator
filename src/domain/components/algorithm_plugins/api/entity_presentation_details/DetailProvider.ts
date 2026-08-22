@@ -1,6 +1,6 @@
 import { MessageData } from "../entities/state_entities/Messages.js";
 import { NodeState } from "../entities/state_entities/Nodes.js";
-import { PresentationDetail } from "./EntityPresentationDetails.js";
+import type { PresentationDetail } from "./EntityPresentationDetails.js";
 
 /**
  * Generic entity state data is always available to the user interface.
