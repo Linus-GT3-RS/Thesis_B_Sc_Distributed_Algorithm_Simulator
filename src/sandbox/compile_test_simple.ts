@@ -6,7 +6,7 @@ import { MessageState } from "../../src/domain_layer/components/algorithm_plugin
 import { EchoAlgorithmNodeState } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
 import { PendingMessage, SimulationSnapshot } from "../../src/domain_layer/components/simulation/SimulationSnapshot.js";
 import { EchoAlgorithmNodeProcess } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess.js";
-import { SnapshotDataWorker } from "../domain_layer/components/simulation/worker/SnapshotWorker.js";
+import { SnapshotDataWorker } from "../domain_layer/components/simulation/data/SnapshotWorker.js";
 import { EntityStateObserver, MessageStateObserver, NodeProcessLogObserver, NodeStateObserver } from "../domain_layer/components/simulation/presenter/SimSnapshotObserver.js";
 import { NodeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { ISimulationEngine, SimulationEngine } from "../domain_layer/components/simulation/engine/SimulationEngine.js";
