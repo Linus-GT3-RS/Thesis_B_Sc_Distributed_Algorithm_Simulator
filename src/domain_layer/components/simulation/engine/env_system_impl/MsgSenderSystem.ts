@@ -67,8 +67,8 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
 
         const message = new MessageState(
             this.store.size(),
-            receiverNode,
-            this.simulationTime + receiverNode.distance_ms,
+            this.scopedNode, receiverNode.id,
+            this.simulationTime, this.simulationTime + receiverNode.distance_ms,
             data
         );
         this.store.insert(message);

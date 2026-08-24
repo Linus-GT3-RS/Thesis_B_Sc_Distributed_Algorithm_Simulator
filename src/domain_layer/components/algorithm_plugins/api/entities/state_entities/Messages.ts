@@ -10,8 +10,13 @@ export class MessageData {
 export class MessageState {
     constructor(
         public id: number,
-        public receiverNode: Identifiable,
-        public destinationTime: MilisecsSinceEpoch,
+
+        public sender: number,
+        public receiver: number,
+
+        public sendTime: number,
+        public destinationTime: number,
+
         public data: MessageData,
     ) { }
 }
