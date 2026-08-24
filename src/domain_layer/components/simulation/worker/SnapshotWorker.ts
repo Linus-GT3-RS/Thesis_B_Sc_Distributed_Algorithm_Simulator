@@ -1,9 +1,20 @@
-import TinyQueue from "tinyqueue";
 import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/env_system_impl/MsgSenderSystem.js";
 import { IndexedStore } from "../../../../common/EntityStores.js";
-import { PendingMessage } from "../SimulationSnapshot.js";
+import { MessageQueue, PendingMessage } from "../SimulationSnapshot.js";
 
-export class SimulationEntityWorkerError extends Error { }
+
+//* Errors
+
+/**
+ * Indicates that the simulation encountered 
+ * an internal unrecoverable error.
+ *
+ * The engine is now in an invalid state and must be reset.
+ */
+export class SnapshotWorkerError extends Error { }
+
+
+//* Data
 
 export interface NodeNeighbor {
     id: number
@@ -12,11 +23,14 @@ export interface NodeNeighbor {
 export type NeighborStore = IndexedStore<NodeNeighbor>;
 export type Neighbor = Readonly<IndexedStore<Readonly<NodeNeighbor>>>;
 
+
+//* Worker
+
 /**
  * Performs data operations
  * on a SimulationSnapshot
  */
-export class SimSnapshotDataWorker {
+export class SnapshotDataWorker {
 
     /**
      * Returns all neighbors of a node
@@ -49,28 +63,47 @@ export class SimSnapshotDataWorker {
     }
 
 
-
-    //! todo full rework
     /**
-     * dequeues the next pending msg
-     * @param messages 
-     * @param queryTimestamp 
-     * @returns null if no msg is pending
+     * Checks if the next message in queue is pending
+     * at given time 
+     * 
+     * @param queue 
+     * @param t_ms The timestamp if the simulation at which the
+     *              check should occur
+     * @returns true if a message is pending or false if none
+    *              is pending (either they are not dude yet or none exist)
      */
-    public dequeueNextPendingMessage(
-        messages: TinyQueue<PendingMessage>,
-        now: number,
-    ): PendingMessage | null {
+    public pendingMsgExists(
+        queue: Readonly<MessageQueue>,
+        t_ms: number
+    ): boolean {
+        const peeked: Readonly<PendingMessage> | undefined
+            = queue.peek();
 
-        // sanity check if queue empty
-        const next: PendingMessage | undefined = messages.peek();
-        if (next === undefined) {
-            return null;
+        const pendingExists: boolean =
+            peeked !== undefined &&
+            (peeked.destinationTime <= t_ms);
+
+        return pendingExists;
+    }
+
+
+    /**
+     * Pops the next item in queue
+     * 
+     * @throws {SnapshotWorkerError} if queue is empty
+     */
+    public popPendingMessage(
+        queue: MessageQueue // full access
+    ): Readonly<PendingMessage> {
+        const next: Readonly<PendingMessage> | undefined = queue.pop();
+        if (next !== undefined) {
+            return next;
         }
-        else if (next.destinationTime <= now) {
-            return messages.pop()!;
-        }
-        return null
+        throw new SnapshotWorkerError(`
+            Expected queue to contain atleast one PendingMessage,
+            but found none.`
+        );
     }
 
 
@@ -126,28 +159,5 @@ export class SimSnapshotDataWorker {
 //     // }
 
 
-
-//     // /**
-//     //  * dequeues the next pending msg
-//     //  * @param messages 
-//     //  * @param queryTimestamp 
-//     //  * @returns null if no msg is pending
-//     //  */
-//     // public dequeueNextPendingMessage(
-//     //     messages: TinyQueue<GenericMessage>,
-//     //     queryTimestamp: Miliseconds,
-//     // ): GenericMessage | null {
-//     //     // sanity check if queue empty
-//     //     const next: GenericMessage | undefined = messages.peek();
-//     //     if (next === undefined) {
-//     //         return null;
-//     //     }
-
-//     //     if (next.destinationTime <= queryTimestamp) {
-//     //         messages.pop(); // dequeue
-//     //         return next;
-//     //     }
-//     //     return null;
-//     // }
 
 // }

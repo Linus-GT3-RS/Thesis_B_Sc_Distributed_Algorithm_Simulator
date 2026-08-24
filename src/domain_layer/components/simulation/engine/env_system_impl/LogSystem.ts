@@ -1,6 +1,6 @@
 import { ILoggingSystem } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { LogType, NodeLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { LogObserver } from "../../presenter/SimSnapshotObserver.js";
+import { LogType, NodeProcessLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { NodeProcessLogObserver } from "../../presenter/SimSnapshotObserver.js";
 import { LogStore } from "../../SimulationSnapshot.js";
 
 /**
@@ -16,17 +16,17 @@ import { LogStore } from "../../SimulationSnapshot.js";
  * into simulation-specific actions, such as queuing messages, creating log
  * entries, or updating the presentation.
  */
-export class LogSystem implements ILoggingSystem {
+export class LoggingSystem implements ILoggingSystem {
 
     constructor(
         private store: LogStore, // full access
-        private updateListener: LogObserver,
+        private updateListener: NodeProcessLogObserver,
 
         private currentNode: number,
     ) { }
 
     public logInfo(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: NodeProcessLog = new NodeProcessLog(
             this.store.size(),
             LogType.INFO, msg,
             this.currentNode
@@ -37,7 +37,7 @@ export class LogSystem implements ILoggingSystem {
     }
 
     public logWarning(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: NodeProcessLog = new NodeProcessLog(
             this.store.size(),
             LogType.WARNING, msg,
             this.currentNode
@@ -48,7 +48,7 @@ export class LogSystem implements ILoggingSystem {
     }
 
     public logError(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: NodeProcessLog = new NodeProcessLog(
             this.store.size(),
             LogType.ERROR, msg,
             this.currentNode

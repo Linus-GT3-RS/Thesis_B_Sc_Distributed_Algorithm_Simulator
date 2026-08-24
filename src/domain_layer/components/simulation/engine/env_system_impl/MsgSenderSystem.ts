@@ -4,7 +4,7 @@ import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/
 import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { MessageStateObserver } from "../../presenter/SimSnapshotObserver.js";
 import { MessageQueue as PendingMessageQueue, MessageStateStore } from "../../SimulationSnapshot.js";
-import { NeighborStore, NodeNeighbor, SimSnapshotDataWorker as SimSnapshotDataWorker } from "../../worker/EntityWorker.js";
+import { NeighborStore, NodeNeighbor, SnapshotDataWorker as SnapshotDataWorker } from "../../worker/SnapshotWorker.js";
 
 //* Types
 
@@ -38,7 +38,7 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
         private updateListener: MessageStateObserver,
 
         private edgeStates: ReadonlyEdgeStore,  // read only access
-        private worker: SimSnapshotDataWorker,
+        private worker: SnapshotDataWorker,
 
         private scopedNode: number,
     ) { }

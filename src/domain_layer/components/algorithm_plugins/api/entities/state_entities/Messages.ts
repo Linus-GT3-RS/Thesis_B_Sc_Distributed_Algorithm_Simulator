@@ -1,5 +1,3 @@
-import { Identifiable } from "../../../../../../common/EntityStores.js";
-import { MilisecsSinceEpoch } from "../../../../../../common/Time.js";
 
 export class MessageData {
     constructor(

@@ -5,11 +5,11 @@ export enum LogType {
     ERROR,
 }
 
-export class NodeLog {
+export class NodeProcessLog {
     constructor(
         public id: number,
         public type: LogType,
         public msg: string,
-        public issuerNode: number,
+        public nodeProcess: number, // id of node (process) that issued log
     ) { }
 }

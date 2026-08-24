@@ -1,15 +1,15 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../../src/common/EntityStores.js";
 import { BiDirectionalEdgeState } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeLog } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
+import { NodeProcessLog } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Messages.js";
 import { EchoAlgorithmNodeState } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
 import { PendingMessage, SimulationSnapshot } from "../../src/domain_layer/components/simulation/SimulationSnapshot.js";
 import { ISimulationEngine, SimEng } from "../../src/domain_layer/components/simulation/engine/SimulationEngine.js";
 import { EchoAlgorithmNodeProcess } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess.js";
-import { SimSnapshotDataWorker } from "../../src/domain_layer/components/simulation/worker/EntityWorker.js";
+import { SnapshotDataWorker } from "../domain_layer/components/simulation/worker/SnapshotWorker.js";
 
-const logStore = new IndexedStore<NodeLog>();
+const logStore = new IndexedStore<NodeProcessLog>();
 const nodeStore = new IndexedStore<EchoAlgorithmNodeState>();
 const edgeStore = new IndexedStore<BiDirectionalEdgeState>();
 const msgStore = new IndexedStore<MessageState>();
@@ -41,7 +41,7 @@ edgeStore.insert(new BiDirectionalEdgeState(4, { id: 1 }, { id: 4 }, 140));
 
 // Setup SimulationEngine
 const engine: ISimulationEngine = new SimEng<EchoAlgorithmNodeState>(
-    snapshot, new EchoAlgorithmNodeProcess(), new SimSnapshotDataWorker()
+    snapshot, new EchoAlgorithmNodeProcess(), new SnapshotDataWorker()
 );
 
 

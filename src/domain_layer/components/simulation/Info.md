@@ -1,22 +1,5 @@
 
-// todo go over this and add as documentation 
-// to the neccessary class
-
-
 # the current design implementaiton
-
-simulation snapshot is like image thats capturing
-a moment of real world
-which nodes exist in rl, edges, messages
-
-the simulation is the chain of snapshots, like a video irl
-is just the chain of images
-
-engine gets a snapshot and does  stuff
-on this current time
-    - L engine producs new snapshots
-engine is nog only the internet but the entire real world
-executioner
 
 and point of doing a simulation instead of using real stuff
 is to be able to visualize and inspect all the elements u couldnt

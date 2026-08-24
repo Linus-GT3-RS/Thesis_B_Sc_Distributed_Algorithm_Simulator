@@ -1,12 +1,12 @@
 import { Identifiable } from "../../../../common/EntityStores.js";
-import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { NodeProcessLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 
 
 //* Types
 
-export type LogObserver = EntityStateObserver<NodeLog>
+export type NodeProcessLogObserver = EntityStateObserver<NodeProcessLog>
 export type NodeStateObserver = EntityStateObserver<NodeState>
 export type MessageStateObserver = EntityStateObserver<MessageState>
 
