@@ -44,7 +44,7 @@ export abstract class ISimulationEngine {
      * not advance simulation time.
      * 
      * @param initiatorNode 
-     * @throws {} // todo exceptions
+     * @throws {}
      */
     public abstract simulateInitiation(initiatorNode: number): void;
 
@@ -53,7 +53,7 @@ export abstract class ISimulationEngine {
      * how the world evolves and behaves during that time.
      * 
      * @param t_ms 
-     * @throws {} // todo exceptions
+     * @throws {}
      */
     public abstract simulateTimeAdvancement(delta: number): void;
 
