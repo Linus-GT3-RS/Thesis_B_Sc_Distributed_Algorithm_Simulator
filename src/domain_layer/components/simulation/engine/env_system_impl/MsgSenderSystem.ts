@@ -3,8 +3,8 @@ import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_p
 import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/state_entities/Edges.js";
 import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { MessageStateObserver } from "../../presenter/SimSnapshotObserver.js";
-import { MessageQueue as PendingMessageQueue, MessageStateStore } from "../../SimulationSnapshot.js";
 import { NeighborStore, NodeNeighbor, SnapshotDataWorker as SnapshotDataWorker } from "../../data/SnapshotWorker.js";
+import { MessageQueue, MessageStateStore } from "../../data/SimulationSnapshot.js";
 
 //* Types
 
@@ -33,7 +33,7 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
 
     constructor(
         private store: MessageStateStore, // full access
-        private queue: PendingMessageQueue, // full access
+        private queue: MessageQueue, // full access
         private simulationTime: number,
         private updateListener: MessageStateObserver,
 

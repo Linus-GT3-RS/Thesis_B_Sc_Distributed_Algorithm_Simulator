@@ -3,12 +3,12 @@ import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/beh
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { NodeProcessLogObserver, NodeStateObserver, MessageStateObserver } from "../presenter/SimSnapshotObserver.js";
-import { PendingMessage, SimulationSnapshot } from "../SimulationSnapshot.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
 import { LoggingSystem } from "./env_system_impl/LogSystem.js";
 import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
 import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
+import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
 
 //* Errors
 

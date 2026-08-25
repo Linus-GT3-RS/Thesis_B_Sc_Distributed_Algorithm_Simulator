@@ -1,7 +1,7 @@
 import { ILoggingSystem } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
 import { LogType, NodeProcessLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { LogStore } from "../../data/SimulationSnapshot.js";
 import { NodeProcessLogObserver } from "../../presenter/SimSnapshotObserver.js";
-import { LogStore } from "../../SimulationSnapshot.js";
 
 /**
  * The LogSystem is part of the SimulationEngine and 

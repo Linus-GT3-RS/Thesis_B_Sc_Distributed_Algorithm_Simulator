@@ -1,6 +1,6 @@
 import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/env_system_impl/MsgSenderSystem.js";
 import { IndexedStore } from "../../../../common/EntityStores.js";
-import { MessageQueue, PendingMessage } from "../SimulationSnapshot.js";
+import { MessageQueue, PendingMessage } from "./SimulationSnapshot.js";
 
 
 //* Errors

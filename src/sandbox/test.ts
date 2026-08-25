@@ -1,154 +1,59 @@
-// // import { GenericAlgorithmProtocol } from "./domain/algorithm/algorithm/AlgorithmProtocol.js";
-// // import { GenericNode } from "./domain/algorithm/data/AlgoData.js";
-// // import { EchoAlgorithmNode } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoData.js";
-// // import { EchoAlgorithmProtocol } from "./domain/algorithm_impl/echo_algorithm/EchoAlgoProtocol.js";
-// // import { CommunicationSystem } from "./domain/simulation/action_handling/CommunicationSystem.js";
-// // import { LogSystem } from "./domain/simulation/action_handling/LogSystem.js";
-// // import { NodeSystem } from "./domain/simulation/action_handling/NodeSystem.js";
 
-// // abstract class IMiniEngine {
-// //     public abstract dosth(): void;
-// // }
+abstract class I1 {
 
-// // class MyMiniEngine<N extends GenericNode>
-// //     implements IMiniEngine {
+    public abstract dostuff1(): void;
+}
 
-// //     constructor(
-// //         // private nodesystem: NodeSystem<N>,
-// //     ) { }
+abstract class I2 {
 
-// //     public dosth(): void {
-
-// //     }
-// // }
-
-
-// // class RegistryEntry<N extends GenericNode> {
-
-// // }
-
-// // class build {
-
-// //     build(algo: string): IMiniEngine {
-// //         //! algo developer has to 
-// //         // make this small if
-// //         if (algo === "echo") {
-// //             //! uses his registry entry here
-// //             // -> defines all types for my generell function
-// //             return this.getWrapper(
-// //                 new RegistryEntry<EchoAlgorithmNode>()
-// //             );
-// //         }
-// //         throw Error();
-// //         // else {
-// //         //     // ...
-// //         // }
-// //     }
-// //     // 
-
-
-// //     getWrapper<N extends GenericNode>(entry: RegistryEntry<N>): IMiniEngine {
-// //         return new MyMiniEngine<N>();
-// //     }
-// // }
-
-
-
-// class AMessage {
-//     constructor(
-//         public name: string,
-//     ) { }
-// }
-
-// class BMessage {
-//     constructor(
-//         public name: string,
-//         public age: number
-//     ) { }
-// }
-
-// // class CMessage {
-// //     constructor(
-// //     ) { }
-// // }
-
-
-
-// class Handler {
-
-//     onA(msg: AMessage): void {
-//     }
-
-//     onB(msg: BMessage): void {
-//     }
-
-//     onC(msg: CMessage): void {
-//     }
-
-// }
-
-
-// type HandlerMap<MsgType> = {
-//     [K in MsgType]: (msg: K) => void;
-// };
-
-
-
-// interface MyABCHandler {
-//     onAMsg: (msg: AMessage) => void,
-//     onBMsg: (msg: BMessage) => void,
-//     onCMsg: (msg: CMessage) => void,
-// }
-
-
-
-// type ABCMessage =
-//     AMessage
-//     | BMessage
-// // | CMessage
-
-// class test {
-
-//     //! need sth that exists during runtime
-//     // private map = 
-
-//     handle<K extends ABCMessage>(msg: K): void {
-
-//     }
-
-// }
-
-// new test().handle(new AMessage(""))
+    public abstract dostuff2(): void;
+}
 
 
 
 
+class I1Handler implements I1 {
 
-// type MessageHandler<Messages> =
+    public dostuff1(): void {
+        console.log("hi from 1");
+    }
 
-//     class GenProtocol < MessageType > {
+}
 
-//         private msgHandler: MessageHandler<Messages>;
+class I2Handler implements I2 {
 
-//         public handle(msg: MessageType): void {
+    public dostuff2(): void {
+        console.log("hi from 2");
+    }
 
-//         }
+}
 
-//     }
+class I12Handler implements I1, I2 {
 
+    public dostuff1(): void {
+        console.log("hi from 3 in dostuff 1");
+    }
 
-// class Child implements Parent<EchoProcotolMessage> {
+    public dostuff2(): void {
+        console.log("hi from 3 in dostuff2");
+    }
 
-// }
-
-
-// class Sim<MsgType> {
-
-//     private msg: MsgType;
-
-
-
-// }
+}
 
 
+// main
+const mine1: I1Handler = new I1Handler();
+const mine2: I2Handler = new I2Handler();
+const mine3: I12Handler = new I12Handler();
 
+let current: unknown = mine1;
+console.log(current instanceof I1);
+console.log(current instanceof I2);
+
+current = mine2;
+console.log(current instanceof I1);
+console.log(current instanceof I2);
+
+current = mine3;
+console.log(current instanceof I1);
+console.log(current instanceof I2);

@@ -1,9 +1,9 @@
 import TinyQueue from "tinyqueue";
-import { IndexedStore } from "../../../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeProcessLog } from "../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { IndexedStore } from "../../../../common/EntityStores.js";
+import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
+import { NodeProcessLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 
 export type LogStore = IndexedStore<NodeProcessLog>;
 export type NodeStateStore<N extends NodeState> = IndexedStore<N>;
