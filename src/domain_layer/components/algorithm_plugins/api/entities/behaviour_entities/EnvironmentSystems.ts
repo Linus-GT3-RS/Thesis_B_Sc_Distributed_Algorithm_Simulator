@@ -9,7 +9,8 @@ import { NodeState } from "../state_entities/Nodes.js";
  * This error is expected to be handled by the node process.
  *
  * It represents a failure that may occur in a real-world node
- * and should therefore be handled by the process developer.
+ * and should therefore be handled by the 
+ * Plugin Developer !
  *
  * If unhandled, the simulation crashes.
  */

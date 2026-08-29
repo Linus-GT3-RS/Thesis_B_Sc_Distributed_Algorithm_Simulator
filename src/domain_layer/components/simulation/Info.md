@@ -28,22 +28,8 @@ sim or for a reallife node because of the node environment
     -> feels real and clean i feel like
 
 
-## error handling
 
-if i mess sth up and a
-exceptioies flies cause a obj does not exist
-thats fine cause i faield and made the sim invali
-
-all other errors are stuff that could happen irl
-and would need to be handled
-    -> developer of process decides
-just log it ? kill node ? inform nodes ? (see features)
-
-Changes to the network configuration are expected 
- * to take effect immediately for all
- * affected nodes.
- * -> cmd does that... if i mess up its my problem and sim
- * is invalid but that gets checked from the system impl
+## NodProcess error handling
 
 in a node process a exceoption could
     - be from invalid received msg -> gets ignored

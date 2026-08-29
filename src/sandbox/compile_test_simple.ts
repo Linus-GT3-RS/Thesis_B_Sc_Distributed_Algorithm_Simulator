@@ -1,10 +1,10 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../../src/common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeProcessLog } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../../src/domain_layer/components/algorithm_plugins/api/entities/state_entities/Messages.js";
-import { EchoAlgorithmNodeState } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
-import { EchoAlgorithmNodeProcess } from "../../src/domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess.js";
+import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Edges.js";
+import { NodeProcessLog } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
+import { MessageState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Messages.js";
+import { EchoAlgorithmNodeState } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
+import { EchoAlgorithmNodeProcess } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess.js";
 import { SnapshotDataWorker } from "../domain_layer/components/simulation/data/SnapshotWorker.js";
 import { EntityStateObserver, MessageStateObserver, NodeProcessLogObserver, NodeStateObserver } from "../domain_layer/components/simulation/presenter/SimSnapshotObserver.js";
 import { NodeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Nodes.js";

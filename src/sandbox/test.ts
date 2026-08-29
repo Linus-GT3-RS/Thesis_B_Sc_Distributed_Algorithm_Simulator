@@ -1,59 +1,22 @@
 
-abstract class I1 {
-
-    public abstract dostuff1(): void;
-}
-
-abstract class I2 {
-
-    public abstract dostuff2(): void;
+async function sleep(ms: number): Promise<number> {
+    // // return new Promise(resolve => setTimeout(() => { console.log("timer finished") }, ms));
+    // return new Promise<void>(() => { console.log("promise execution") });
+    return 5;
 }
 
 
-
-
-class I1Handler implements I1 {
-
-    public dostuff1(): void {
-        console.log("hi from 1");
-    }
-
+function print(msg: string): void {
+    console.log(msg);
 }
 
-class I2Handler implements I2 {
-
-    public dostuff2(): void {
-        console.log("hi from 2");
-    }
-
+async function f1(): Promise<void> {
+    print("before");
+    await sleep(1000);
+    print("after");
 }
 
-class I12Handler implements I1, I2 {
+await f1();
+print("end");
 
-    public dostuff1(): void {
-        console.log("hi from 3 in dostuff 1");
-    }
-
-    public dostuff2(): void {
-        console.log("hi from 3 in dostuff2");
-    }
-
-}
-
-
-// main
-const mine1: I1Handler = new I1Handler();
-const mine2: I2Handler = new I2Handler();
-const mine3: I12Handler = new I12Handler();
-
-let current: unknown = mine1;
-console.log(current instanceof I1);
-console.log(current instanceof I2);
-
-current = mine2;
-console.log(current instanceof I1);
-console.log(current instanceof I2);
-
-current = mine3;
-console.log(current instanceof I1);
-console.log(current instanceof I2);
+setTimeout(() => { console.log("timer finished") }, 1000);
