@@ -1,4 +1,6 @@
-import { InitAlgorithmCmd, CommandTypeSchema, isCommandError, InitAlgorithmCmdData, InitAlgorithmCmdDataSchema } from "./messages/Commands.js";
+import { StatementSync } from "node:sqlite";
+import { SimulateAlgorithmInitCmd, CommandTypeSchema, isCommandError, SimulateAlgoInitCmd, SimAlgoInitCmdSchema, SimulateStepForwardCmd, idSimulateAlgorithmInitCmd, idSimStepForwardCmd as idSimulateForwardStepCmd, SimStepForwardCmdSchema } from "./messages/Commands.js";
+import z from "zod";
 
 /**
  * The domain layer runs in his own thread
@@ -9,43 +11,143 @@ import { InitAlgorithmCmd, CommandTypeSchema, isCommandError, InitAlgorithmCmdDa
  */
 //! todo rename to thread controller?
 // and then domain controller gets final cmd?
-export class DomainController {
+
+export class TempSimulationStoppedState { }
+export class TempSimulationRunningState { }
+export class TempConfigState { }
+
+export enum DomainState {
+    SimulationStoppedState,
+    SimulationRunningState,
+    ConfigState,
+}
+
+/**
+ * validates if current state can exec
+ * the given amount
+ * 
+ * validates if current state can request
+ * the given transitiotj request
+ * 
+ * validates if current state can
+ * emit the given events
+ * 
+ * is the state machiene?
+ */
+export class DomainStateMachine {
 
     constructor(
-        // state machine
-        // eventListener
+        private simStoppedState: TempSimulationStoppedState,
+        private simRunningState: TempSimulationRunningState,
+        private configState: TempConfigState,
+        private currentState: DomainState,
 
-        // todo queue?
+        private eventGateteway: IDomainEventGateway
     ) { }
 
+    //* Commands
 
-    public scheduleCommand() {
-        //! loop in here?
-        // also async stuff 
+    public onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void {
+
     }
 
+    public onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void {
 
-    public processCommand(cmd: unknown): void {
+    }
+
+    //* Events
+
+
+
+    //? Transitions
+}
+
+
+/**
+ * Acts as the gateway to the domain layer.
+ * Only valid Domain Commands can enter the domain through this gateway.
+ */
+export abstract class IDomainCommandGateway {
+
+    /** 
+    * checks if given cmd is supported
+    * if yes forward to state machine
+    * if not emit erroe event
+    * 
+    */
+    public abstract receiveCommand(cmd: unknown): void;
+
+}
+
+
+/**
+ * Acts as the gateway out of the domain layer.
+ * Only valid Domain Events can leave the domain through this gateway.
+ */
+export abstract class IDomainEventGateway {
+
+    /**
+     * emits the event to the listener
+     * @param ev 
+     */
+    public abstract emit(ev: any): void;
+
+}
+
+
+export class DomainController
+    implements IDomainCommandGateway, IDomainEventGateway {
+
+    constructor(
+        private stateMachiene: DomainStateMachine,
+        private readonly emitEvent: (ev: any) => void,
+    ) { }
+
+    //* Commands
+
+
+    public receiveCommand(cmd: unknown): void {
         try {
-            const cmdtype: string = CommandTypeSchema.parse(cmd).type;
+            const cmdid: string = CommandTypeSchema.parse(cmd).type;
 
             // determine specific cmd
-            if (cmdtype === InitAlgorithmCmd.stype) {
-                const parsed: InitAlgorithmCmdData =
-                    InitAlgorithmCmdDataSchema.parse(cmd);
-
+            if (cmdid === idSimulateAlgorithmInitCmd) {
+                const parsed: SimulateAlgoInitCmd =
+                    SimAlgoInitCmdSchema.parse(cmd);
+                this.stateMachiene.onSimulateAlgoInitCmd(parsed);
+            }
+            else if (cmdid === idSimulateForwardStepCmd) {
+                const parsed: SimulateStepForwardCmd =
+                    SimStepForwardCmdSchema.parse(cmd);
+                this.stateMachiene.onSimulateStepForwardCmd(parsed);
             }
             else {
-                //? do what
+                // cmd parsing error ev: unknown cmd
             }
-
         }
         catch (error) {
-            if (isCommandError(error)) {
-
+            if (error instanceof z.ZodError) {
+                // cmd parsing error ev: invalid cmd data
             }
-            throw error; //? todo rethrow? or err msg
+            else { // unknown error
+                throw error; //?
+            }
         }
+    }
+
+    //* Events 
+
+    //! todo gets ev
+    // wraps ev and emits that
+    // -> sets event type
+    public emit(ev: any): void {
+        if (ev.type === "ev1") {
+
+        }
+        else {
+            // event emit error ev: unknown event
+        }
+
     }
 
 }

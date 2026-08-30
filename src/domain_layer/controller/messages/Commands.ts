@@ -14,36 +14,46 @@ export const CommandTypeSchema = z.object({
 export type CommandType = z.infer<typeof CommandTypeSchema>
 
 
-//* Init
+//* SimulateInit
+/**
+ * Simulates what happens when a node
+ * initializes the algorithm.
+ */
+export const idSimulateAlgorithmInitCmd: string = "SimulateAlgorithmInitCmd";
 
-export const InitAlgorithmCmdDataSchema = z.object({
+export const SimAlgoInitCmdSchema = z.object({
     initiator: z.number()
 });
-export type InitAlgorithmCmdData = z.infer<typeof InitAlgorithmCmdDataSchema>
+export type SimulateAlgoInitCmd = z.infer<typeof SimAlgoInitCmdSchema>
 
-export class InitAlgorithmCmd
-    implements CommandType, InitAlgorithmCmdData {
-
-    public static readonly stype = "AlgorithmInitiationCmd";
-    public readonly type: string = InitAlgorithmCmd.stype;
-
-    constructor(
-        public initiator: number
-    ) { }
-
+export interface HandlerSimulateAlgoInitCmd {
+    onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void;
 }
 
 
+//* StepForward
+/**
+ * Simulates time advancement.
+ * The simulation runs until the target time is reached.
+ */
+export const idSimStepForwardCmd: string = "SimStepForwardCmd"
+
+export const SimStepForwardCmdSchema = z.object({
+    delta: z.number()
+});
+export type SimulateStepForwardCmd = z.infer<typeof SimStepForwardCmdSchema>
+
+export interface HandlerSimulateForwardStepCmd {
+    onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void;
+}
+
 
 // //* Run
+
 // export const RunCmdZodSchema = z.object({
+
 //     initiator: z.number()
+
 // });
+
 // export type InitiationCmd = z.infer<typeof InitiationCmdZodSchema>
-
-
-// //* Step
-// export const SimStepForwardCmdSchema = z.object({
-//     delta: z.number() //? todo change later? or just let it that way and when doing run just send timescale each time it changes
-// });
-// export type SimStepForwardCmd = z.infer<typeof SimStepForwardCmdSchema>
