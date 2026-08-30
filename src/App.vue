@@ -9,18 +9,25 @@
 
         <div class="main">
             <div ref="container" class="graph"/>
-            <MessageTable class="my-table" :messages="refSnapshot.msgStates"/>
+
+            <LogView class="message-log" 
+                :header="['id', 'type', 'destinationTime', 'receiver']" 
+                :rows="refSnapshot.msgStates"" 
+            />
         </div>
     </div>
 </template>
 
 <style scoped>
 .app {
+    box-sizing: border-box;
     height: 100vh;
     width: 100vw;
     
     display: flex;
     flex-direction: column;
+
+    padding: 20px;
 }
 
 .header {
@@ -28,7 +35,7 @@
 }
 
 .main {
-    flex: 90%;
+    flex: 1;
 
     display: flex;
     flex-direction: row;
@@ -36,7 +43,11 @@
 
 .graph {
     flex: 3;
-    height: 100%;
+}
+
+.message-log {
+    flex: 1;
+    height: 50%;
 }
 
 /* .my-table {
@@ -52,6 +63,7 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
 import cytoscape, { type Core } from "cytoscape";
 import MessageTable from "./MessageTable.vue";
 import { engine, refSnapshot } from "./config.ts";
+import LogView from "./ui/LogView.vue";
 
 // // const refMsgs = ref(new Array<MessageTableData>);
 
