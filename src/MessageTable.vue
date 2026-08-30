@@ -2,7 +2,8 @@
 import type { IndexedStore } from "./common/EntityStores.ts";
 import type { MessageState } from "./domain/components/algorithm_plugins/api/entities/state_entities/Messages.ts";
 import type { MessageStateStore } from "./domain/components/simulation/SimulationSnapshot.ts";
-import MessageTableRow from "./MessageTableRow.vue";
+import TableHeader from "./TableHeader.vue";
+import TableRow from "./TableRow.vue";
 
 defineProps<{
     messages: IndexedStore<MessageState>;
@@ -10,39 +11,42 @@ defineProps<{
 </script>
 
 <template>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Type</th>
-                <th>Receiver Node</th>
-                <th>Destination Time</th>
-            </tr>
-        </thead>
+            <table class="table">
+                <thead class="table-header">
+                    <TableHeader/>
+                </thead>
 
-        <tbody>
-            <MessageTableRow
-                v-for="message of messages.readAllValues()"
-                :key="message.id"
-                :id="message.id.toString()"
-                :type="message.data.type.toString()"
-                :receiver-node="message.receiverNode.id.toString()"
-                :destination-time="message.destinationTime.toString()"
-            />
-        </tbody>
-    </table>
+                <tbody class="table-body">
+                    <TableRow
+                        v-for="message of messages.readAllValues()"
+                        :key="message.id"
+                        :id="message.id.toString()"
+                        :type="message.data.type.toString()"
+                        :receiver-node="message.receiverNode.id.toString()"
+                        :destination-time="message.destinationTime.toString()"
+                    />
+                </tbody>
+            </table>
+
 </template>
 
 <style scoped>
-table {
-    width: 100%;
-    border-collapse: collapse;
+
+.table {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
 }
 
-th,
-td {
-    padding: 8px;
-    border: 1px solid black;
-    text-align: left;
+.table-header {
+    height: 10%;
 }
+
+.table-body {
+    flex: 1;
+    overflow: hidden;
+}
+
+
 </style>

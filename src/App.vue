@@ -9,10 +9,43 @@
 
         <div class="main">
             <div ref="container" class="graph"/>
-             <MessageTable :messages="refSnapshot.msgStates"/>
+            <MessageTable class="my-table" :messages="refSnapshot.msgStates"/>
         </div>
     </div>
 </template>
+
+<style scoped>
+.app {
+    height: 100vh;
+    width: 100vw;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    height: 10%;
+}
+
+.main {
+    flex: 90%;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.graph {
+    flex: 3;
+    height: 100%;
+}
+
+/* .my-table {
+    flex: 1;
+    height: 100%;
+} */
+
+
+</style>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
@@ -155,24 +188,3 @@ function onStep(): void {
 
 
 </script>
-
-
-<style scoped>
-.main {
-    flex: 1;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-.graph {
-    width: 100%;
-    height: 100%;
-}
-
-.app {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-</style>

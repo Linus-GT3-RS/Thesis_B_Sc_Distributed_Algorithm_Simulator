@@ -15,3 +15,11 @@ defineProps<{
         <td>{{ destinationTime }}</td>
     </tr>
 </template>
+
+<style scoped>
+tr {
+    background-color: green;
+    width: 100%;
+    height: 100%;
+}
+</style>
