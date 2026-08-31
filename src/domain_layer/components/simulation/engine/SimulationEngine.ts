@@ -1,4 +1,4 @@
-import { INodeProcess } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
+import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
 import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
@@ -9,6 +9,7 @@ import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
 import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
+import { snapshot } from "node:test";
 
 //* Errors
 
@@ -69,7 +70,7 @@ export class SimulationEngine<N extends NodeState>
         private ss: SimulationSnapshot<N>, // full access
 
         private worker: SnapshotDataWorker,
-        private process: INodeProcess<N>,
+        private processEmulator: INodeProcessEmulator<N>,
 
         private observerLogsNodeProcess: NodeProcessLogObserver,
         private observerNodeStates: NodeStateObserver,
@@ -105,7 +106,7 @@ export class SimulationEngine<N extends NodeState>
         };
 
         // simulate initiation
-        this.process.onInitiationInstruction(env);
+        this.processEmulator.onInitiationInstruction(env);
     }
 
 
@@ -119,7 +120,12 @@ export class SimulationEngine<N extends NodeState>
 
     private advanceTimeUntil(t_ms: number): void {
         if (t_ms < this.ss.simulationTimestamp) {
-            throw new SimulationEngineError('');
+            throw new SimulationEngineError(
+                `Can not simulate time advancement
+                to a time t which is in the past:
+                SimulationTime is ${this.ss.simulationTimestamp}, 
+                but t is ${t_ms}.`
+            );
         }
 
         while (this.worker.pendingMsgExists( // deliver message
@@ -156,7 +162,7 @@ export class SimulationEngine<N extends NodeState>
             };
 
             // simulate message delivery
-            this.process.onIncomingMessage(env);
+            this.processEmulator.onIncomingMessage(env);
         }
         this.ss.simulationTimestamp = t_ms;
     }

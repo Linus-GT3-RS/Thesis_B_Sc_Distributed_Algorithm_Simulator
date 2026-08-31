@@ -1,5 +1,4 @@
-import { StatementSync } from "node:sqlite";
-import { SimulateAlgorithmInitCmd, CommandTypeSchema, isCommandError, SimulateAlgoInitCmd, SimAlgoInitCmdSchema, SimulateStepForwardCmd, idSimulateAlgorithmInitCmd, idSimStepForwardCmd as idSimulateForwardStepCmd, SimStepForwardCmdSchema } from "./messages/Commands.js";
+import { CommandTypeSchema, SimulateAlgoInitCmd, SimAlgoInitCmdSchema, SimulateStepForwardCmd, idSimulateAlgorithmInitCmd, idSimStepForwardCmd as idSimulateForwardStepCmd, SimStepForwardCmdSchema } from "./gateway_data/Commands.js";
 import z from "zod";
 
 /**
@@ -12,55 +11,6 @@ import z from "zod";
 //! todo rename to thread controller?
 // and then domain controller gets final cmd?
 
-export class TempSimulationStoppedState { }
-export class TempSimulationRunningState { }
-export class TempConfigState { }
-
-export enum DomainState {
-    SimulationStoppedState,
-    SimulationRunningState,
-    ConfigState,
-}
-
-/**
- * validates if current state can exec
- * the given amount
- * 
- * validates if current state can request
- * the given transitiotj request
- * 
- * validates if current state can
- * emit the given events
- * 
- * is the state machiene?
- */
-export class DomainStateMachine {
-
-    constructor(
-        private simStoppedState: TempSimulationStoppedState,
-        private simRunningState: TempSimulationRunningState,
-        private configState: TempConfigState,
-        private currentState: DomainState,
-
-        private eventGateteway: IDomainEventGateway
-    ) { }
-
-    //* Commands
-
-    public onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void {
-
-    }
-
-    public onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void {
-
-    }
-
-    //* Events
-
-
-
-    //? Transitions
-}
 
 
 /**
@@ -82,12 +32,15 @@ export abstract class IDomainCommandGateway {
 
 /**
  * Acts as the gateway out of the domain layer.
- * Only valid Domain Events can leave the domain through this gateway.
+ * Anything can be emitted as a Domain Event
+ * and leave the domain through this gateway.
  */
 export abstract class IDomainEventGateway {
 
     /**
-     * emits the event to the listener
+     * emits event to whoever is
+     * listening to domain layer
+     * 
      * @param ev 
      */
     public abstract emit(ev: any): void;

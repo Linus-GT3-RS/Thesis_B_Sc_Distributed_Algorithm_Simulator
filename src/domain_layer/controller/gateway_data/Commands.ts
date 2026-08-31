@@ -26,7 +26,7 @@ export const SimAlgoInitCmdSchema = z.object({
 });
 export type SimulateAlgoInitCmd = z.infer<typeof SimAlgoInitCmdSchema>
 
-export interface HandlerSimulateAlgoInitCmd {
+export interface IHandlerSimulateAlgoInitCmd {
     onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void;
 }
 
@@ -43,7 +43,7 @@ export const SimStepForwardCmdSchema = z.object({
 });
 export type SimulateStepForwardCmd = z.infer<typeof SimStepForwardCmdSchema>
 
-export interface HandlerSimulateForwardStepCmd {
+export interface IHandlerSimulateForwardStepCmd {
     onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void;
 }
 
