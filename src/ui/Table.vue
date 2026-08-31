@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="I extends Identifiable">
+
 import { MessageState } from '@/domain/components/algorithm_plugins/api/entities/state_entities/Messages.js';
 import { IndexedStore, type Identifiable, type ReadonlyIndexedStore, type RoStoreAccessor as RoAccessor } from '@/common/EntityStores.js';
 import type { MessageViewMStore } from './view_models/ViewModels';
@@ -7,7 +8,7 @@ import TableRow from './TableRow.vue';
 defineProps<{
     header: ReadonlyArray<string>,
     store: RoAccessor<IndexedStore<I>>,
-    rowBuilder: (item: I) => ReadonlyArray<string>
+    buildRowFromStoreItem: (id: I) => ReadonlyArray<string>
 }>();
 
 </script>
@@ -22,7 +23,7 @@ defineProps<{
         <div class="table-body">
             <TableRow 
                 v-for="item of store.readAllValues()" 
-                :cells="rowBuilder(item)" 
+                :cells="buildRowFromStoreItem(item)" 
             />
         </div>
     </div>

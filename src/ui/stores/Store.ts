@@ -1,39 +1,56 @@
-import { IndexedStore } from "@/common/EntityStores";
+import { IndexedStore, type Identifiable } from "@/common/EntityStores";
 import { defineStore } from "pinia";
-import { NodeLogViewModel, type EdgeViewModel, type MessageViewModel, type NodeViewModel } from "../view_models/ViewModels";
+import { NodeLogViewModel, type EdgeViewModel, type MessageViewModel, type NodeLogViewMStore, type NodeViewModel } from "../view_models/ViewModels";
 
 
 export const useStore = defineStore("store", {
 
     state: () => ({
-        domainState: "undefined",
-        simTime: 0,
+        nodeLogViewModels: new IndexedStore<NodeLogViewModel>(),
+        messageViewModels: new IndexedStore<MessageViewModel>(),
+        nodeViewModels: new IndexedStore<NodeViewModel>(),
+        edgeViewModels: new IndexedStore<EdgeViewModel>(),
 
-        nodeLogVMStore: new IndexedStore<NodeLogViewModel>(),
-        msgVMStore: new IndexedStore<MessageViewModel>(),
-        nodeVMStore: new IndexedStore<NodeViewModel>(),
-        edgeVMStore: new IndexedStore<EdgeViewModel>(),
+        // domainState: "undefined",
+        // simTime: 0,
     }),
 
-    // getters: {
-    //     buildTableRowFromNodeLogVm(store): ReadonlyArray<string> {
-    //         const item = this.nodeLogVMStore.peek({ id: id });
-    //         return [
-    //             item.id.toString(), item.logType, item.timestamp.toString(),
-    //             item.node.toString(), item.log
-    //         ];
-    //     }
-    // },
+    getters: {
+        buildTableRowNodeLogViewM(store) {
+            return (target: Identifiable) => {
+                const vm: NodeLogViewModel = this.nodeLogViewModels.read(target);
+                return [
+                    `${vm.id}`, `${vm.logType}`, `${vm.timestamp}`,
+                    `${vm.node}`, `${vm.log}`
+                ];
+            };
+        },
+
+        buildTableRowMessageViewM(store) {
+            return (target: Identifiable) => {
+                const vm: MessageViewModel = this.messageViewModels.read(target);
+                return [
+                    `${vm.id}`, `${vm.type}`,
+                    `${vm.sendTime}`, `${vm.destinationTime}`,
+                    `${vm.sender}`, `${vm.receiver}`,
+                ];
+            };
+        }
+    },
 
     actions: {
         addNodeLogVM() {
-            this.nodeLogVMStore.insert(new NodeLogViewModel(
-                this.nodeLogVMStore.size(), "info", 0, 1, "monke"
+            this.nodeLogViewModels.insert(new NodeLogViewModel(
+                this.nodeLogViewModels.size(), "info", 0, 1, "monke"
             ));
         },
 
-        changeFirst() {
-            this.nodeLogVMStore.peek({ id: 1 }).node++;
+        changeElem() {
+            this.nodeLogViewModels.peek({ id: 0 }).node++;
+        },
+
+        removeAll() {
+            this.nodeLogViewModels = new IndexedStore<NodeLogViewModel>();
         }
     }
 

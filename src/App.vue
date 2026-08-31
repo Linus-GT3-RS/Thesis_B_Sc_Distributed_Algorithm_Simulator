@@ -3,8 +3,10 @@
         <div class="header">
             <button @click="onInit">Init Node with id 0</button>
             <button @click="onStep">Do Simulation Step of 25ms</button>
+
             <button @click="store.addNodeLogVM">add nodelog</button>
-            <button @click="store.changeFirst">change first</button>
+            <button @click="store.changeElem">change first</button>
+            <button @click="store.removeAll">remove all</button>
 
             SimulationTime is: {{ refSnapshot.simulationTimestamp }}
         </div>
@@ -13,9 +15,9 @@
             <div ref="container" class="graph"/>
 
             <Table class="node-log-table"
-                :header="['test']" 
-                :store="nodeLogVMStore"
-                :row-builder="buildTableRowFromNodeLogVm"
+                :header="['id', 'type', 'time', 'node', 'log']" 
+                :store="nodeLogViewModels"
+                :buildRowFromStoreItem="buildTableRowNodeLogViewM"
             /> 
         </div>
     </div>
@@ -67,16 +69,7 @@ import { useStore } from "./ui/stores/Store.ts";
 import { storeToRefs } from "pinia";
 
 const store = useStore();
-const {nodeLogVMStore} = storeToRefs(store);
-
-function buildTableRowFromNodeLogVm(id: Identifiable): ReadonlyArray<string> {
-    const item = nodeLogVMStore.value.peek(id);
-    return [
-        item.id.toString(), item.logType, item.timestamp.toString(),
-        item.node.toString(), item.log
-    ];
-}
-
+const {nodeLogViewModels, buildTableRowNodeLogViewM} = storeToRefs(store);
 
 
 // // const refMsgs = ref(new Array<MessageTableData>);
