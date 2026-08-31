@@ -1,5 +1,5 @@
 <template>
- <div class="app">
+ <!-- <div class="app">
         <div class="header">
             <button @click="onInit">Init Node with id 0</button>
             <button @click="onStep">Do Simulation Step of 25ms</button>
@@ -20,9 +20,17 @@
                 :buildRowFromStoreItem="buildTableRowNodeLogViewM"
             /> 
         </div>
-    </div>
+    </div> -->
+    <Main></Main>
 </template>
 
+<script setup>
+import Main from './ui/views/Main.vue';
+
+</script>
+
+
+<!-- 
 <style scoped>
 .app {
     box-sizing: border-box;
@@ -56,13 +64,13 @@
 }
 
 
-</style>
+</style> -->
 
+<!-- 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import cytoscape, { type Core } from "cytoscape";
 import { engine, refSnapshot } from "./config.ts";
-import Table from "./ui/Table.vue";
 import { NodeLogViewModel } from "./ui/view_models/ViewModels.ts";
 import { IndexedStore, type Identifiable } from "./common/EntityStores.ts";
 import { useStore } from "./ui/stores/Store.ts";
@@ -206,4 +214,4 @@ function onStep(): void {
 }
 
 
-</script>
+</script> -->

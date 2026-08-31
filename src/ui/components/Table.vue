@@ -2,7 +2,7 @@
 
 import { MessageState } from '@/domain/components/algorithm_plugins/api/entities/state_entities/Messages.js';
 import { IndexedStore, type Identifiable, type ReadonlyIndexedStore, type RoStoreAccessor as RoAccessor } from '@/common/EntityStores.js';
-import type { MessageViewMStore } from './view_models/ViewModels';
+import type { MessageViewMStore } from '../view_models/ViewModels.ts';
 import TableRow from './TableRow.vue';
 
 defineProps<{
