@@ -3,6 +3,8 @@
         <div class="header">
             <button @click="onInit">Init Node with id 0</button>
             <button @click="onStep">Do Simulation Step of 25ms</button>
+            <button @click="store.addNodeLogVM">add nodelog</button>
+            <button @click="store.changeFirst">change first</button>
 
             SimulationTime is: {{ refSnapshot.simulationTimestamp }}
         </div>
@@ -10,10 +12,11 @@
         <div class="main">
             <div ref="container" class="graph"/>
 
-            <LogView class="message-log" 
-                :header="['id', 'type', 'destinationTime', 'receiver']" 
-                :rows="refSnapshot.msgStates"" 
-            />
+            <Table class="node-log-table"
+                :header="['test']" 
+                :store="nodeLogVMStore"
+                :row-builder="buildTableRowFromNodeLogVm"
+            /> 
         </div>
     </div>
 </template>
@@ -45,15 +48,10 @@
     flex: 3;
 }
 
-.message-log {
+.node-log-table {
     flex: 1;
     height: 50%;
 }
-
-/* .my-table {
-    flex: 1;
-    height: 100%;
-} */
 
 
 </style>
@@ -61,9 +59,25 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import cytoscape, { type Core } from "cytoscape";
-import MessageTable from "./MessageTable.vue";
 import { engine, refSnapshot } from "./config.ts";
-import LogView from "./ui/LogView.vue";
+import Table from "./ui/Table.vue";
+import { NodeLogViewModel } from "./ui/view_models/ViewModels.ts";
+import { IndexedStore, type Identifiable } from "./common/EntityStores.ts";
+import { useStore } from "./ui/stores/Store.ts";
+import { storeToRefs } from "pinia";
+
+const store = useStore();
+const {nodeLogVMStore} = storeToRefs(store);
+
+function buildTableRowFromNodeLogVm(id: Identifiable): ReadonlyArray<string> {
+    const item = nodeLogVMStore.value.peek(id);
+    return [
+        item.id.toString(), item.logType, item.timestamp.toString(),
+        item.node.toString(), item.log
+    ];
+}
+
+
 
 // // const refMsgs = ref(new Array<MessageTableData>);
 

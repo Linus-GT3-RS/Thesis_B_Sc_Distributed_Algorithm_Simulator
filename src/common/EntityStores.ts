@@ -7,6 +7,9 @@ export interface Identifiable {
 export type ReadonlyIndexedStore<T extends Identifiable> =
     Pick<IndexedStore<T>, "read" | "readAllValues" | "size">
 
+export type RoStoreAccessor<Store extends IndexedStore<any>> =
+    Pick<Store, "read" | "readAllValues" | "size">
+
 
 //* Errors
 export class IdentifiableError extends Error { }

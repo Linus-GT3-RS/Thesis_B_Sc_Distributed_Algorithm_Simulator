@@ -1,15 +1,15 @@
 <script setup lang="ts">
 
 defineProps<{
-    columns: string[],
+    cells: ReadonlyArray<string>,
 }>();
 
 
 </script>
 
 <template>
-    <div class="log-row">
-        <div class="log-row-col" v-for="item in columns">
+    <div class="table-row">
+        <div class="cell" v-for="item in cells">
             {{ item }}
         </div>
     </div>
@@ -17,7 +17,7 @@ defineProps<{
 
 <style scoped>
 
-.log-row {
+.table-row {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -27,9 +27,8 @@ defineProps<{
     border-color: black;
 }
 
-.log-row-col {
+.cell {
     flex: 1;
-
 }
 
 </style>
