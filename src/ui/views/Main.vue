@@ -4,9 +4,13 @@ import 'splitpanes/dist/splitpanes.css';
 import { useStore } from '../stores/Store';
 import { storeToRefs } from 'pinia';
 import Table from '../components/Table.vue';
+import TableRow from '../components/TableRow.vue';
 
 const store = useStore();
-const {getSortedMessageViews, buildTableRowMessageViewM} = storeToRefs(store);
+const {
+    getSortedMessageViews, buildTableRowMessageViewM,
+    getSortedNodeLogs, buildTableRowNodeLogViewM,
+} = storeToRefs(store);
 
 </script>
 
@@ -18,6 +22,9 @@ const {getSortedMessageViews, buildTableRowMessageViewM} = storeToRefs(store);
     <div class="cont-header">
         <button @click="store.addMessage">insert msg</button>
         <button @click="store.changeMessage">change msg 1</button>
+
+        <button @click="store.addNodeLogVM">add node log</button>
+        <button @click="store.changeLog">change node log</button>
     </div>
 
     <Splitpanes vertical>
@@ -29,6 +36,11 @@ const {getSortedMessageViews, buildTableRowMessageViewM} = storeToRefs(store);
                 </Pane>
 
                 <Pane class="cont-nodelog-table" size="20">
+                    <Table
+                        :header="['Id', 'Log Type', 'Timestamp', 'Node', 'Log']"
+                        :sortedStoreItems="getSortedNodeLogs"
+                        :renderAsRow="buildTableRowNodeLogViewM"
+                    />
                 </Pane>
                 
             </Splitpanes>
@@ -77,8 +89,16 @@ const {getSortedMessageViews, buildTableRowMessageViewM} = storeToRefs(store);
 }
 
 .cont-header{
-    height: 10%;
+    max-height: 9%;
     width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    gap: 25px;
+
+    padding: 10px;
 
     background-color: grey;
 }

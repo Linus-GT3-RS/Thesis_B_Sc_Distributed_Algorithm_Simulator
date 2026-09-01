@@ -35,15 +35,12 @@ defineProps<{
 .table {
     width: 100%;
     height: 100%;
-}
 
-.table-header {
-    height: 4%;
-    font-weight: bold;
+    display: flex;
+    flex-direction: column;
 }
 
 .table-body {
-    height: 96%;
     overflow-y: scroll;
 }
 

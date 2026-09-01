@@ -16,15 +16,6 @@ export const useStore = defineStore("store", {
     }),
 
     getters: {
-        buildTableRowNodeLogViewM(store) {
-            return (target: Identifiable) => {
-                const vm: NodeLogViewModel = this.nodeLogViewModels.read(target);
-                return [
-                    `${vm.id}`, `${vm.logType}`, `${vm.timestamp}`,
-                    `${vm.node}`, `${vm.log}`
-                ];
-            };
-        },
 
         getSortedMessageViews(store): ReadonlyArray<MessageViewModel> {
             return Array
@@ -41,7 +32,24 @@ export const useStore = defineStore("store", {
                     `${vm.sender}`, `${vm.receiver}`,
                 ];
             };
-        }
+        },
+
+        getSortedNodeLogs(store): ReadonlyArray<NodeLogViewModel> {
+            return Array
+                .from(store.nodeLogViewModels.readAllValues())
+                .sort((l, r) => l.timestamp - r.timestamp);
+        },
+
+        buildTableRowNodeLogViewM(store) {
+            return (target: Identifiable) => {
+                const vm: NodeLogViewModel = this.nodeLogViewModels.read(target);
+                return [
+                    `${vm.id}`, `${vm.logType}`, `${vm.timestamp}`,
+                    `${vm.node}`, `${vm.log}`
+                ];
+            };
+        },
+
     },
 
     actions: {
@@ -51,8 +59,8 @@ export const useStore = defineStore("store", {
             ));
         },
 
-        changeElem() {
-            this.nodeLogViewModels.peek({ id: 0 }).node++;
+        changeLog() {
+            this.nodeLogViewModels.peek({ id: 0 }).timestamp += 5;
         },
 
         removeAll() {
