@@ -1,6 +1,6 @@
 import { ISimulationEngine } from "../../../components/simulation/engine/SimulationEngine.js";
 import { IDomainEventGateway } from "../../Controller.js";
-import { IHandlerSimulateAlgoInitCmd, IHandlerSimulateForwardStepCmd, SimulateAlgoInitCmd, SimulateStepForwardCmd } from "../../gateway_data/Commands.js";
+import { IHandlerSimulateAlgoInitCmd, IHandlerSimulateForwardStepCmd, SimulateAlgoInitCmd, SimulateStepForwardCmd } from "../../gateways/Commands.js";
 
 /**
  * Multiple states can support the same command,

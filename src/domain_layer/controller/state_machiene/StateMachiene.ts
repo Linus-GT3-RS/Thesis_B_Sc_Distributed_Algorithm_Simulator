@@ -1,5 +1,5 @@
 import { IDomainEventGateway } from "../Controller.js";
-import { IHandlerSimulateAlgoInitCmd, IHandlerSimulateForwardStepCmd, SimulateAlgoInitCmd, SimulateStepForwardCmd } from "../gateway_data/Commands.js";
+import { IHandlerSimulateAlgoInitCmd, IHandlerSimulateForwardStepCmd, SimulateAlgoInitCmd, SimulateStepForwardCmd } from "../gateways/Commands.js";
 import { BehaviourSimulationStoppedState } from "./state_behaviours/BehavSimStoppedState.js";
 
 //* States
