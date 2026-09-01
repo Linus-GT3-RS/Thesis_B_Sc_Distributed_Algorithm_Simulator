@@ -13,39 +13,10 @@ import z from "zod";
 
 
 
-/**
- * Acts as the gateway to the domain layer.
- * Only valid Domain Commands can enter the domain through this gateway.
- */
-export abstract class IDomainCommandGateway {
-
-    /** 
-    * checks if given cmd is supported
-    * if yes forward to state machine
-    * if not emit erroe event
-    * 
-    */
-    public abstract receiveCommand(cmd: unknown): void;
-
-}
 
 
-/**
- * Acts as the gateway out of the domain layer.
- * Anything can be emitted as a Domain Event
- * and leave the domain through this gateway.
- */
-export abstract class IDomainEventGateway {
 
-    /**
-     * emits event to whoever is
-     * listening to domain layer
-     * 
-     * @param ev 
-     */
-    public abstract emit(ev: any): void;
 
-}
 
 
 export class DomainController

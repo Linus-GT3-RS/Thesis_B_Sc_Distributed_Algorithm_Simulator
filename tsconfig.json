@@ -13,7 +13,7 @@
         "noImplicitAny": true,
         "sourceMap": true,
         "rootDir": "src",
-        "outDir": ".build/src",
+        "outDir": "dist/src",
         "types": [
             "node"
         ]

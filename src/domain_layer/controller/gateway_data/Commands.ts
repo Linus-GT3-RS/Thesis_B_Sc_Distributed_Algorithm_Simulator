@@ -1,59 +1,46 @@
 import * as z from "zod";
 
-//* Errors
+//* Gateway CommandMessage
 
-export function isCommandError(err: unknown): boolean {
-    return err instanceof z.ZodError;
+export const SchemaCommandMessage = z.object({
+    type: z.string(),
+    command: z.unknown(),
+});
+
+export type CommandMessage = z.infer<typeof SchemaCommandMessage>
+
+
+
+//* Domain CommandHandler
+
+export abstract class IDomainCommandHandler {
+
+    /**
+    * Simulates what happens when a node
+    * initializes the algorithm.
+    */
+    public abstract onCmdSimulateAlgoInit(cmd: CmdSimulateAlgoInit): void;
+
+
+    /**
+     * Simulates time advancement.
+     * The simulation runs until the target time is reached.
+     */
+    public abstract onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void;
+
 }
 
 
-//* Base
-export const CommandTypeSchema = z.object({
-    type: z.string(),
-});
-export type CommandType = z.infer<typeof CommandTypeSchema>
+//* ---------------------------- Commands
 
-
-//* SimulateInit
-/**
- * Simulates what happens when a node
- * initializes the algorithm.
- */
-export const idSimulateAlgorithmInitCmd: string = "SimulateAlgorithmInitCmd";
-
-export const SimAlgoInitCmdSchema = z.object({
+export const SchemaCmdSimulateAlgoInit = z.object({
     initiator: z.number()
 });
-export type SimulateAlgoInitCmd = z.infer<typeof SimAlgoInitCmdSchema>
-
-export interface IHandlerSimulateAlgoInitCmd {
-    onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void;
-}
+export type CmdSimulateAlgoInit = z.infer<typeof SchemaCmdSimulateAlgoInit>
 
 
-//* StepForward
-/**
- * Simulates time advancement.
- * The simulation runs until the target time is reached.
- */
-export const idSimStepForwardCmd: string = "SimStepForwardCmd"
-
-export const SimStepForwardCmdSchema = z.object({
+export const SchemaCmdSimulateTimeAdvance = z.object({
     delta: z.number()
 });
-export type SimulateStepForwardCmd = z.infer<typeof SimStepForwardCmdSchema>
+export type CmdSimulateTimeAdvance = z.infer<typeof SchemaCmdSimulateTimeAdvance>
 
-export interface IHandlerSimulateForwardStepCmd {
-    onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void;
-}
-
-
-// //* Run
-
-// export const RunCmdZodSchema = z.object({
-
-//     initiator: z.number()
-
-// });
-
-// export type InitiationCmd = z.infer<typeof InitiationCmdZodSchema>
