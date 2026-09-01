@@ -1,6 +1,6 @@
 import { IndexedStore, type Identifiable } from "@/common/EntityStores";
 import { defineStore } from "pinia";
-import { NodeLogViewModel, type EdgeViewModel, type MessageViewModel, type NodeLogViewMStore, type NodeViewModel } from "../view_models/ViewModels";
+import { MessageViewModel, NodeLogViewModel, type EdgeViewModel, type NodeLogViewMStore, type NodeViewModel } from "../view_models/ViewModels";
 
 
 export const useStore = defineStore("store", {
@@ -26,12 +26,18 @@ export const useStore = defineStore("store", {
             };
         },
 
+        getSortedMessageViews(store): ReadonlyArray<MessageViewModel> {
+            return Array
+                .from(store.messageViewModels.readAllValues())
+                .sort((l, r) => l.destinationTime - r.destinationTime);
+        },
+
         buildTableRowMessageViewM(store) {
             return (target: Identifiable) => {
                 const vm: MessageViewModel = this.messageViewModels.read(target);
                 return [
                     `${vm.id}`, `${vm.type}`,
-                    `${vm.sendTime}`, `${vm.destinationTime}`,
+                    `${vm.destinationTime}`, `${vm.sendTime}`,
                     `${vm.sender}`, `${vm.receiver}`,
                 ];
             };
@@ -51,7 +57,18 @@ export const useStore = defineStore("store", {
 
         removeAll() {
             this.nodeLogViewModels = new IndexedStore<NodeLogViewModel>();
-        }
+        },
+
+        addMessage() {
+            this.messageViewModels.insert(new MessageViewModel(
+                this.messageViewModels.size(), "type x",
+                this.messageViewModels.size(), 10, 2, 4
+            ));
+        },
+
+        changeMessage() {
+            this.messageViewModels.peek({ id: 1 }).destinationTime += 5;
+        },
     }
 
 });

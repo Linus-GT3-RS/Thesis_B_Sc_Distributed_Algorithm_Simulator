@@ -1,13 +1,23 @@
 <script setup>
 import { Pane, Splitpanes } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
+import { useStore } from '../stores/Store';
+import { storeToRefs } from 'pinia';
+import Table from '../components/Table.vue';
+
+const store = useStore();
+const {getSortedMessageViews, buildTableRowMessageViewM} = storeToRefs(store);
 
 </script>
+
+
 
 <template>
 <div class="cont-app">
 
     <div class="cont-header">
+        <button @click="store.addMessage">insert msg</button>
+        <button @click="store.changeMessage">change msg 1</button>
     </div>
 
     <Splitpanes vertical>
@@ -28,6 +38,11 @@ import 'splitpanes/dist/splitpanes.css';
             <Splitpanes horizontal>
 
                 <Pane class="cont-message-table" size="65">
+                    <Table 
+                        :header="['id', 'type', 'destTime', 'sendTime', 'sender', 'receiver']"
+                        :sortedStoreItems="getSortedMessageViews"
+                        :renderAsRow="buildTableRowMessageViewM" 
+                    />
                 </Pane>
 
                 <Pane class="cont-property-view"  size="35">
@@ -53,13 +68,12 @@ import 'splitpanes/dist/splitpanes.css';
 }
 
 .cont-app {
-    box-sizing: border-box;
-
-    height: 100vh;
+    height: 100%;
     width: 100%;
 
     display: flex;
     flex-direction: column;
+    justify-content: start;
 }
 
 .cont-header{

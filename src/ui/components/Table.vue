@@ -7,8 +7,8 @@ import TableRow from './TableRow.vue';
 
 defineProps<{
     header: ReadonlyArray<string>,
-    store: RoAccessor<IndexedStore<I>>,
-    buildRowFromStoreItem: (id: I) => ReadonlyArray<string>
+    sortedStoreItems: ReadonlyArray<I>
+    renderAsRow: (id: I) => ReadonlyArray<string>
 }>();
 
 </script>
@@ -22,8 +22,8 @@ defineProps<{
 
         <div class="table-body">
             <TableRow 
-                v-for="item of store.readAllValues()" 
-                :cells="buildRowFromStoreItem(item)" 
+                v-for="item of sortedStoreItems" 
+                :cells="renderAsRow(item)" 
             />
         </div>
     </div>
@@ -38,11 +38,12 @@ defineProps<{
 }
 
 .table-header {
+    height: 4%;
     font-weight: bold;
 }
 
 .table-body {
-    height: 100%;
+    height: 96%;
     overflow-y: scroll;
 }
 

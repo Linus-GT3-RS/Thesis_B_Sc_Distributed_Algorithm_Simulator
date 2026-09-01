@@ -1,33 +1,24 @@
 <template>
- <!-- <div class="app">
-        <div class="header">
-            <button @click="onInit">Init Node with id 0</button>
-            <button @click="onStep">Do Simulation Step of 25ms</button>
-
-            <button @click="store.addNodeLogVM">add nodelog</button>
-            <button @click="store.changeElem">change first</button>
-            <button @click="store.removeAll">remove all</button>
-
-            SimulationTime is: {{ refSnapshot.simulationTimestamp }}
-        </div>
-
-        <div class="main">
-            <div ref="container" class="graph"/>
-
-            <Table class="node-log-table"
-                :header="['id', 'type', 'time', 'node', 'log']" 
-                :store="nodeLogViewModels"
-                :buildRowFromStoreItem="buildTableRowNodeLogViewM"
-            /> 
-        </div>
-    </div> -->
-    <Main></Main>
+    <div class="app">
+        <Main></Main>
+    </div>
 </template>
 
 <script setup>
 import Main from './ui/views/Main.vue';
 
 </script>
+
+<style scoped>
+
+.app {
+    height: 100vh;
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+</style>
 
 
 <!-- 
