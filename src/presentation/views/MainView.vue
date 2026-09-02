@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Pane, Splitpanes } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import { useStore } from '../stores/Store';
@@ -12,6 +12,10 @@ const {
     getSortedNodeLogs, buildTableRowNodeLogViewM,
     domainState, renderedSimulationTime,
 } = storeToRefs(store);
+
+function btn(): void {
+    store.changeStatusBar(4);
+}
 
 </script>
 
@@ -27,7 +31,7 @@ const {
         <button @click="store.addNodeLogVM">add node log</button>
         <button @click="store.changeLog">change node log</button>
 
-        <button @click="store.changeStatusBar">change status bar</button>
+        <button @click="btn">change status bar</button>
     </div>
 
     <Splitpanes vertical>

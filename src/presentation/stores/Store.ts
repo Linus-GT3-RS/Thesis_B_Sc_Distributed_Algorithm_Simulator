@@ -82,10 +82,10 @@ export const useStore = defineStore("store", {
             this.messageViewModels.peek({ id: 1 }).destinationTime += 5;
         },
 
-        changeStatusBar() {
+        changeStatusBar(n: number) {
             console.log("test");
-            this.domainState += "1";
-            this.simulationTime += 5;
+            this.domainState += n;
+            this.simulationTime += n;
         },
     }
 
