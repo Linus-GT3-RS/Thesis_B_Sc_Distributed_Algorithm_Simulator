@@ -1,6 +1,15 @@
-import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
-import { IDomainEventGateway } from "../DomainController.js";
-import { IHandlerSimulateAlgoInitCmd, IHandlerSimulateForwardStepCmd, SimulateAlgoInitCmd, SimulateStepForwardCmd } from "../../gateways/Commands.js";
+
+
+
+export class StateBehavSimulationStopped {
+
+
+
+
+}
+
+
+
 
 /**
  * Multiple states can support the same command,

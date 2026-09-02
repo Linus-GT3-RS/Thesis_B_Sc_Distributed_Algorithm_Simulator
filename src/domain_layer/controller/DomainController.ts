@@ -1,4 +1,6 @@
-
+import { IDomainCommandHandler, CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../gateways/Commands.js";
+import { IDomainEventGateway } from "../gateways/EventGateway.js";
+import { ErrorEv } from "../gateways/Events.js";
 
 
 //* States
@@ -7,6 +9,13 @@ export enum DomainState {
     SimulationStoppedState,
     SimulationRunningState,
 }
+
+
+//* State Behaviour Interfaces
+
+export type IStateBehavSimulationStopped = Pick<IDomainCommandHandler,
+    "onCmdSimulateAlgoInit" | "onCmdSimulateTimeAdvance">
+
 
 
 //* DomainController
@@ -21,52 +30,47 @@ export enum DomainState {
  * 
  * If the command cannot be handled in the current
  * state, an error event is emitted.
- * 
  */
-export class DomainController implements
-    IHandlerSimulateAlgoInitCmd,
-    IHandlerSimulateForwardStepCmd {
+export class DomainController implements IDomainCommandHandler {
 
     constructor(
         private curState: DomainState,
-
-        private simStoppedStateBehav: BehaviourSimulationStoppedState,
-
         private eventGateway: IDomainEventGateway,
+
+        // state behaviours
+        private behavSimStopped: IStateBehavSimulationStopped,
     ) { }
 
 
-    //? All possible Commands
-
-    onSimulateAlgoInitCmd(cmd: SimulateAlgoInitCmd): void {
+    public onCmdSimulateAlgoInit(cmd: CmdSimulateAlgoInit): void {
         switch (this.curState) {
             case DomainState.SimulationStoppedState:
-                this.simStoppedStateBehav.onSimulateAlgoInitCmd(cmd);
-                break;
-
-            // case DomainState.SimulationRunningState:
-            //     break;
-
-            default:
-                this.emitInvalidCmdError();
-        }
-    }
-
-    onSimulateStepForwardCmd(cmd: SimulateStepForwardCmd): void {
-        switch (this.curState) {
-            case DomainState.SimulationStoppedState:
-                this.simStoppedStateBehav.onSimulateStepForwardCmd(cmd);
+                this.behavSimStopped.onCmdSimulateAlgoInit(cmd);
                 break;
 
             default:
-                this.emitInvalidCmdError();
+                this.emitEvStateMachineError(cmd);
         }
     }
 
 
-    //? Utils
-    private emitInvalidCmdError(): void {
-        //! todo EVENTS
+    public onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void {
+        switch (this.curState) {
+            case DomainState.SimulationStoppedState:
+                this.behavSimStopped.onCmdSimulateTimeAdvance(cmd);
+                break;
+
+            default:
+                this.emitEvStateMachineError(cmd);
+        }
+    }
+
+
+    private emitEvStateMachineError(cmd: unknown): void {
+        this.eventGateway.emit(new ErrorEv(`
+            Cannot handle command in current state ${this.curState}.
+            Given command is ${cmd}`
+        ));
     }
 
 }

@@ -1,7 +1,7 @@
 import z from "zod";
 import { IDomainEventGateway } from "./EventGateway.js";
-import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance, CommandMessage, IDomainCommandHandler, SchemaCmdSimulateAlgoInit, SchemaCmdSimulateTimeAdvance, SchemaCommandMessage } from "./gateway_data/Commands.js";
-import { ErrorEv } from "./gateway_data/Events.js";
+import { ErrorEv } from "./Events.js";
+import { IDomainCommandHandler, CommandMessage, SchemaCommandMessage, CmdSimulateAlgoInit, SchemaCmdSimulateAlgoInit, CmdSimulateTimeAdvance, SchemaCmdSimulateTimeAdvance } from "./Commands.js";
 
 
 export abstract class IDomainCommandGateway {
