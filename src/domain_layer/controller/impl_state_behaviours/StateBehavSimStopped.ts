@@ -1,0 +1,71 @@
+import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
+import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../../gateways/Commands.js";
+import { IDomainEventGateway } from "../../gateways/EventGateway.js";
+import { ErrorEv } from "../../gateways/Events.js";
+import { IStateBehavSimulationStopped } from "../DomainController.js";
+
+
+/**
+ * A function call represents that a command is now to be handled 
+ * by the current state. The controller has there already approved
+ * command handleing by this state.
+ * 
+ * A state's behaviour decides how a command is handled. The behaviour 
+ * does not however contain implementation details. Instead, it instructs 
+ * his worker which actions to perform and in what order. 
+ * The worker is responsible for carrying them out and therefor contains the 
+ * implementation details.
+*
+ * Events communicate what happens during processing to the outside
+ * world, such as a successful operation or an error.
+ * 
+ * Different states may support the same command but handle it
+ * differently. Each state therefore has its own behaviour class.
+ * 
+ */
+export class StateBehavSimulationStopped implements IStateBehavSimulationStopped {
+
+    constructor(
+        private eventGateway: IDomainEventGateway,
+
+        // state specific dependencies / workers
+        private simulationEngine: ISimulationEngine,
+    ) { }
+
+    public onCmdSimulateAlgoInit(cmd: CmdSimulateAlgoInit): void {
+        try {
+            this.simulationEngine.simulateInitiation(cmd.initiator);
+            // handle edge case in case messages with distance=0 were send
+            this.simulationEngine.simulateTimeAdvancement(0);
+
+            // todo events
+            // present snapshot updates
+        }
+        catch (error) {
+            this.emitEvInvalidStateSimStopped(cmd, error);
+        }
+    }
+
+
+    public onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void {
+        try {
+            this.simulationEngine.simulateTimeAdvancement(cmd.delta);
+
+            // todo events
+            // present snapshot updates
+        }
+        catch (error) {
+            this.emitEvInvalidStateSimStopped(cmd, error);
+        }
+    }
+
+    private emitEvInvalidStateSimStopped(cmd: unknown, error: unknown): void {
+        this.eventGateway.emit(new ErrorEv(`
+            An Exception occured during the handleing of a cmd in 
+            the StateBehaviour for the StateSimulationStopped.
+            When handleing cmd ${cmd} the following error occured: ${error}`
+        ));
+    }
+
+}
+

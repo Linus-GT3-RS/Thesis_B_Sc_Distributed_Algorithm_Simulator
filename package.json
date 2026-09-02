@@ -1,0 +1,17 @@
+{
+  "name": "thesis_b_sc_distributed_algorithm_simulator",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "type": "module",
+  "dependencies": {
+    "tinyqueue": "^3.0.0",
+    "yocto-queue": "^1.2.2",
+    "zod": "^4.5.4"
+  }
+}
