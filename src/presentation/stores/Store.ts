@@ -11,8 +11,8 @@ export const useStore = defineStore("store", {
         nodeViewModels: new IndexedStore<NodeViewModel>(),
         edgeViewModels: new IndexedStore<EdgeViewModel>(),
 
-        // domainState: "undefined",
-        // simTime: 0,
+        domainState: "state",
+        simulationTime: 0,
     }),
 
     getters: {
@@ -50,6 +50,10 @@ export const useStore = defineStore("store", {
             };
         },
 
+        renderedSimulationTime(store): string {
+            return new Number(this.simulationTime).toString();
+        },
+
     },
 
     actions: {
@@ -76,6 +80,12 @@ export const useStore = defineStore("store", {
 
         changeMessage() {
             this.messageViewModels.peek({ id: 1 }).destinationTime += 5;
+        },
+
+        changeStatusBar() {
+            console.log("test");
+            this.domainState += "1";
+            this.simulationTime += 5;
         },
     }
 

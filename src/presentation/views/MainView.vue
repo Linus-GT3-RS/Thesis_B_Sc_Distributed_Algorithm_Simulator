@@ -4,11 +4,13 @@ import 'splitpanes/dist/splitpanes.css';
 import { useStore } from '../stores/Store';
 import { storeToRefs } from 'pinia';
 import Table from '../vue_components/Table.vue';
+import StatusBar from '../vue_components/StatusBar.vue';
 
 const store = useStore();
 const {
     getSortedMessageViews, buildTableRowMessageViewM,
     getSortedNodeLogs, buildTableRowNodeLogViewM,
+    domainState, renderedSimulationTime,
 } = storeToRefs(store);
 
 </script>
@@ -24,6 +26,8 @@ const {
 
         <button @click="store.addNodeLogVM">add node log</button>
         <button @click="store.changeLog">change node log</button>
+
+        <button @click="store.changeStatusBar">change status bar</button>
     </div>
 
     <Splitpanes vertical>
@@ -31,6 +35,11 @@ const {
             <Splitpanes horizontal>
 
                 <Pane class="cont-graph-view" size="80">
+                    <div class="graph-view"></div>
+                    <StatusBar class="status-bar" 
+                        :domainState="domainState"
+                        :simulationTime="renderedSimulationTime">
+                    </StatusBar>
                 </Pane>
 
                 <Pane class="cont-nodelog-table" size="20">
@@ -98,7 +107,7 @@ const {
 
     padding: 10px;
 
-    background-color: grey;
+    background-color: rgb(55, 55, 55);
 }
 
 .cont-right {
@@ -109,8 +118,21 @@ const {
 .cont-graph-view {
     height: 100%;
     width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.graph-view {
+   flex: 1;
     background-color: aqua;
 }
+
+.status-bar {
+    height: 3.5%;
+    background-color:  grey;
+}
+
 
 .cont-nodelog-table {
     height: 100%;
