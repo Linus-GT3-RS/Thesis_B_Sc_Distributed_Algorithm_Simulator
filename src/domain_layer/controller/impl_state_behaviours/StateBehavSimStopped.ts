@@ -1,6 +1,7 @@
 import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
 import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../../gateways/Commands.js";
 import { IDomainEventGateway } from "../../gateways/EventGateway.js";
+import { ErrorEv } from "../../gateways/Events.js";
 import { IStateBehavSimulationStopped } from "../DomainController.js";
 
 
@@ -59,7 +60,7 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
     }
 
     private emitEvInvalidStateSimStopped(cmd: unknown, error: unknown): void {
-        this.eventGateway.emit(new ErrorEvent(`
+        this.eventGateway.emit(new ErrorEv(`
             An Exception occured during the handleing of a cmd in 
             the StateBehaviour for the StateSimulationStopped.
             When handleing cmd ${cmd} the following error occured: ${error}`

@@ -1,4 +1,4 @@
-import { ErrorEv, EventMessage } from "./gateway_data/Events.js";
+import { ErrorEv, EventMessage } from "./Events.js";
 
 
 export abstract class IDomainEventGateway {
