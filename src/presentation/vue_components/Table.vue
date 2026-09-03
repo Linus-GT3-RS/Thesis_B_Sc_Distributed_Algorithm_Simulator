@@ -24,6 +24,7 @@ defineProps<{
                 :cells="renderAsRow(item)" 
             />
         </div>
+
     </div>
 </template>
 
@@ -36,6 +37,11 @@ defineProps<{
 
     display: flex;
     flex-direction: column;
+}
+
+.table-header {
+    background-color: grey;
+    font-size: 15px;
 }
 
 .table-body {

@@ -23,9 +23,11 @@ defineProps<{
     display: flex;
     flex-direction: row;
     gap: 10px;
-
-    border-width: 1px;
-    border-style: solid;
+    
+    border-top: 1px;
+    border-bottom: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
     border-color: black;
 }
 

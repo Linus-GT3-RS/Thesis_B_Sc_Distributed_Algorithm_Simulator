@@ -5,6 +5,8 @@ import { useStore } from '../stores/Store';
 import { storeToRefs } from 'pinia';
 import Table from '../vue_components/Table.vue';
 import StatusBar from '../vue_components/StatusBar.vue';
+import TitleBar from '../vue_components/TitleBar.vue';
+import DetailWidget from '../vue_components/DetailWidget.vue';
 
 const store = useStore();
 const {
@@ -47,6 +49,7 @@ function btn(): void {
                 </Pane>
 
                 <Pane class="cont-nodelog-table" size="20">
+                    <TitleBar :title="'Node Log Overview'"></TitleBar>
                     <Table
                         :header="['Id', 'Log Type', 'Timestamp', 'Node', 'Log']"
                         :sortedStoreItems="getSortedNodeLogs"
@@ -61,6 +64,7 @@ function btn(): void {
             <Splitpanes horizontal>
 
                 <Pane class="cont-message-table" size="65">
+                    <TitleBar :title="'Message Overview'"></TitleBar>
                     <Table 
                         :header="['id', 'type', 'destTime', 'sendTime', 'sender', 'receiver']"
                         :sortedStoreItems="getSortedMessageViews"
@@ -69,6 +73,8 @@ function btn(): void {
                 </Pane>
 
                 <Pane class="cont-property-view"  size="35">
+                    <TitleBar :title="'Detail View'"></TitleBar>
+                    <DetailWidget class="detail-view"></DetailWidget>
                 </Pane>
 
             </Splitpanes>
@@ -141,19 +147,34 @@ function btn(): void {
 .cont-nodelog-table {
     height: 100%;
     width: 100%;
+    
+    padding: 5px;
+
     background-color: lawngreen;
 }
 
 .cont-message-table {
     height: 100%;
     width: 100%;
+
+    padding: 5px;
+    
     background-color: yellow;
 }
 
 .cont-property-view {
     height: 100%;
     width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
     background-color: chocolate;
+}
+
+.detail-view {
+    height: 100%;
+    width: 100%;
 }
 
 
