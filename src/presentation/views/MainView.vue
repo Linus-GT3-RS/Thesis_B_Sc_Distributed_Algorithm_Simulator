@@ -7,6 +7,8 @@ import Table from '../vue_components/Table.vue';
 import StatusBar from '../vue_components/StatusBar.vue';
 import TitleBar from '../vue_components/TitleBar.vue';
 import DetailWidget from '../vue_components/DetailWidget.vue';
+import SpeedSlider from '../vue_components/SpeedSlider.vue';
+import { ref } from 'vue';
 
 const store = useStore();
 const {
@@ -34,6 +36,8 @@ function btn(): void {
         <button @click="store.changeLog">change node log</button>
 
         <button @click="btn">change status bar</button>
+
+        <SpeedSlider></SpeedSlider>
     </div>
 
     <Splitpanes vertical>

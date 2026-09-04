@@ -2,6 +2,13 @@ import { IndexedStore, type Identifiable } from "@/common/EntityStores";
 import { defineStore } from "pinia";
 import { MessageViewModel, NodeLogViewModel, type EdgeViewModel, type NodeLogViewMStore, type NodeViewModel } from "../view_models/ViewModels";
 
+export interface SpeedSliderSettings {
+    min: number,
+    max: number,
+    stepsize: number,
+    currentValue: number,
+    metric: string,
+}
 
 export const useStore = defineStore("store", {
 
@@ -53,6 +60,16 @@ export const useStore = defineStore("store", {
         renderedSimulationTime(store): string {
             return new Number(this.simulationTime).toString();
         },
+
+        speedSliderSettings(store): SpeedSliderSettings | null {
+            if (store.domainState === "state") {
+                return {
+                    min: 5, max: 200, stepsize: 5,
+                    currentValue: 50, metric: "ms Stepsize"
+                }
+            }
+            return null;
+        }
 
     },
 
