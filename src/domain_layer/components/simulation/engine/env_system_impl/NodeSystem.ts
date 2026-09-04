@@ -1,7 +1,7 @@
 import { ILocalDataEnvSystem, MutableNodeStateKeys } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
 import { NodeState } from "../../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { NodeStateStore } from "../../data/SimulationSnapshot.js";
-import { NodeStateObserver } from "../../presenter/SimSnapshotObserver.js";
+import { EntityUpdateListener } from "../../presenter/EntityStateObserver.js";
 
 
 /**
@@ -22,7 +22,7 @@ export class NodeStateSystem<N extends NodeState>
 
     constructor(
         private store: NodeStateStore<N>, // full access
-        private updateListener: NodeStateObserver,
+        private updateObserver: EntityUpdateListener<NodeState>,
 
         private currentNode: number,
     ) { }
@@ -50,7 +50,7 @@ export class NodeStateSystem<N extends NodeState>
             { id: this.currentNode }
         )[property] = value;
 
-        this.updateListener.notifyUpdate({ id: this.currentNode });
+        this.updateObserver.notifyUpdate({ id: this.currentNode });
     }
 
 }

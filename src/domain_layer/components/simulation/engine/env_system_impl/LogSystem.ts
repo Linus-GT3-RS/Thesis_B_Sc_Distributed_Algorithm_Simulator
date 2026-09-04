@@ -1,7 +1,7 @@
 import { ILoggingSystem } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
 import { LogType, NodeProcessLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
 import { LogStore } from "../../data/SimulationSnapshot.js";
-import { NodeProcessLogObserver } from "../../presenter/SimSnapshotObserver.js";
+import { EntityUpdateListener } from "../../presenter/EntityStateObserver.js";
 
 /**
  * The LogSystem is part of the SimulationEngine and 
@@ -20,7 +20,7 @@ export class LoggingSystem implements ILoggingSystem {
 
     constructor(
         private store: LogStore, // full access
-        private updateListener: NodeProcessLogObserver,
+        private nodelogObserver: EntityUpdateListener<NodeProcessLog>,
 
         private currentNode: number,
     ) { }
@@ -33,7 +33,7 @@ export class LoggingSystem implements ILoggingSystem {
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.nodelogObserver.notifyUpdate(log);
     }
 
     public logWarning(msg: string): void {
@@ -44,7 +44,7 @@ export class LoggingSystem implements ILoggingSystem {
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.nodelogObserver.notifyUpdate(log);
     }
 
     public logError(msg: string): void {
@@ -55,7 +55,7 @@ export class LoggingSystem implements ILoggingSystem {
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.nodelogObserver.notifyUpdate(log);
     }
 
 }

@@ -2,13 +2,14 @@ import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/ap
 import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
-import { NodeProcessLogObserver, NodeStateObserver, MessageStateObserver } from "../presenter/SimSnapshotObserver.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
 import { LoggingSystem } from "./env_system_impl/LogSystem.js";
 import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
 import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
+import { IEntityStateObserver } from "../presenter/EntityStateObserver.js";
+import { NodeProcessLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
 
 //* Errors
 
@@ -71,9 +72,9 @@ export class SimulationEngine<N extends NodeState>
         private worker: SnapshotDataWorker,
         private processEmulator: INodeProcessEmulator<N>,
 
-        private observerLogsNodeProcess: NodeProcessLogObserver,
-        private observerNodeStates: NodeStateObserver,
-        private observerMessageStates: MessageStateObserver
+        private observerNodeProcessLogs: IEntityStateObserver<NodeProcessLog>,
+        private observerNodeStates: IEntityStateObserver<NodeState>,
+        private observerMessageStates: IEntityStateObserver<MessageState>
     ) { }
 
 
@@ -87,7 +88,7 @@ export class SimulationEngine<N extends NodeState>
         // setup environment for NodeProcess
         const env: NodeProcessEnvironment<N> = {
             up: new LoggingSystem(this.ss.logs,
-                this.observerLogsNodeProcess, scopedNodeId
+                this.observerNodeProcessLogs, scopedNodeId
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
@@ -143,7 +144,7 @@ export class SimulationEngine<N extends NodeState>
 
             const env: NodeProcessEnvironment<N> = {
                 up: new LoggingSystem(this.ss.logs,
-                    this.observerLogsNodeProcess, scopedNode
+                    this.observerNodeProcessLogs, scopedNode
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
