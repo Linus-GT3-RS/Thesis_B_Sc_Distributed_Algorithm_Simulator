@@ -1,7 +1,7 @@
 import { ILocalDataEnvSystem, MutableNodeStateKeys } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
 import { NodeState } from "../../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { NodeStateStore } from "../../data/SimulationSnapshot.js";
-import { EntityUpdateListener } from "../../presenter/EntityStateObserver.js";
+import { EntityUpdateListener } from "../../presentation/EntityStateObserver.js";
 
 
 /**

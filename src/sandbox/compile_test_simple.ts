@@ -1,7 +1,7 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../common/EntityStores.js";
 import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeProcessLog } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
+import { NodeLog } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { EchoAlgorithmNodeState } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
@@ -9,7 +9,7 @@ import { EchoAlgorithmNodeProcess } from "../domain_layer/components/algorithm_p
 import { PendingMessage, SimulationSnapshot } from "../domain_layer/components/simulation/data/SimulationSnapshot.js";
 import { SnapshotDataWorker } from "../domain_layer/components/simulation/data/SnapshotWorker.js";
 import { ISimulationEngine, SimulationEngine } from "../domain_layer/components/simulation/engine/SimulationEngine.js";
-import { NodeProcessLogObserver, EntityStateObserver, NodeStateObserver, MessageStateObserver } from "../domain_layer/components/simulation/presenter/SimSnapshotObserver.js";
+import { NodeProcessLogObserver, EntityStateObserver, NodeStateObserver, MessageStateObserver } from "../domain_layer/components/simulation/presentation/SimSnapshotObserver.js";
 import { DomainController, DomainState } from "../domain_layer/controller/DomainController.js";
 import { StateBehavSimulationStopped } from "../domain_layer/controller/impl_state_behaviours/StateBehavSimStopped.js";
 import { DomainCommandGateway } from "../domain_layer/gateways/CommandGateway.js";
@@ -17,7 +17,7 @@ import { DomainEventGateway } from "../domain_layer/gateways/EventGateway.js";
 
 
 //* Init SimulationSnapshot
-const logStore = new IndexedStore<NodeProcessLog>();
+const logStore = new IndexedStore<NodeLog>();
 const nodeStore = new IndexedStore<EchoAlgorithmNodeState>();
 const edgeStore = new IndexedStore<BiDirectionalEdgeState>();
 const msgStore = new IndexedStore<MessageState>();
@@ -48,7 +48,7 @@ edgeStore.insert(new BiDirectionalEdgeState(4, { id: 1 }, { id: 4 }, 140));
 
 //* Setup SimulationEngine
 const updates: Set<number> = new Set<number>();
-const obsLogs: NodeProcessLogObserver = new EntityStateObserver<NodeProcessLog>(updates);
+const obsLogs: NodeProcessLogObserver = new EntityStateObserver<NodeLog>(updates);
 const obsNodes: NodeStateObserver = new EntityStateObserver<NodeState>(updates);
 const obsMsgs: MessageStateObserver = new EntityStateObserver<MessageState>(updates);
 

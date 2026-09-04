@@ -8,8 +8,8 @@ import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
 import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
-import { IEntityStateObserver } from "../presenter/EntityStateObserver.js";
-import { NodeProcessLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { IEntityStateObserver } from "../presentation/EntityStateObserver.js";
+import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
 
 //* Errors
 
@@ -72,7 +72,7 @@ export class SimulationEngine<N extends NodeState>
         private worker: SnapshotDataWorker,
         private processEmulator: INodeProcessEmulator<N>,
 
-        private observerNodeProcessLogs: IEntityStateObserver<NodeProcessLog>,
+        private observerNodeProcessLogs: IEntityStateObserver<NodeLog>,
         private observerNodeStates: IEntityStateObserver<NodeState>,
         private observerMessageStates: IEntityStateObserver<MessageState>
     ) { }

@@ -28,12 +28,15 @@ export abstract class IEntityStateObserver<E extends Identifiable> {
      * This is a consuming call: after invocation, the 
      * observer contains no recorded updates until the next update occurs.
     */
-    public abstract consumeUpdates(): Set<number>;
+    public abstract consumeUpdates(): Iterable<number>;
 
 }
 
-
-export class EntityStateObserver<E extends Identifiable>
+/**
+ * For performance reasons only the most latest update
+ * is stored.
+ */
+export class SmartEntityStateObserver<E extends Identifiable>
     implements IEntityStateObserver<E> {
 
     constructor(
@@ -44,10 +47,10 @@ export class EntityStateObserver<E extends Identifiable>
         this.updates.add(entity.id);
     }
 
-    public consumeUpdates(): Set<number> {
-        const res: Set<number> = this.updates;
+    public consumeUpdates(): Iterable<number> {
+        const it: Iterable<number> = this.updates.values();
         this.updates = new Set<number>();
-        return res;
+        return it;
     }
 
 }

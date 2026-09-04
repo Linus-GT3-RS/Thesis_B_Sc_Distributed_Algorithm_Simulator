@@ -5,7 +5,7 @@ export enum LogType {
     ERROR,
 }
 
-export class NodeProcessLog {
+export class NodeLog {
     constructor(
         public id: number,
         public type: LogType,

@@ -4,7 +4,7 @@ import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/
 import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NeighborStore, NodeNeighbor, SnapshotDataWorker as SnapshotDataWorker } from "../../data/SnapshotWorker.js";
 import { MessageQueue, MessageStateStore } from "../../data/SimulationSnapshot.js";
-import { EntityUpdateListener } from "../../presenter/EntityStateObserver.js";
+import { EntityUpdateListener } from "../../presentation/EntityStateObserver.js";
 
 //* Types
 
