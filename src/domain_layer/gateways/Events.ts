@@ -1,4 +1,5 @@
 import z from "zod";
+import { PresentationModelNodeLog } from "../components/simulation/presentation/models/PresentationModels.js";
 
 //* Gateway Event Message
 
@@ -15,6 +16,13 @@ export type EventMessage = z.infer<typeof SchemaEventMessage>
 
 export class ErrorEv {
     constructor(
-        error: string,
+        public error: string,
+    ) { }
+}
+
+
+export class NodeLogUpdatedEv {
+    constructor(
+        public model: PresentationModelNodeLog
     ) { }
 }

@@ -1,14 +1,14 @@
-import { ModelDataDetail, ModelStyle } from "./PresentationModels.js";
+import { ModelDataDetail, ModelStyle } from "../PresentationModels.js";
 
+//* Data Detailer
 
-
-export abstract class IDetailerPresentationModel {
+export abstract class IDataDetailerPresentationModel {
 
     public abstract addDataDetail(key: string, value: string): void;
 
 }
 
-export class DataDetailerModel implements IDetailerPresentationModel {
+export class DataDetailerModel implements IDataDetailerPresentationModel {
 
     constructor(
         private data: ModelDataDetail, // full access
@@ -20,10 +20,9 @@ export class DataDetailerModel implements IDetailerPresentationModel {
 
 }
 
-// class ModelDetailProviderNodeState {
 
-// }
 
+//* Styles Detailer
 
 /**
  * through the stylist a style provider
@@ -32,7 +31,7 @@ export class DataDetailerModel implements IDetailerPresentationModel {
  * stylist provides all possible styles the provider
  * can choose from
  */
-abstract class IStylistPresentationModel {
+abstract class IStyleDetailerPresentationModel {
 
     public abstract setColor(color: string): void;
 
@@ -42,7 +41,7 @@ abstract class IStylistPresentationModel {
 
 }
 
-export class StylistPresentationModel implements IStylistPresentationModel {
+export class StylistPresentationModel implements IStyleDetailerPresentationModel {
 
     constructor(
         private styles: ModelStyle, // full access
@@ -53,19 +52,11 @@ export class StylistPresentationModel implements IStylistPresentationModel {
     }
 
     public setThickness(isThick: boolean): void {
-        this.styles.set("isThick", `${isThick}`); // todo weird
+        this.styles.set("thickness", isThick ? "thick" : "thin");
     }
 
     public setShape(shape: string): void {
         this.styles.set("shape", shape);
     }
-
-}
-
-
-
-
-
-class IStyleProviderPresentationModelNodeState {
 
 }
