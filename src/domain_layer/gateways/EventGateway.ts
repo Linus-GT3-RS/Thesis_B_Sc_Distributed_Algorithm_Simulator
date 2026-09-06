@@ -1,4 +1,4 @@
-import { ErrorEv, EventMessage, UpdatedEdgeStateEv, UpdatedMessageStateEv, UpdatedNodeLogEv, UpdatedNodeStateEv } from "./Events.js";
+import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, ErrorEv, EventMessage, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "./Events.js";
 
 
 export abstract class IDomainEventGateway {
@@ -30,11 +30,17 @@ export class DomainEventGateway implements IDomainEventGateway {
                 event: ev
             });
         }
-        else if (ev instanceof UpdatedNodeLogEv) {
+        else if (ev instanceof CreatedNodeLogEv) {
             this.sendEventMessage({
-                type: "UpdatedNodeLogEv",
+                type: "CreatedNodeLogEv",
                 event: ev,
             })
+        }
+        else if (ev instanceof CreatedNodeStateEv) {
+            this.sendEventMessage({
+                type: "CreatedNodeStateEv",
+                event: ev,
+            });
         }
         else if (ev instanceof UpdatedNodeStateEv) {
             this.sendEventMessage({
@@ -42,9 +48,15 @@ export class DomainEventGateway implements IDomainEventGateway {
                 event: ev,
             });
         }
-        else if (ev instanceof UpdatedMessageStateEv) {
+        else if (ev instanceof CreatedMessageStateEv) {
             this.sendEventMessage({
-                type: "UpdatedMessageStateEv",
+                type: "CreatedMessageStateEv",
+                event: ev,
+            });
+        }
+        else if (ev instanceof CreatedEdgeStateEv) {
+            this.sendEventMessage({
+                type: "CreatedEdgeStateEv",
                 event: ev,
             });
         }

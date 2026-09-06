@@ -4,19 +4,19 @@ export type ModelStyle = Map<string, string>
 
 export class PresentationModelNodeLog {
     constructor(
-        public idEntity: number,
+        public idNodeLog: number,
 
-        public type: string,
+        public logType: string,
         public log: string,
 
-        public logger: number,
+        public idLogger: number,
     ) { }
 }
 
 
 export class PresentationModelNodeState {
     constructor(
-        public idEntity: number,
+        public idNodeState: number,
 
         public dataDetails: ModelDataDetail,
         public styles: ModelStyle,
@@ -26,13 +26,13 @@ export class PresentationModelNodeState {
 
 export class PresentationModelEdgeState {
     constructor(
-        public idEntity: number,
+        public idEdgeState: number,
 
-        public nodeA: number,
-        public nodeB: number,
+        public idNodeA: number,
+        public idNodeB: number,
 
         public length_ms: number,
-        public type: string,
+        public edgeType: string,
 
         public dataDetails: ModelDataDetail,
         public styles: ModelStyle,
@@ -42,10 +42,10 @@ export class PresentationModelEdgeState {
 
 export class PresentationModelMessageState {
     constructor(
-        public idEntity: number,
+        public idMessageState: number,
 
-        public sender: number,
-        public receiver: number,
+        public idSender: number,
+        public idReceiver: number,
 
         public sendTime: number,
         public destinationTime: number,

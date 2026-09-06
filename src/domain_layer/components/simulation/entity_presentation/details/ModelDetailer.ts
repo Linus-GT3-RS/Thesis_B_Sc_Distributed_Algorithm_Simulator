@@ -1,6 +1,7 @@
-import { ModelDataDetail, ModelStyle } from "../PresentationModels.js";
 
 //* Data Detailer
+
+import { ModelDataDetail, ModelStyle } from "../models/PresentationModels.js";
 
 export abstract class IDataDetailerPresentationModel {
 

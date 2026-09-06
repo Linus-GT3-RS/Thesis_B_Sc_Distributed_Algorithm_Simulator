@@ -1,6 +1,6 @@
-import { Identifiable, ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
+import { ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
 import { IDomainEventGateway } from "../../../gateways/EventGateway.js";
-import { NodeLogUpdatedEv, UpdatedEdgeStateEv, UpdatedMessageStateEv, UpdatedNodeLogEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
+import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
 import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
 import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
@@ -8,47 +8,37 @@ import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/N
 import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "./models/PresentationModelBuilder.js";
 import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./models/PresentationModels.js";
 
-//* Interface
+//* Interfaces
 
-/** 
- * An entity presenter is responsible for presenting 
- * entities of one specific type. 
- * 
- * It presents an entity through a PresentationModel 
- * and emits corresponding events. 
- */
-export abstract class IEntityPresenter {
+export abstract class IPresenterUpdatedEntityStates {
 
     /**
-     * Presents an updated entity.
+     * Presents an entity after it has been updated by
+     * emitting an event containing its presentation model. 
+     * 
      * @param id 
      */
-    public presentUpdated(id: number): void {
+    public abstract presentUpdate(id: number): void;
 
-    }
+}
 
-    // /**
-    //  * Presents a newly created entity.
-    //  * @param id 
-    //  */
-    // public presentCreated(id: number): void {
+export abstract class IPresenterCreatedEntityStates {
 
-    // }
-
-    // /**
-    //  * Presents an entity in response to a read request.
-    //  * @param id 
-    //  */
-    // public presentRead(id: number): void {
-
-    // }
+    /**
+     * Presents an entity for the first time after it
+     * has been created by emitting an event containing
+     * its presentation model.
+     * 
+     * @param id 
+     */
+    public abstract presentCreation(id: number): void;
 
 }
 
 
 //* Implementations 
 
-export class PresenterNodeLogs implements IEntityPresenter {
+export class PresenterNodeLogs implements IPresenterCreatedEntityStates {
 
     constructor(
         private store: ReadonlyIndexedStore<NodeLog>,
@@ -57,19 +47,22 @@ export class PresenterNodeLogs implements IEntityPresenter {
     ) { }
 
 
-    public presentUpdated(id: number): void {
+    public presentCreation(id: number): void {
         const updtEntity: Readonly<NodeLog> = this.store.read({ id: id });
 
         const model: PresentationModelNodeLog =
             this.modelBuilder.build(updtEntity);
 
-        this.eventGateway.emit(new UpdatedNodeLogEv(model));
+        this.eventGateway.emit(new CreatedNodeLogEv(model));
     }
 
 }
 
 
-export class PresenterNodeStates implements IEntityPresenter {
+export class PresenterNodeStates
+    implements
+    IPresenterCreatedEntityStates,
+    IPresenterUpdatedEntityStates {
 
     constructor(
         private roStore: ReadonlyIndexedStore<NodeState>,
@@ -78,7 +71,15 @@ export class PresenterNodeStates implements IEntityPresenter {
     ) { }
 
 
-    public presentUpdated(id: number): void {
+    public presentCreation(id: number): void {
+        const updtEnt: Readonly<NodeState> = this.roStore.read({ id: id });
+
+        const model: PresentationModelNodeState = this.modelBuilder.build(updtEnt);
+
+        this.eventGateway.emit(new CreatedNodeStateEv(model));
+    }
+
+    public presentUpdate(id: number): void {
         const updtEnt: Readonly<NodeState> = this.roStore.read({ id: id });
 
         const model: PresentationModelNodeState = this.modelBuilder.build(updtEnt);
@@ -89,7 +90,7 @@ export class PresenterNodeStates implements IEntityPresenter {
 }
 
 
-export class PresenterMessageStates implements IEntityPresenter {
+export class PresenterMessageStates implements IPresenterCreatedEntityStates {
 
     constructor(
         private store: ReadonlyIndexedStore<MessageState>,
@@ -98,21 +99,24 @@ export class PresenterMessageStates implements IEntityPresenter {
     ) { }
 
 
-    public presentUpdated(id: number): void {
+    public presentCreation(id: number): void {
         const updtEntity: Readonly<MessageState> =
             this.store.read({ id: id });
 
         const model: PresentationModelMessageState =
             this.modelBuilder.build(updtEntity);
 
-        this.eventGateway.emit(new UpdatedMessageStateEv(model));
+        this.eventGateway.emit(new CreatedMessageStateEv(model));
     }
 
 }
 
 
 
-export class PresenterEdgeStates implements IEntityPresenter {
+export class PresenterEdgeStates
+    implements
+    IPresenterCreatedEntityStates,
+    IPresenterUpdatedEntityStates {
 
     constructor(
         private store: ReadonlyIndexedStore<BiDirectionalEdgeState>,
@@ -120,7 +124,18 @@ export class PresenterEdgeStates implements IEntityPresenter {
         private eventGateway: IDomainEventGateway,
     ) { }
 
-    public presentUpdated(id: number): void {
+
+    public presentCreation(id: number): void {
+        const updtEntity: Readonly<BiDirectionalEdgeState> =
+            this.store.read({ id: id });
+
+        const model: PresentationModelEdgeState =
+            this.modelBuilder.build(updtEntity);
+
+        this.eventGateway.emit(new CreatedEdgeStateEv(model));
+    }
+
+    public presentUpdate(id: number): void {
         const updtEntity: Readonly<BiDirectionalEdgeState> =
             this.store.read({ id: id });
 

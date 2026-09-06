@@ -1,7 +1,5 @@
 import z from "zod";
-import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "../components/simulation/presentation/models/PresentationModels.js";
-import { Identifiable } from "../../common/EntityStores.js";
-import { NodeLog } from "../components/algorithm_plugins/api/entities/state_entities/Logs.js";
+import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "../components/simulation/entity_presentation/models/PresentationModels.js";
 
 //* Gateway Event Message
 
@@ -23,11 +21,17 @@ export class ErrorEv {
 }
 
 
-//? Simulation Entities
+//= Simulation Entities
 
-export class UpdatedNodeLogEv {
+export class CreatedNodeLogEv {
     constructor(
-        public updated: PresentationModelNodeLog,
+        public model: PresentationModelNodeLog,
+    ) { }
+}
+
+export class CreatedNodeStateEv {
+    constructor(
+        public model: PresentationModelNodeState,
     ) { }
 }
 
@@ -37,14 +41,20 @@ export class UpdatedNodeStateEv {
     ) { }
 }
 
+export class CreatedEdgeStateEv {
+    constructor(
+        public model: PresentationModelEdgeState,
+    ) { }
+}
+
 export class UpdatedEdgeStateEv {
     constructor(
         public updated: PresentationModelEdgeState,
     ) { }
 }
 
-export class UpdatedMessageStateEv {
+export class CreatedMessageStateEv {
     constructor(
-        public updated: PresentationModelMessageState,
+        public model: PresentationModelMessageState,
     ) { }
 }

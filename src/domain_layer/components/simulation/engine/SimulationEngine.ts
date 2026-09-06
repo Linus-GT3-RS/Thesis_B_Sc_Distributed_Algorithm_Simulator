@@ -8,8 +8,8 @@ import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
 import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
-import { IEntityStateObserver } from "../presentation/EntityStateObserver.js";
 import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { ChangeObserverCollection } from "../entity_observation/EntityCollectionObserver.js";
 
 //* Errors
 
@@ -72,9 +72,9 @@ export class SimulationEngine<N extends NodeState>
         private worker: SnapshotDataWorker,
         private processEmulator: INodeProcessEmulator<N>,
 
-        private observerNodeProcessLogs: IEntityStateObserver<NodeLog>,
-        private observerNodeStates: IEntityStateObserver<NodeState>,
-        private observerMessageStates: IEntityStateObserver<MessageState>
+        private changeObsNodeLogs: ChangeObserverCollection<NodeLog>,
+        private changeObsNodeStates: ChangeObserverCollection<NodeState>,
+        private changeObsMessageStates: ChangeObserverCollection<MessageState>
     ) { }
 
 
@@ -88,18 +88,19 @@ export class SimulationEngine<N extends NodeState>
         // setup environment for NodeProcess
         const env: NodeProcessEnvironment<N> = {
             up: new LoggingSystem(this.ss.logs,
-                this.observerNodeProcessLogs, scopedNodeId
+                this.changeObsNodeLogs, scopedNodeId
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
-                this.observerNodeStates, scopedNodeId
+                this.changeObsNodeStates, scopedNodeId
             ),
 
             in: new MessageDeliverySystem(null),
 
             out: new MessageSenderSystem(
-                this.ss.msgStates, this.ss.pendingMessages, this.ss.simulationTimestamp,
-                this.observerMessageStates,
+                this.ss.msgStates, this.ss.pendingMessages,
+                this.changeObsMessageStates,
+                this.ss.simulationTimestamp,
                 this.ss.edgeStates, this.worker,
                 scopedNodeId
             ),
@@ -144,18 +145,19 @@ export class SimulationEngine<N extends NodeState>
 
             const env: NodeProcessEnvironment<N> = {
                 up: new LoggingSystem(this.ss.logs,
-                    this.observerNodeProcessLogs, scopedNode
+                    this.changeObsNodeLogs, scopedNode
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
-                    this.observerNodeStates, scopedNode
+                    this.changeObsNodeStates, scopedNode
                 ),
 
                 in: new MessageDeliverySystem(delivery.data),
 
                 out: new MessageSenderSystem(
-                    this.ss.msgStates, this.ss.pendingMessages, this.ss.simulationTimestamp,
-                    this.observerMessageStates,
+                    this.ss.msgStates, this.ss.pendingMessages,
+                    this.changeObsMessageStates,
+                    this.ss.simulationTimestamp,
                     this.ss.edgeStates, this.worker,
                     scopedNode
                 ),

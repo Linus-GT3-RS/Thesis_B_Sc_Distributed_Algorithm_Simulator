@@ -1,4 +1,7 @@
+import { NodeLog } from "../../components/algorithm_plugins/api/entities/state_entities/Logs.js";
 import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
+import { ConsumableObserverCollection as ConsumeableChangeObserverCollection } from "../../components/simulation/entity_observation/EntityCollectionObserver.js";
+import { PresenterNodeLogs } from "../../components/simulation/entity_presentation/EntityStatePresenter.js";
 import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../../gateways/Commands.js";
 import { IDomainEventGateway } from "../../gateways/EventGateway.js";
 import { ErrorEv } from "../../gateways/Events.js";
@@ -28,18 +31,31 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
     constructor(
         private eventGateway: IDomainEventGateway,
 
-        // state specific dependencies / workers
+        //* state specific dependencies
         private simulationEngine: ISimulationEngine,
+
+        private changeObsvNodeLogs: ConsumeableChangeObserverCollection<NodeLog>,
+        // private changeObsvNodeStates: ConsumeableChangeObserverCollection<NodeState>,
+        // private changeObsvMessageStates: ConsumeableChangeObserverCollection<MessageState>,
+        // private changeObsvEdgeStates: ConsumeableChangeObserverCollection<BiDirectionalEdgeState>,
+
+        private presenterNodeLogs: PresenterNodeLogs,
+        // private presenterNodeStates: PresenterNodeStates,
+        // private presenterMessageStates: PresenterMessageStates,
+        // private presenterEdgeStates: PresenterEdgeStates,
     ) { }
 
     public onCmdSimulateAlgoInit(cmd: CmdSimulateAlgoInit): void {
         try {
+            //= simulate init
             this.simulationEngine.simulateInitiation(cmd.initiator);
             // handle edge case in case messages with distance=0 were send
             this.simulationEngine.simulateTimeAdvancement(0);
 
-            // todo events
-            // present snapshot updates
+            //= present changes of snapshot
+            for (const creation of this.changeObsvNodeLogs.consumeCreationReports()) {
+                this.presenterNodeLogs.presentCreation(creation);
+            }
         }
         catch (error) {
             this.emitEvInvalidStateSimStopped(cmd, error);
@@ -49,10 +65,13 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
 
     public onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void {
         try {
+            //= simulate
             this.simulationEngine.simulateTimeAdvancement(cmd.delta);
 
-            // todo events
-            // present snapshot updates
+            //= present changes
+            for (const creation of this.changeObsvNodeLogs.consumeCreationReports()) {
+                this.presenterNodeLogs.presentCreation(creation);
+            }
         }
         catch (error) {
             this.emitEvInvalidStateSimStopped(cmd, error);

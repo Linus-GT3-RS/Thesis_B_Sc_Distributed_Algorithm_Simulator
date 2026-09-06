@@ -4,7 +4,7 @@ import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/
 import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NeighborStore, NodeNeighbor, SnapshotDataWorker as SnapshotDataWorker } from "../../data/SnapshotWorker.js";
 import { MessageQueue, MessageStateStore } from "../../data/SimulationSnapshot.js";
-import { EntityUpdateListener } from "../../presentation/EntityStateObserver.js";
+import { ChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";
 
 //* Types
 
@@ -34,9 +34,9 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
     constructor(
         private store: MessageStateStore, // full access
         private queue: MessageQueue, // full access
-        private simulationTime: number,
-        private updateObserver: EntityUpdateListener<MessageState>,
+        private changeObsv: ChangeObserverCollection<MessageState>,
 
+        private simulationTime: number,
         private edgeStates: ReadonlyEdgeStore,  // read only access
         private worker: SnapshotDataWorker,
 
@@ -73,7 +73,7 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
         );
         this.store.insert(message);
         this.queue.push(message);
-        this.updateObserver.notifyUpdate(message);
+        this.changeObsv.notifyCreation(message);
     }
 
 

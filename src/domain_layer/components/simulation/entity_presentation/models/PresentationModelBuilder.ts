@@ -1,5 +1,5 @@
 import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { LogType, NodeLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./PresentationModels.js";
@@ -10,9 +10,20 @@ export class ModelBuilderNodeLog {
     public build(log: Readonly<NodeLog>): PresentationModelNodeLog {
         return new PresentationModelNodeLog(
             log.id,
-            log.type.toString(), log.msg,
+            this.type2String(log.type), log.msg,
             log.logger
         );
+    }
+
+    public type2String(logtype: LogType): string {
+        switch (logtype) {
+            case LogType.INFO:
+                return "log-info";
+            case LogType.WARNING:
+                return "log-warning";
+            case LogType.ERROR:
+                return "log-error";
+        }
     }
 
 }

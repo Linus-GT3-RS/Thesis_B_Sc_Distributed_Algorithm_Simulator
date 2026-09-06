@@ -9,11 +9,13 @@ import { EchoAlgorithmNodeProcess } from "../domain_layer/components/algorithm_p
 import { PendingMessage, SimulationSnapshot } from "../domain_layer/components/simulation/data/SimulationSnapshot.js";
 import { SnapshotDataWorker } from "../domain_layer/components/simulation/data/SnapshotWorker.js";
 import { ISimulationEngine, SimulationEngine } from "../domain_layer/components/simulation/engine/SimulationEngine.js";
-import { NodeProcessLogObserver, EntityStateObserver, NodeStateObserver, MessageStateObserver } from "../domain_layer/components/simulation/presentation/SimSnapshotObserver.js";
 import { DomainController, DomainState } from "../domain_layer/controller/DomainController.js";
 import { StateBehavSimulationStopped } from "../domain_layer/controller/impl_state_behaviours/StateBehavSimStopped.js";
 import { DomainCommandGateway } from "../domain_layer/gateways/CommandGateway.js";
 import { DomainEventGateway } from "../domain_layer/gateways/EventGateway.js";
+import { EntityCollectionObserver } from "../domain_layer/components/simulation/entity_observation/EntityCollectionObserver.js";
+import { PresenterNodeLogs } from "../domain_layer/components/simulation/entity_presentation/EntityStatePresenter.js";
+import { ModelBuilderNodeLog } from "../domain_layer/components/simulation/entity_presentation/models/PresentationModelBuilder.js";
 
 
 //* Init SimulationSnapshot
@@ -45,36 +47,55 @@ edgeStore.insert(new BiDirectionalEdgeState(3, { id: 2 }, { id: 4 }, 130));
 edgeStore.insert(new BiDirectionalEdgeState(4, { id: 1 }, { id: 4 }, 140));
 
 
-
-//* Setup SimulationEngine
-const updates: Set<number> = new Set<number>();
-const obsLogs: NodeProcessLogObserver = new EntityStateObserver<NodeLog>(updates);
-const obsNodes: NodeStateObserver = new EntityStateObserver<NodeState>(updates);
-const obsMsgs: MessageStateObserver = new EntityStateObserver<MessageState>(updates);
-
-const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
-    snapshot,
-    new SnapshotDataWorker(), new EchoAlgorithmNodeProcess(),
-    obsLogs, obsNodes, obsMsgs
-);
-
-
-
-//* Setup Domain
+//* Setup Domain Event Gateway
 function emitter(ev: unknown): void {
-    console.log(`received ev: ${ev}`);
+    console.log(`received ev`);
+    console.log(ev);
 }
 const evGateway: DomainEventGateway = new DomainEventGateway(emitter);
 
-const bevSimStopppedState = new StateBehavSimulationStopped(
-    evGateway, engine
+
+//* Setup EntityCollectionObserver
+const obsNodeLogs = new EntityCollectionObserver<NodeLog>(
+    new Set<number>(), new Set<number>()
+);
+const obsNodeStates = new EntityCollectionObserver<NodeState>(
+    new Set<number>(), new Set<number>()
+);
+const obsMessageStates = new EntityCollectionObserver<MessageState>(
+    new Set<number>(), new Set<number>()
+);
+// const obsEdgeStates = new EntityCollectionObserver<BiDirectionalEdgeState>(
+//     new Set<number>(), new Set<number>()
+// );
+
+//* Setup Simulation Engine
+const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
+    snapshot,
+    new SnapshotDataWorker(), new EchoAlgorithmNodeProcess(),
+    obsNodeLogs, obsNodeStates, obsMessageStates
 );
 
+//* Setup Simulation Presenter
+const presenterNodeLogs = new PresenterNodeLogs(
+    snapshot.logs, new ModelBuilderNodeLog(), evGateway
+)
+
+//* Setup Simulation Stopped State
+
+
+const bevSimStopppedState = new StateBehavSimulationStopped(
+    evGateway,
+    engine, obsNodeLogs, presenterNodeLogs
+);
+
+//* Setup Controller
 const domainController = new DomainController(
     DomainState.SimulationStoppedState, evGateway,
     bevSimStopppedState
 );
 
+//* Setup Domain Command Gateway
 const cmdGateway = new DomainCommandGateway(domainController, evGateway);
 
 
@@ -92,4 +113,3 @@ while (snapshot.pendingMessages.length > 0) {
 }
 
 console.log(snapshot.nodeStates);
-console.log(snapshot.logs);
