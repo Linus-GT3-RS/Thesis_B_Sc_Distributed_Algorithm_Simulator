@@ -1,5 +1,7 @@
 import z from "zod";
-import { PresentationModelNodeLog } from "../components/simulation/presentation/models/PresentationModels.js";
+import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "../components/simulation/presentation/models/PresentationModels.js";
+import { Identifiable } from "../../common/EntityStores.js";
+import { NodeLog } from "../components/algorithm_plugins/api/entities/state_entities/Logs.js";
 
 //* Gateway Event Message
 
@@ -21,8 +23,28 @@ export class ErrorEv {
 }
 
 
-export class NodeLogUpdatedEv {
+//? Simulation Entities
+
+export class UpdatedNodeLogEv {
     constructor(
-        public model: PresentationModelNodeLog
+        public updated: PresentationModelNodeLog,
+    ) { }
+}
+
+export class UpdatedNodeStateEv {
+    constructor(
+        public updated: PresentationModelNodeState,
+    ) { }
+}
+
+export class UpdatedEdgeStateEv {
+    constructor(
+        public updated: PresentationModelEdgeState,
+    ) { }
+}
+
+export class UpdatedMessageStateEv {
+    constructor(
+        public updated: PresentationModelMessageState,
     ) { }
 }

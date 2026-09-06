@@ -1,4 +1,4 @@
-import { ErrorEv, EventMessage } from "./Events.js";
+import { ErrorEv, EventMessage, UpdatedEdgeStateEv, UpdatedMessageStateEv, UpdatedNodeLogEv, UpdatedNodeStateEv } from "./Events.js";
 
 
 export abstract class IDomainEventGateway {
@@ -28,6 +28,30 @@ export class DomainEventGateway implements IDomainEventGateway {
             this.sendEventMessage({
                 type: "ErrorEv",
                 event: ev
+            });
+        }
+        else if (ev instanceof UpdatedNodeLogEv) {
+            this.sendEventMessage({
+                type: "UpdatedNodeLogEv",
+                event: ev,
+            })
+        }
+        else if (ev instanceof UpdatedNodeStateEv) {
+            this.sendEventMessage({
+                type: "UpdatedNodeStateEv",
+                event: ev,
+            });
+        }
+        else if (ev instanceof UpdatedMessageStateEv) {
+            this.sendEventMessage({
+                type: "UpdatedMessageStateEv",
+                event: ev,
+            });
+        }
+        else if (ev instanceof UpdatedEdgeStateEv) {
+            this.sendEventMessage({
+                type: "UpdatedEdgeStateEv",
+                event: ev,
             });
         }
         else {
