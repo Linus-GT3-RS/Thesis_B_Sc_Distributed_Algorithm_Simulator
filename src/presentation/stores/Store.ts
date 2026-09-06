@@ -20,6 +20,8 @@ export const useStore = defineStore("store", {
 
         domainState: "state",
         simulationTime: 0,
+
+        sliderValue: 50,
     }),
 
     getters: {

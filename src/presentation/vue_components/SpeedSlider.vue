@@ -3,9 +3,7 @@ import { useStore } from '../stores/Store';
 import { storeToRefs } from 'pinia';
 
 const store = useStore();
-const {speedSliderSettings} = storeToRefs(store);
-
-let val = speedSliderSettings.value.currentValue;
+const {speedSliderSettings, sliderValue} = storeToRefs(store);
 
 </script>
 
@@ -13,15 +11,16 @@ let val = speedSliderSettings.value.currentValue;
 <template>
 <div class="speed-slider" v-if="speedSliderSettings !== null">
     <input
-    type="range"
-    min="speedSliderSettings.min" 
-    max="speedSliderSettings.max" 
-    step="speedSliderSettings.stepsize"
-    v-model.number="val"
+    :type="'range'"
+    :min="speedSliderSettings.min" 
+    :max="speedSliderSettings.max" 
+    :step="speedSliderSettings.stepsize"
+    :v-model.number="sliderValue" 
+    @input="(payload) => sliderValue = Number((payload.target as HTMLInputElement).value)"
     />
     
     <div> 
-        {{ val }}{{ val }}
+        {{ sliderValue }}{{ speedSliderSettings.metric }}
     </div>    
 </div>
 
