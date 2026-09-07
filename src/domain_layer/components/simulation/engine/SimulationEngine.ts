@@ -9,8 +9,7 @@ import { MessageSenderSystem } from "./environment_systems/MsgSenderSystem.js";
 import { NodeStateSystem } from "./environment_systems/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
 import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { ChangeObserverCollection, ConnectedEntityCollectionsObserver } from "../entity_observation/EntityCollectionObserver.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
+import { IChangeObserverCollection } from "../entity_observation/EntityCollectionObserver.js";
 
 //* Errors
 
@@ -73,14 +72,12 @@ export class SimulationEngine<N extends NodeState>
         private worker: SnapshotDataWorker,
         private processEmulator: INodeProcessEmulator<N>,
 
-        private changeObsNodeLogs: ChangeObserverCollection<NodeLog>,
-        private changeObsNodeStates: ChangeObserverCollection<NodeState>,
-        private changeObsEdgeStates: ChangeObserverCollection<BiDirectionalEdgeState>,
-        private changeObsMessageStates: ChangeObserverCollection<MessageState>,
+        private creationObsNodeLogs: IChangeObserverCollection<NodeLog>,
+        private changeObsNodeStates: IChangeObserverCollection<NodeState>,
+        private creationObsMessageStates: IChangeObserverCollection<MessageState>,
     ) { }
 
-
-    //? Initiation Simulation
+    //= Initiation Simulation
 
     public simulateInitiation(target: number): void {
         // determine initiator node
@@ -90,26 +87,18 @@ export class SimulationEngine<N extends NodeState>
         // setup environment for NodeProcess
         const env: NodeProcessEnvironment<N> = {
             up: new LoggingSystem(this.ss.logs,
-                this.changeObsNodeLogs, scopedNodeId
+                this.creationObsNodeLogs, scopedNodeId
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
-                new ConnectedEntityCollectionsObserver(
-                    this.changeObsNodeStates, this.changeObsEdgeStates,
-                    (target: Readonly<NodeState>) => {
-                        return this.worker.getNodeEdges(
-                            this.ss.edgeStates, target.id
-                        );
-                    }
-                ),
-                scopedNodeId
+                this.changeObsNodeStates, scopedNodeId
             ),
 
             in: new MessageDeliverySystem(null),
 
             out: new MessageSenderSystem(
                 this.ss.msgStates, this.ss.pendingMessages,
-                this.changeObsMessageStates,
+                this.creationObsMessageStates,
                 this.ss.simulationTimestamp,
                 this.ss.edgeStates, this.worker,
                 scopedNodeId
@@ -155,26 +144,18 @@ export class SimulationEngine<N extends NodeState>
 
             const env: NodeProcessEnvironment<N> = {
                 up: new LoggingSystem(this.ss.logs,
-                    this.changeObsNodeLogs, scopedNode
+                    this.creationObsNodeLogs, scopedNode
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
-                    new ConnectedEntityCollectionsObserver(
-                        this.changeObsNodeStates, this.changeObsEdgeStates,
-                        (target: Readonly<NodeState>) => {
-                            return this.worker.getNodeEdges(
-                                this.ss.edgeStates, target.id
-                            );
-                        }
-                    ),
-                    scopedNode
+                    this.changeObsNodeStates, scopedNode
                 ),
 
                 in: new MessageDeliverySystem(delivery.data),
 
                 out: new MessageSenderSystem(
                     this.ss.msgStates, this.ss.pendingMessages,
-                    this.changeObsMessageStates,
+                    this.creationObsMessageStates,
                     this.ss.simulationTimestamp,
                     this.ss.edgeStates, this.worker,
                     scopedNode
