@@ -1,146 +1,95 @@
 import { Identifiable } from "../../../../common/EntityStores.js";
 
-//* Types
+//* Interfaces
 
-export type ChangeObserverCollection<I extends Identifiable> =
-    Pick<IObserverEntityCollection<I>, "notifyUpdate" | "notifyCreation">
-
-export type ConsumableCollectionObserver<I extends Identifiable> =
-    Pick<IObserverEntityCollection<I>,
-        "consumeCreationReports" | "consumeUpdateReports">
-
-
-//* Observer
-
-/**
- * Observes CRUD actions to entities with a given type
- * and records the action type with the id of the entity
- */
-export abstract class IObserverEntityCollection<TypeEntity extends Identifiable> {
-
-
-    //= Updates
+export abstract class IChangeObserverCollection
+    <Entity extends Identifiable> {
 
     /**
-     * When an update is reported, the corresponding entity ID
-     * is stored and can later be retrieved by the consumer.
-
+     * When a change is reported, the corresponding entity ID
+     * is stored.
+     * 
      * @param entityId 
-     */
-    public abstract notifyUpdate(entity: TypeEntity): void;
+    */
+    public abstract notifyChange(entity: Entity): void;
+
+}
+
+export abstract class IChangeReportProvider {
 
     /**
-     * Gets all currently recorded updates.
+     * Gets all currently recorded changes.
      * 
      * This is a consuming call: after invocation, the 
-     * observer contains no recorded updates until the next occurs.
+     * observer contains no records until the next occurs.
     */
-    public abstract consumeUpdateReports(): Iterable<number>;
-
-
-    //= Creation
-
-    /**
-     * When a creation is reported, the corresponding entity ID
-     * is stored and can later be retrieved by the consumer.
-
-     * @param entityId 
-     */
-    public abstract notifyCreation(entity: TypeEntity): void;
-
-    /**
-     * Gets all currently recorded creations.
-     * 
-     * This is a consuming call: after invocation, the 
-     * observer contains no recorded creations until the next occurs.
-    */
-    public abstract consumeCreationReports(): Iterable<number>;
+    public abstract consumeChangeReports(): Iterable<number>;
 
 }
 
 
-//* Implementation 
+//* Implementations
 
+//= Lazy Change Observer
 /**
  * Observes changes to entities of a given type.
  *
- * Note on Updates:
- * Multiple updates to the same entity are coalesced,
- * so only the latest pending update for each entity is retained.
+ * Note:
+ * Multiple changes to the same entity are coalesced,
+ * so only one is retained.
  */
-export class EntityCollectionObserver<E extends Identifiable>
-    implements IObserverEntityCollection<E> {
+export class LazyChangeObserverCollection<E extends Identifiable>
+    implements
+    IChangeObserverCollection<E>,
+    IChangeReportProvider {
 
     constructor(
-        private creationReports: Set<number>,
-        private updateReports: Set<number>,
+        private changeReports: Set<number>,
     ) { }
 
-
-    public notifyCreation(entity: E): void {
-        this.creationReports.add(entity.id);
+    public notifyChange(entity: E): void {
+        this.changeReports.add(entity.id);
     }
 
-    public consumeCreationReports(): Iterable<number> {
-        const it: Iterable<number> = this.creationReports.values();
-        this.creationReports = new Set<number>();
-        return it;
-    }
-
-    public notifyUpdate(entity: E): void {
-        this.updateReports.add(entity.id);
-    }
-
-    public consumeUpdateReports(): Iterable<number> {
-        const it: Iterable<number> = this.updateReports.values();
-        this.updateReports = new Set<number>();
+    public consumeChangeReports(): Iterable<number> {
+        const it: Iterable<number> = this.changeReports.values();
+        this.changeReports = new Set<number>();
         return it;
     }
 
 }
 
+
+
+//= Cascading Change Observer
+
 /**
- * observer for an entity type
- * that has dependent types
+ * Observer for an entity type
+ * that has a dependent type:
  *
- * if a change to an entity is reported,
- * all entities that depend on it are
- * reported as changed as well
- *
- * @type {Observed} type of entity that is observed
- * @type {Dependent} type of entity that depends on
- *                  the observed entities
+ * if a change to an entity of @type {Observed} is 
+ * reported, all entities of @type {Dependent} that depend 
+ * on this entity are reported as changed as well (cascading)
+ * 
  */
-export class ConnectedEntityCollectionsObserver
-    <Observed extends Identifiable, Dependent extends Identifiable>
-    implements IObserverEntityCollection<Observed> {
+export class CascadingChangeObserverCollection<
+    ObservedEntity extends Identifiable,
+    DependentEntity extends Identifiable
+>
+    implements IChangeObserverCollection<ObservedEntity> {
 
     constructor(
-        private obsCollObserved: ChangeObserverCollection<Observed>,
-        private obsCollDependents: ChangeObserverCollection<Dependent>,
-        private getAllDependents: (updatedObserved: Readonly<Observed>) => Iterable<Readonly<Dependent>>,
+        private changeObsObserved: IChangeObserverCollection<ObservedEntity>,
+        private changeObsDependents: IChangeObserverCollection<DependentEntity>,
+        private getAllDependingEntites: (observable: Readonly<ObservedEntity>) => Iterable<Readonly<DependentEntity>>,
     ) { }
 
-    public notifyUpdate(observedEntity: Observed): void {
-        this.obsCollObserved.notifyUpdate(observedEntity);
+    public notifyChange(observable: ObservedEntity): void {
+        this.changeObsObserved.notifyChange(observable);
 
-        for (const dependent of this.getAllDependents(observedEntity)) {
-            this.obsCollDependents.notifyUpdate(dependent);
+        for (const dependent of this.getAllDependingEntites(observable)) {
+            this.changeObsDependents.notifyChange(dependent);
         }
-    }
-
-
-    //! todo refactor this shi
-    public consumeUpdateReports(): Iterable<number> {
-        throw new Error("Call on this method should not happen");
-    }
-
-    public notifyCreation(entity: Observed): void {
-        throw new Error("Call on this method should not happen");
-    }
-
-    public consumeCreationReports(): Iterable<number> {
-        throw new Error("Call on this method should not happen");
     }
 
 }
