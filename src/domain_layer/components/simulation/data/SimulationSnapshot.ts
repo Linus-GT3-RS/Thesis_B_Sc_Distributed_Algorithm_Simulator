@@ -37,7 +37,7 @@ export class SimulationSnapshot<N extends NodeState> {
 
         public simulationTimestamp: number,
 
-        // public algoType: AlgorithmIdentifier,
+        // public algoType: AlgorithmIdentifier, //todo is this even supposed to be in here? has no meaning... should be stored in repo? only entities here?
     ) { }
 }
 

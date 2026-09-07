@@ -5,7 +5,7 @@ import { Identifiable } from "../../../../common/EntityStores.js";
 export type ChangeObserverCollection<I extends Identifiable> =
     Pick<IObserverEntityCollection<I>, "notifyUpdate" | "notifyCreation">
 
-export type ConsumableObserverCollection<I extends Identifiable> =
+export type ConsumableCollectionObserver<I extends Identifiable> =
     Pick<IObserverEntityCollection<I>,
         "consumeCreationReports" | "consumeUpdateReports">
 

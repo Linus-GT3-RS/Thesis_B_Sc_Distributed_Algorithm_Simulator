@@ -14,8 +14,8 @@ import { StateBehavSimulationStopped } from "../domain_layer/controller/impl_sta
 import { DomainCommandGateway } from "../domain_layer/gateways/CommandGateway.js";
 import { DomainEventGateway } from "../domain_layer/gateways/EventGateway.js";
 import { EntityCollectionObserver } from "../domain_layer/components/simulation/entity_observation/EntityCollectionObserver.js";
-import { PresenterNodeLogs } from "../domain_layer/components/simulation/entity_presentation/EntityStatePresenter.js";
-import { ModelBuilderNodeLog } from "../domain_layer/components/simulation/entity_presentation/models/PresentationModelBuilder.js";
+import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "../domain_layer/components/simulation/entity_presentation/models/PresentationModelBuilder.js";
+import { IPresentationCoordinator, PresentationCoordinator } from "../domain_layer/components/simulation/entity_presentation/PresentationCoordinator.js";
 
 
 //* Init SimulationSnapshot
@@ -55,19 +55,19 @@ function emitter(ev: unknown): void {
 const evGateway: DomainEventGateway = new DomainEventGateway(emitter);
 
 
-//* Setup EntityCollectionObserver
+//* Setup EntityCollection Observer
 const obsNodeLogs = new EntityCollectionObserver<NodeLog>(
     new Set<number>(), new Set<number>()
 );
 const obsNodeStates = new EntityCollectionObserver<NodeState>(
     new Set<number>(), new Set<number>()
 );
+const obsEdgeStates = new EntityCollectionObserver<BiDirectionalEdgeState>(
+    new Set<number>(), new Set<number>()
+);
 const obsMessageStates = new EntityCollectionObserver<MessageState>(
     new Set<number>(), new Set<number>()
 );
-// const obsEdgeStates = new EntityCollectionObserver<BiDirectionalEdgeState>(
-//     new Set<number>(), new Set<number>()
-// );
 
 //* Setup Simulation Engine
 const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
@@ -76,17 +76,20 @@ const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
     obsNodeLogs, obsNodeStates, obsMessageStates
 );
 
-//* Setup Simulation Presenter
-const presenterNodeLogs = new PresenterNodeLogs(
-    snapshot.logs, new ModelBuilderNodeLog(), evGateway
-)
+//* Setup Simulation PresentationCoordinator
+const presentationCoord: IPresentationCoordinator = new PresentationCoordinator(
+    snapshot.logs, snapshot.nodeStates, snapshot.edgeStates, snapshot.msgStates,
+    obsNodeLogs, obsNodeStates, obsEdgeStates, obsMessageStates,
+    new ModelBuilderNodeLog(), new ModelBuilderNodeState(),
+    new ModelBuilderEdgeState(), new ModelBuilderMessageState(),
+    evGateway
+);
+
 
 //* Setup Simulation Stopped State
-
-
 const bevSimStopppedState = new StateBehavSimulationStopped(
     evGateway,
-    engine, obsNodeLogs, presenterNodeLogs
+    engine, presentationCoord,
 );
 
 //* Setup Controller
@@ -111,5 +114,3 @@ while (snapshot.pendingMessages.length > 0) {
         command: { delta: 25 }
     });
 }
-
-console.log(snapshot.nodeStates);
