@@ -98,3 +98,49 @@ export class EntityCollectionObserver<E extends Identifiable>
     }
 
 }
+
+/**
+ * observer for an entity type
+ * that has dependent types
+ *
+ * if a change to an entity is reported,
+ * all entities that depend on it are
+ * reported as changed as well
+ *
+ * @type {Observed} type of entity that is observed
+ * @type {Dependent} type of entity that depends on
+ *                  the observed entities
+ */
+export class ConnectedEntityCollectionsObserver
+    <Observed extends Identifiable, Dependent extends Identifiable>
+    implements IObserverEntityCollection<Observed> {
+
+    constructor(
+        private obsCollObserved: ChangeObserverCollection<Observed>,
+        private obsCollDependents: ChangeObserverCollection<Dependent>,
+        private getAllDependents: (updatedObserved: Readonly<Observed>) => Iterable<Readonly<Dependent>>,
+    ) { }
+
+    public notifyUpdate(observedEntity: Observed): void {
+        this.obsCollObserved.notifyUpdate(observedEntity);
+
+        for (const dependent of this.getAllDependents(observedEntity)) {
+            this.obsCollDependents.notifyUpdate(dependent);
+        }
+    }
+
+
+    //! todo refactor this shi
+    public consumeUpdateReports(): Iterable<number> {
+        throw new Error("Call on this method should not happen");
+    }
+
+    public notifyCreation(entity: Observed): void {
+        throw new Error("Call on this method should not happen");
+    }
+
+    public consumeCreationReports(): Iterable<number> {
+        throw new Error("Call on this method should not happen");
+    }
+
+}

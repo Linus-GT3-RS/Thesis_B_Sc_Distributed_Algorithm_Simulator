@@ -3,13 +3,14 @@ import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/beh
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
-import { LoggingSystem } from "./env_system_impl/LogSystem.js";
-import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
-import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
-import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
+import { LoggingSystem } from "./environment_systems/LogSystem.js";
+import { MessageDeliverySystem } from "./environment_systems/MsgDeliverySystem.js";
+import { MessageSenderSystem } from "./environment_systems/MsgSenderSystem.js";
+import { NodeStateSystem } from "./environment_systems/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
 import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { ChangeObserverCollection } from "../entity_observation/EntityCollectionObserver.js";
+import { ChangeObserverCollection, ConnectedEntityCollectionsObserver } from "../entity_observation/EntityCollectionObserver.js";
+import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
 
 //* Errors
 
@@ -74,7 +75,8 @@ export class SimulationEngine<N extends NodeState>
 
         private changeObsNodeLogs: ChangeObserverCollection<NodeLog>,
         private changeObsNodeStates: ChangeObserverCollection<NodeState>,
-        private changeObsMessageStates: ChangeObserverCollection<MessageState>
+        private changeObsEdgeStates: ChangeObserverCollection<BiDirectionalEdgeState>,
+        private changeObsMessageStates: ChangeObserverCollection<MessageState>,
     ) { }
 
 
@@ -92,7 +94,15 @@ export class SimulationEngine<N extends NodeState>
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
-                this.changeObsNodeStates, scopedNodeId
+                new ConnectedEntityCollectionsObserver(
+                    this.changeObsNodeStates, this.changeObsEdgeStates,
+                    (target: Readonly<NodeState>) => {
+                        return this.worker.getNodeEdges(
+                            this.ss.edgeStates, target.id
+                        );
+                    }
+                ),
+                scopedNodeId
             ),
 
             in: new MessageDeliverySystem(null),
@@ -149,7 +159,15 @@ export class SimulationEngine<N extends NodeState>
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
-                    this.changeObsNodeStates, scopedNode
+                    new ConnectedEntityCollectionsObserver(
+                        this.changeObsNodeStates, this.changeObsEdgeStates,
+                        (target: Readonly<NodeState>) => {
+                            return this.worker.getNodeEdges(
+                                this.ss.edgeStates, target.id
+                            );
+                        }
+                    ),
+                    scopedNode
                 ),
 
                 in: new MessageDeliverySystem(delivery.data),

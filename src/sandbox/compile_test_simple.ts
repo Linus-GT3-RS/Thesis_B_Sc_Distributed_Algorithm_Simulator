@@ -73,7 +73,7 @@ const obsMessageStates = new EntityCollectionObserver<MessageState>(
 const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
     snapshot,
     new SnapshotDataWorker(), new EchoAlgorithmNodeProcess(),
-    obsNodeLogs, obsNodeStates, obsMessageStates
+    obsNodeLogs, obsNodeStates, obsEdgeStates, obsMessageStates
 );
 
 //* Setup Simulation PresentationCoordinator
