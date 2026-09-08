@@ -1,11 +1,11 @@
 import { ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
 import { IDomainEventGateway } from "../../../gateways/EventGateway.js";
-import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
+import { CreatedMessageStateEv, CreatedNodeLogEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
 import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
 import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
-import { ConsumableCollectionObserver } from "../entity_observation/EntityCollectionObserver.js";
+import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
 import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "./models/PresentationModelBuilder.js";
 import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./models/PresentationModels.js";
 
@@ -31,17 +31,17 @@ export abstract class IPresentationCoordinator {
 export class PresentationCoordinator implements IPresentationCoordinator {
 
     constructor(
+        //= all observers
+        private creationReporterNodeLogs: IChangeReportProvider,
+        private updateReporterNodeStates: IChangeReportProvider,
+        private updateReporterEdgeStates: IChangeReportProvider,
+        private creationReporterMessageStates: IChangeReportProvider,
+
         //= all stores
         private storeNodeLogs: ReadonlyIndexedStore<NodeLog>,
         private storeNodeStates: ReadonlyIndexedStore<NodeState>,
         private storeEdgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
         private storeMessageStates: ReadonlyIndexedStore<MessageState>,
-
-        //= all observers
-        private obsNodeLogs: ConsumableCollectionObserver<NodeLog>,
-        private obsNodeStates: ConsumableCollectionObserver<NodeState>,
-        private obsEdgeStates: ConsumableCollectionObserver<BiDirectionalEdgeState>,
-        private obsMessageStates: ConsumableCollectionObserver<MessageState>,
 
         //= all builder
         private modelBuilderNodeLog: ModelBuilderNodeLog,
@@ -56,17 +56,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
 
     public presentSnapshotChanges(): void {
         //= present node state collection changes
-        for (const idCreated of this.obsNodeStates.consumeCreationReports()) {
-            const created: Readonly<NodeState> =
-                this.storeNodeStates.read({ id: idCreated });
-
-            const model: PresentationModelNodeState =
-                this.modelBuilderNodeState.build(created);
-
-            this.eventGateway.emit(new CreatedNodeStateEv(model));
-        }
-
-        for (const idUpdated of this.obsNodeStates.consumeUpdateReports()) {
+        for (const idUpdated of this.updateReporterNodeStates.consumeChangeReports()) {
             const updated: Readonly<NodeState> =
                 this.storeNodeStates.read({ id: idUpdated });
 
@@ -77,17 +67,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         }
 
         //= present edge state collection changes
-        for (const idCreatedEdge of this.obsEdgeStates.consumeCreationReports()) {
-            const createdEdge: Readonly<BiDirectionalEdgeState> =
-                this.storeEdgeStates.read({ id: idCreatedEdge });
-
-            const model: PresentationModelEdgeState =
-                this.modelBuilderEdgeState.build(createdEdge);
-
-            this.eventGateway.emit(new CreatedEdgeStateEv(model));
-        }
-
-        for (const idUpdatedEdge of this.obsEdgeStates.consumeUpdateReports()) {
+        for (const idUpdatedEdge of this.updateReporterEdgeStates.consumeChangeReports()) {
             const updatedEdge: Readonly<BiDirectionalEdgeState> =
                 this.storeEdgeStates.read({ id: idUpdatedEdge });
 
@@ -98,7 +78,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         }
 
         //= present message state collection changes
-        for (const idCreatedMessage of this.obsMessageStates.consumeCreationReports()) {
+        for (const idCreatedMessage of this.creationReporterMessageStates.consumeChangeReports()) {
             const target: Readonly<MessageState> =
                 this.storeMessageStates.read({ id: idCreatedMessage });
 
@@ -109,7 +89,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         }
 
         //= present log collection changes
-        for (const idCreatedLog of this.obsNodeLogs.consumeCreationReports()) {
+        for (const idCreatedLog of this.creationReporterNodeLogs.consumeChangeReports()) {
             const createdLog: Readonly<NodeLog> =
                 this.storeNodeLogs.read({ id: idCreatedLog });
 

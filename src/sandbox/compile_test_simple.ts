@@ -13,9 +13,9 @@ import { DomainController, DomainState } from "../domain_layer/controller/Domain
 import { StateBehavSimulationStopped } from "../domain_layer/controller/impl_state_behaviours/StateBehavSimStopped.js";
 import { DomainCommandGateway } from "../domain_layer/gateways/CommandGateway.js";
 import { DomainEventGateway } from "../domain_layer/gateways/EventGateway.js";
-import { EntityCollectionObserver } from "../domain_layer/components/simulation/entity_observation/EntityCollectionObserver.js";
 import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "../domain_layer/components/simulation/entity_presentation/models/PresentationModelBuilder.js";
 import { IPresentationCoordinator, PresentationCoordinator } from "../domain_layer/components/simulation/entity_presentation/PresentationCoordinator.js";
+import { CascadingChangeObserverCollection, LazyChangeObserverCollection } from "../domain_layer/components/simulation/entity_observation/EntityCollectionObserver.js";
 
 
 //* Init SimulationSnapshot
@@ -56,30 +56,32 @@ const evGateway: DomainEventGateway = new DomainEventGateway(emitter);
 
 
 //* Setup EntityCollection Observer
-const obsNodeLogs = new EntityCollectionObserver<NodeLog>(
-    new Set<number>(), new Set<number>()
-);
-const obsNodeStates = new EntityCollectionObserver<NodeState>(
-    new Set<number>(), new Set<number>()
-);
-const obsEdgeStates = new EntityCollectionObserver<BiDirectionalEdgeState>(
-    new Set<number>(), new Set<number>()
-);
-const obsMessageStates = new EntityCollectionObserver<MessageState>(
-    new Set<number>(), new Set<number>()
-);
+const worker = new SnapshotDataWorker();
+
+const creationObsNodeLogs =
+    new LazyChangeObserverCollection<NodeLog>(new Set<number>());
+const updateObsEdgeStates =
+    new LazyChangeObserverCollection<BiDirectionalEdgeState>(new Set<number>());
+const updateObsNodeStates =
+    new CascadingChangeObserverCollection<NodeState, BiDirectionalEdgeState>(
+        new Set<number>(), updateObsEdgeStates, (changedNodeState: NodeState) => {
+            // gets all Edges that depent on this NodeState
+            return worker.getNodeEdges(snapshot.edgeStates, changedNodeState.id);
+        }
+    );
+const creationObsMessageStates =
+    new LazyChangeObserverCollection<MessageState>(new Set<number>());
 
 //* Setup Simulation Engine
 const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
-    snapshot,
-    new SnapshotDataWorker(), new EchoAlgorithmNodeProcess(),
-    obsNodeLogs, obsNodeStates, obsEdgeStates, obsMessageStates
+    snapshot, worker, new EchoAlgorithmNodeProcess(),
+    creationObsNodeLogs, updateObsNodeStates, creationObsMessageStates
 );
 
 //* Setup Simulation PresentationCoordinator
 const presentationCoord: IPresentationCoordinator = new PresentationCoordinator(
+    creationObsNodeLogs, updateObsNodeStates, updateObsEdgeStates, creationObsMessageStates,
     snapshot.logs, snapshot.nodeStates, snapshot.edgeStates, snapshot.msgStates,
-    obsNodeLogs, obsNodeStates, obsEdgeStates, obsMessageStates,
     new ModelBuilderNodeLog(), new ModelBuilderNodeState(),
     new ModelBuilderEdgeState(), new ModelBuilderMessageState(),
     evGateway

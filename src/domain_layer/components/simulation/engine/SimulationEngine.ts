@@ -73,7 +73,7 @@ export class SimulationEngine<N extends NodeState>
         private processEmulator: INodeProcessEmulator<N>,
 
         private creationObsNodeLogs: IChangeObserverCollection<NodeLog>,
-        private changeObsNodeStates: IChangeObserverCollection<NodeState>,
+        private updateObsNodeStates: IChangeObserverCollection<NodeState>,
         private creationObsMessageStates: IChangeObserverCollection<MessageState>,
     ) { }
 
@@ -91,7 +91,7 @@ export class SimulationEngine<N extends NodeState>
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
-                this.changeObsNodeStates, scopedNodeId
+                this.updateObsNodeStates, scopedNodeId
             ),
 
             in: new MessageDeliverySystem(null),
@@ -148,7 +148,7 @@ export class SimulationEngine<N extends NodeState>
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
-                    this.changeObsNodeStates, scopedNode
+                    this.updateObsNodeStates, scopedNode
                 ),
 
                 in: new MessageDeliverySystem(delivery.data),

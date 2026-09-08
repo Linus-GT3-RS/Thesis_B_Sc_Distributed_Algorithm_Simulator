@@ -76,20 +76,27 @@ export class CascadingChangeObserverCollection<
     ObservedEntity extends Identifiable,
     DependentEntity extends Identifiable
 >
-    implements IChangeObserverCollection<ObservedEntity> {
+    implements
+    IChangeObserverCollection<ObservedEntity>,
+    IChangeReportProvider {
 
     constructor(
-        private changeObsObserved: IChangeObserverCollection<ObservedEntity>,
+        private changeReportsObservedColl: Set<number>,
         private changeObsDependents: IChangeObserverCollection<DependentEntity>,
         private getAllDependingEntites: (observable: Readonly<ObservedEntity>) => Iterable<Readonly<DependentEntity>>,
     ) { }
 
     public notifyChange(observable: ObservedEntity): void {
-        this.changeObsObserved.notifyChange(observable);
+        this.changeReportsObservedColl.add(observable.id);
 
         for (const dependent of this.getAllDependingEntites(observable)) {
             this.changeObsDependents.notifyChange(dependent);
         }
     }
 
+    public consumeChangeReports(): Iterable<number> {
+        const it: Iterable<number> = this.changeReportsObservedColl.values();
+        this.changeReportsObservedColl = new Set<number>();
+        return it;
+    }
 }
