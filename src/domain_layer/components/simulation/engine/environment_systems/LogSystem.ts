@@ -1,5 +1,5 @@
-import { ILoggingSystem } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { LogType, NodeLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { ILoggingSystem } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { LogType, NodeLog } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { LogStore } from "../../data/SimulationSnapshot.js";
 import { IChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";
 

@@ -1,9 +1,9 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeLog } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../domain_layer/components/algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { NodeLog } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { MessageState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { EchoAlgorithmNodeState } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoEntities.js";
 import { EchoAlgorithmNodeProcess } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess.js";
 import { PendingMessage, SimulationSnapshot } from "../domain_layer/components/simulation/data/SimulationSnapshot.js";
@@ -13,39 +13,14 @@ import { DomainController, DomainState } from "../domain_layer/controller/Domain
 import { StateBehavSimulationStopped } from "../domain_layer/controller/impl_state_behaviours/StateBehavSimStopped.js";
 import { DomainCommandGateway } from "../domain_layer/gateways/CommandGateway.js";
 import { DomainEventGateway } from "../domain_layer/gateways/EventGateway.js";
-import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "../domain_layer/components/simulation/entity_presentation/models/PresentationModelBuilder.js";
+import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "../domain_layer/components/simulation/entity_presentation/models/ModelBuilder.js";
 import { IPresentationCoordinator, PresentationCoordinator } from "../domain_layer/components/simulation/entity_presentation/PresentationCoordinator.js";
 import { CascadingChangeObserverCollection, LazyChangeObserverCollection } from "../domain_layer/components/simulation/entity_observation/EntityCollectionObserver.js";
+import { buildGraph5 } from "./graphs.js";
 
 
 //* Init SimulationSnapshot
-const logStore = new IndexedStore<NodeLog>();
-const nodeStore = new IndexedStore<EchoAlgorithmNodeState>();
-const edgeStore = new IndexedStore<BiDirectionalEdgeState>();
-const msgStore = new IndexedStore<MessageState>();
-const pendingMsgs = new TinyQueue(
-    [],
-    (a: PendingMessage, b: PendingMessage) => {
-        return a.destinationTime - b.destinationTime;
-    }
-);
-
-const snapshot = new SimulationSnapshot(
-    logStore, nodeStore, edgeStore, msgStore, pendingMsgs, 0
-);
-
-nodeStore.insert(new EchoAlgorithmNodeState(0, false, false, 0, null));
-nodeStore.insert(new EchoAlgorithmNodeState(1, false, false, 0, null));
-nodeStore.insert(new EchoAlgorithmNodeState(2, false, false, 0, null));
-nodeStore.insert(new EchoAlgorithmNodeState(3, false, false, 0, null));
-nodeStore.insert(new EchoAlgorithmNodeState(4, false, false, 0, null));
-
-edgeStore.insert(new BiDirectionalEdgeState(0, { id: 0 }, { id: 1 }, 100));
-edgeStore.insert(new BiDirectionalEdgeState(1, { id: 0 }, { id: 2 }, 110));
-edgeStore.insert(new BiDirectionalEdgeState(2, { id: 2 }, { id: 3 }, 120));
-edgeStore.insert(new BiDirectionalEdgeState(3, { id: 2 }, { id: 4 }, 130));
-edgeStore.insert(new BiDirectionalEdgeState(4, { id: 1 }, { id: 4 }, 140));
-
+const snapshot = buildGraph5();
 
 //* Setup Domain Event Gateway
 function emitter(ev: unknown): void {

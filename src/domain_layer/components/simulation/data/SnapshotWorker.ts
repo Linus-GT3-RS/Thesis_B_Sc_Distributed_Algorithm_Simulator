@@ -1,7 +1,7 @@
 import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/environment_systems/MsgSenderSystem.js";
 import { IndexedStore } from "../../../../common/EntityStores.js";
 import { MessageQueue, PendingMessage } from "./SimulationSnapshot.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
+import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 
 
 //* Errors

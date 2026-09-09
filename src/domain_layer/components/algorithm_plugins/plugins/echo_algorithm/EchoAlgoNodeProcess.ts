@@ -1,8 +1,8 @@
 import { Identifiable } from "../../../../../common/EntityStores.js";
-import { INodeProcess } from "../../api/entities/behaviour_entities/NodeProcess.js";
-import { NodeProcessEnvironment } from "../../api/entities/behaviour_entities/NodeProcessEnv.js";
-import { MessageData } from "../../api/entities/state_entities/Messages.js";
-import { EchoAlgorithmNodeState, EchoData, InfoData } from "./EchoAlgoEntities.js";
+import { INodeProcess } from "../../plugin_api/entities/behaviour_entities/NodeProcess.js";
+import { NodeProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
+import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
+import { EchoAlgorithmNodeState, EchoMessageData, InfoMessageData } from "./EchoAlgoEntities.js";
 
 /**
  * Runs Echo Algorithm Protocol
@@ -19,8 +19,8 @@ export class EchoAlgorithmNodeProcess
 
         // inform neighbors
         for (const neighbor of env.out.getNeighborIterator()) {
-            const msg: InfoData =
-                new InfoData({ id: env.local.get("id") });
+            const msg: InfoMessageData =
+                new InfoMessageData({ id: env.local.get("id") });
             env.out.send(msg, neighbor.id);
         }
     }
@@ -32,10 +32,10 @@ export class EchoAlgorithmNodeProcess
         const msg: Readonly<MessageData> = env.in.readPendingMessage();
 
         // check if msg can be handled
-        if (msg instanceof InfoData) {
+        if (msg instanceof InfoMessageData) {
             this.onInfoMessage(msg, env);
         }
-        else if (msg instanceof EchoData) {
+        else if (msg instanceof EchoMessageData) {
             this.onEchoMessage(env);
         }
         else { // cannot handle message
@@ -46,7 +46,7 @@ export class EchoAlgorithmNodeProcess
     }
 
     private onInfoMessage(
-        msg: InfoData,
+        msg: InfoMessageData,
         env: NodeProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
         env.local.set("numberInformedNeighbors",
@@ -64,8 +64,8 @@ export class EchoAlgorithmNodeProcess
             for (const neighbor of env.out.getNeighborIterator()) {
                 if (neighbor.id != parent.id) {
 
-                    const infoMsgData: InfoData =
-                        new InfoData({ id: env.local.get("id") });
+                    const infoMsgData: InfoMessageData =
+                        new InfoMessageData({ id: env.local.get("id") });
                     env.out.send(infoMsgData, neighbor.id);
                 }
             }
@@ -115,7 +115,7 @@ export class EchoAlgorithmNodeProcess
         const parent: Readonly<Identifiable> | null =
             env.local.get("parentID");
         if (parent !== null) {
-            env.out.send(new EchoData(), parent.id);
+            env.out.send(new EchoMessageData(), parent.id);
         }
         else { // node is in invalid state somehow
             env.up.logError(

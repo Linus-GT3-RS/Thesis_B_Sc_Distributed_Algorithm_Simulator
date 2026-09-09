@@ -1,4 +1,4 @@
-export type ModelDataDetail = Map<string, string>
+export type ModelDataDetail = Map<string, string | number | boolean>
 export type ModelStyle = Map<string, string>
 
 
@@ -49,6 +49,8 @@ export class PresentationModelMessageState {
 
         public sendTime: number,
         public destinationTime: number,
+
+        public typePayload: string,
 
         public dataDetails: ModelDataDetail,
         public styles: ModelStyle,

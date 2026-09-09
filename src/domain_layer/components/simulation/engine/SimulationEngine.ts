@@ -1,14 +1,14 @@
-import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
-import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
-import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcess.js";
+import { NodeProcessEnvironment } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
+import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
 import { LoggingSystem } from "./environment_systems/LogSystem.js";
 import { MessageDeliverySystem } from "./environment_systems/MsgDeliverySystem.js";
 import { MessageSenderSystem } from "./environment_systems/MsgSenderSystem.js";
 import { NodeStateSystem } from "./environment_systems/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
-import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { IChangeObserverCollection } from "../entity_observation/EntityCollectionObserver.js";
 
 //* Errors

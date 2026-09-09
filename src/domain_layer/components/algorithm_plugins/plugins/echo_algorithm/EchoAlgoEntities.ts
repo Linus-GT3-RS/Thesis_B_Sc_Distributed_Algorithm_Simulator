@@ -1,6 +1,6 @@
 import { Identifiable } from "../../../../../common/EntityStores.js";
-import { MessageData } from "../../api/entities/state_entities/Messages.js";
-import { NodeState } from "../../api/entities/state_entities/Nodes.js";
+import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../plugin_api/entities/state_entities/Nodes.js";
 
 //* Node Data
 
@@ -20,17 +20,17 @@ export class EchoAlgorithmNodeState extends NodeState {
 
 //* Message Data
 
-export class InfoData extends MessageData {
+export class InfoMessageData extends MessageData {
     constructor(
         public senderID: Identifiable,
     ) {
-        super("info");
+        super("info-msg-payload");
     }
 }
 
-export class EchoData extends MessageData {
+export class EchoMessageData extends MessageData {
     constructor(
     ) {
-        super("echo");
+        super("echo-msg-payload");
     }
 }

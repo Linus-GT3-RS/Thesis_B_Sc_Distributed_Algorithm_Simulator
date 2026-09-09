@@ -1,7 +1,7 @@
 import { Identifiable, IdentifiableError, ReadonlyIndexedStore } from "../../../../../common/EntityStores.js";
-import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { BiDirectionalEdgeState } from "../../../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { MessageData, MessageState } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
+import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { BiDirectionalEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { MessageData, MessageState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NeighborStore, NodeNeighbor, SnapshotDataWorker as SnapshotDataWorker } from "../../data/SnapshotWorker.js";
 import { MessageQueue, MessageStateStore } from "../../data/SimulationSnapshot.js";
 import { IChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";

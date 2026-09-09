@@ -1,12 +1,12 @@
 import { ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
 import { IDomainEventGateway } from "../../../gateways/EventGateway.js";
 import { CreatedMessageStateEv, CreatedNodeLogEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
-import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "./models/PresentationModelBuilder.js";
+import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "./models/ModelBuilder.js";
 import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./models/PresentationModels.js";
 
 
