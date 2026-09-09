@@ -28,10 +28,11 @@ abstract class ITemplateDetailProvider<EntityGroup> {
     /**
      * The provider determines how the given entity type should be detailed
      * 
-     * @throws {DetailProviderErrorInvalidEntityType} if the type of the
-     *         given entity cannot be handled by this provider.
-     *         Throwing this error is not required, but recommended to help
-     *         detect unexpected entity types in the simulation early.
+     * A data provider however only works on a specific entity of the entity group
+     * and there throws an error if an invalid entity is handed
+    * -> helps prevent errors
+     * 
+     * @throws {DetailProviderErrorInvalidEntityType} 
      */
     public abstract addDetails(
         entity: Readonly<EntityGroup>,

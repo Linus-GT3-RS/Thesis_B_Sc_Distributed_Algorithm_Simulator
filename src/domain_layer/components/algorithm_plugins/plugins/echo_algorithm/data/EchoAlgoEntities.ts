@@ -1,8 +1,9 @@
-import { Identifiable } from "../../../../../common/EntityStores.js";
-import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
-import { NodeState } from "../../plugin_api/entities/state_entities/Nodes.js";
 
 //* Node Data
+
+import { Identifiable } from "../../../../../../common/EntityStores.js";
+import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
 
 export class EchoAlgorithmNodeState extends NodeState {
     constructor(

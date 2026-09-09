@@ -31,10 +31,14 @@ abstract class ITemplateStyleRulesetProvider<PresentationModel> {
      * 
      * Since the rules only depend on the data available in the model, 
      * any entity type from the entity group can be used. 
+     * 
      * The provider therefore does not need to distinguish between 
      * the concrete entity types of the group and does not 
      * throw an error if expected data is missing because the 
-     * model belongs to a different entity * type within the group. 
+     * model belongs to a different entity type within the group. 
+     * 
+     * -> Astyle provider is just a ruleset
+     * if the neccessary data cannot be found no styles are applied
      * */
     public abstract applyStyle(
         model: Readonly<PresentationModel>,

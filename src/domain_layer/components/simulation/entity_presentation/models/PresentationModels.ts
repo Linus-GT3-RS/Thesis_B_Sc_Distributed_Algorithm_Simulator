@@ -1,6 +1,11 @@
 export type ModelDataDetail = Map<string, string | number | boolean>
 export type ModelStyle = Map<string, string>
 
+//*
+/**
+ * For each entity group that shall be presented
+ * a PresentationModel must exist
+ */
 
 export class PresentationModelNodeLog {
     constructor(
@@ -30,9 +35,9 @@ export class PresentationModelEdgeState {
 
         public idNodeA: number,
         public idNodeB: number,
+        public edgeType: string,
 
         public length_ms: number,
-        public edgeType: string,
 
         public dataDetails: ModelDataDetail,
         public styles: ModelStyle,

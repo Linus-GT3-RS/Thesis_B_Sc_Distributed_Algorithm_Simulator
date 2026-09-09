@@ -6,7 +6,7 @@ import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entit
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
-import { ModelBuilderEdgeState, ModelBuilderMessageState, ModelBuilderNodeLog, ModelBuilderNodeState } from "./models/ModelBuilder.js";
+import { IModelBuilderEdgeState, IModelBuilderMessageState, IModelBuilderNodeLog, IModelBuilderNodeState } from "./models/ModelBuilder.js";
 import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./models/PresentationModels.js";
 
 
@@ -44,10 +44,10 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         private storeMessageStates: ReadonlyIndexedStore<MessageState>,
 
         //= all builder
-        private modelBuilderNodeLog: ModelBuilderNodeLog,
-        private modelBuilderNodeState: ModelBuilderNodeState,
-        private modelBuilderEdgeState: ModelBuilderEdgeState,
-        private modelBuilderMessageState: ModelBuilderMessageState,
+        private modelBuilderNodeLog: IModelBuilderNodeLog,
+        private modelBuilderNodeState: IModelBuilderNodeState,
+        private modelBuilderEdgeState: IModelBuilderEdgeState,
+        private modelBuilderMessageState: IModelBuilderMessageState,
 
         //= event gateway
         private eventGateway: IDomainEventGateway,
