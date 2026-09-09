@@ -1,6 +1,6 @@
 import { IndexedStore, type Identifiable } from "@/common/EntityStores";
 import { defineStore } from "pinia";
-import { MessageViewModel, NodeLogViewModel, type EdgeViewModel, type NodeLogViewMStore, type NodeViewModel } from "../view_models/ViewModels";
+import { MessageViewModel, NodeLogViewModel, type EdgeViewModel, type NodeViewModel } from "../view_models/ViewModels";
 
 export interface SpeedSliderSettings {
     min: number,
@@ -83,7 +83,7 @@ export const useStore = defineStore("store", {
         },
 
         changeLog() {
-            this.nodeLogViewModels.peek({ id: 0 }).timestamp += 5;
+            this.nodeLogViewModels.interact({ id: 0 }).timestamp += 5;
         },
 
         removeAll() {
@@ -98,7 +98,7 @@ export const useStore = defineStore("store", {
         },
 
         changeMessage() {
-            this.messageViewModels.peek({ id: 1 }).destinationTime += 5;
+            this.messageViewModels.interact({ id: 1 }).destinationTime += 5;
         },
 
         changeStatusBar(n: number) {

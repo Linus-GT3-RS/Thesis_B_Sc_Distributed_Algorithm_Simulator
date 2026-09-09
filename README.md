@@ -1,4 +1,4 @@
-# .
+# Thesis_B_Sc_Distributed_Algorithm_Simulator
 
 This template should help get you started developing with Vue 3 in Vite.
 

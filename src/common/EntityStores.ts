@@ -1,14 +1,8 @@
-export interface Identifiable {
-    id: number,
-}
 
 //* Types
 
 export type ReadonlyIndexedStore<T extends Identifiable> =
     Pick<IndexedStore<T>, "read" | "readAllValues" | "size">
-
-export type RoStoreAccessor<Store extends IndexedStore<any>> =
-    Pick<Store, "read" | "readAllValues" | "size">
 
 
 //* Errors
@@ -17,7 +11,9 @@ export class IdentifiableError extends Error { }
 
 //* Store
 
-
+export interface Identifiable {
+    id: number,
+}
 
 /**
  * Handles storing and retrieving of data that 
@@ -68,7 +64,7 @@ export class IndexedStore<T extends Identifiable> {
      * @param target 
      * @throws {IdentifiableError} if item with given id does not exist
      */
-    public peek(target: Readonly<Identifiable>): T {
+    public interact(target: Readonly<Identifiable>): T {
         const res: T | undefined = this.map.get(target.id);
         if (res === undefined) {
             throw new IdentifiableError(
@@ -87,7 +83,7 @@ export class IndexedStore<T extends Identifiable> {
     * @throws {IdentifiableError} if item with given id does not exist
     */
     public read(target: Readonly<Identifiable>): Readonly<T> {
-        return this.peek(target);
+        return this.interact(target);
     }
 
 
