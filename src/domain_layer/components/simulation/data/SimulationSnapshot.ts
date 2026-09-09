@@ -1,11 +1,11 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../../../../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/api/entities/state_entities/Edges.js";
-import { NodeProcessLog } from "../../algorithm_plugins/api/entities/state_entities/Logs.js";
-import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 
-export type LogStore = IndexedStore<NodeProcessLog>;
+export type LogStore = IndexedStore<NodeLog>;
 export type NodeStateStore<N extends NodeState> = IndexedStore<N>;
 export type EdgeStateStore = IndexedStore<BiDirectionalEdgeState>;
 export type MessageStateStore = IndexedStore<MessageState>;
@@ -37,7 +37,7 @@ export class SimulationSnapshot<N extends NodeState> {
 
         public simulationTimestamp: number,
 
-        // public algoType: AlgorithmIdentifier,
+        // public algoType: AlgorithmIdentifier, //todo is this even supposed to be in here? has no meaning... should be stored in repo? only entities here?
     ) { }
 }
 

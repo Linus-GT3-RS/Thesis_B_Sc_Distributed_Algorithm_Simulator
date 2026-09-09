@@ -1,5 +1,5 @@
-import { ISystemIncomingMessages, MessageSystemError } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { MessageData } from "../../../algorithm_plugins/api/entities/state_entities/Messages.js";
+import { ISystemIncomingMessages, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { MessageData } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 
 //* System
 

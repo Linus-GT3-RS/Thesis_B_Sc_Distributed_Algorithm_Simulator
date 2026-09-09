@@ -1,7 +1,7 @@
-import { ILoggingSystem } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { LogType, NodeProcessLog } from "../../../algorithm_plugins/api/entities/state_entities/Logs.js";
+import { ILoggingSystem } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { LogType, NodeLog } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { LogStore } from "../../data/SimulationSnapshot.js";
-import { NodeProcessLogObserver } from "../../presenter/SimSnapshotObserver.js";
+import { IChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";
 
 /**
  * The LogSystem is part of the SimulationEngine and 
@@ -20,42 +20,42 @@ export class LoggingSystem implements ILoggingSystem {
 
     constructor(
         private store: LogStore, // full access
-        private updateListener: NodeProcessLogObserver,
+        private creationObs: IChangeObserverCollection<NodeLog>,
 
         private currentNode: number,
     ) { }
 
     public logInfo(msg: string): void {
-        const log: NodeProcessLog = new NodeProcessLog(
+        const log: NodeLog = new NodeLog(
             this.store.size(),
             LogType.INFO, msg,
             this.currentNode
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.creationObs.notifyChange(log);
     }
 
     public logWarning(msg: string): void {
-        const log: NodeProcessLog = new NodeProcessLog(
+        const log: NodeLog = new NodeLog(
             this.store.size(),
             LogType.WARNING, msg,
             this.currentNode
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.creationObs.notifyChange(log);
     }
 
     public logError(msg: string): void {
-        const log: NodeProcessLog = new NodeProcessLog(
+        const log: NodeLog = new NodeLog(
             this.store.size(),
             LogType.ERROR, msg,
             this.currentNode
         );
 
         this.store.insert(log);
-        this.updateListener.notifyUpdate(log);
+        this.creationObs.notifyChange(log);
     }
 
 }

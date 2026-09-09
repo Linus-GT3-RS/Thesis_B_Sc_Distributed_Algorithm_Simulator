@@ -1,4 +1,5 @@
 import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
+import { IPresentationCoordinator } from "../../components/simulation/entity_presentation/PresentationCoordinator.js";
 import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../../gateways/Commands.js";
 import { IDomainEventGateway } from "../../gateways/EventGateway.js";
 import { ErrorEv } from "../../gateways/Events.js";
@@ -28,18 +29,20 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
     constructor(
         private eventGateway: IDomainEventGateway,
 
-        // state specific dependencies / workers
+        //* state specific workers
         private simulationEngine: ISimulationEngine,
+        private changePresenter: IPresentationCoordinator,
     ) { }
 
     public onCmdSimulateAlgoInit(cmd: CmdSimulateAlgoInit): void {
         try {
+            //= simulate init
             this.simulationEngine.simulateInitiation(cmd.initiator);
             // handle edge case in case messages with distance=0 were send
             this.simulationEngine.simulateTimeAdvancement(0);
 
-            // todo events
-            // present snapshot updates
+            //= present changes of snapshot
+            this.changePresenter.presentSnapshotChanges();
         }
         catch (error) {
             this.emitEvInvalidStateSimStopped(cmd, error);
@@ -49,10 +52,11 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
 
     public onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void {
         try {
+            //= simulate
             this.simulationEngine.simulateTimeAdvancement(cmd.delta);
 
-            // todo events
-            // present snapshot updates
+            //= present changes
+            this.changePresenter.presentSnapshotChanges();
         }
         catch (error) {
             this.emitEvInvalidStateSimStopped(cmd, error);

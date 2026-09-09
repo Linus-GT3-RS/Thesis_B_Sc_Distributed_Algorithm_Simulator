@@ -1,14 +1,15 @@
-import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcess.js";
-import { NodeProcessEnvironment } from "../../algorithm_plugins/api/entities/behaviour_entities/NodeProcessEnv.js";
-import { MessageState } from "../../algorithm_plugins/api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/api/entities/state_entities/Nodes.js";
-import { NodeProcessLogObserver, NodeStateObserver, MessageStateObserver } from "../presenter/SimSnapshotObserver.js";
+import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcess.js";
+import { NodeProcessEnvironment } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
+import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
+import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
-import { LoggingSystem } from "./env_system_impl/LogSystem.js";
-import { MessageDeliverySystem } from "./env_system_impl/MsgDeliverySystem.js";
-import { MessageSenderSystem } from "./env_system_impl/MsgSenderSystem.js";
-import { NodeStateSystem } from "./env_system_impl/NodeSystem.js";
+import { LoggingSystem } from "./environment_systems/LogSystem.js";
+import { MessageDeliverySystem } from "./environment_systems/MsgDeliverySystem.js";
+import { MessageSenderSystem } from "./environment_systems/MsgSenderSystem.js";
+import { NodeStateSystem } from "./environment_systems/NodeSystem.js";
 import { SimulationSnapshot, PendingMessage } from "../data/SimulationSnapshot.js";
+import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { IChangeObserverCollection } from "../entity_observation/EntityCollectionObserver.js";
 
 //* Errors
 
@@ -71,13 +72,12 @@ export class SimulationEngine<N extends NodeState>
         private worker: SnapshotDataWorker,
         private processEmulator: INodeProcessEmulator<N>,
 
-        private observerLogsNodeProcess: NodeProcessLogObserver,
-        private observerNodeStates: NodeStateObserver,
-        private observerMessageStates: MessageStateObserver
+        private creationObsNodeLogs: IChangeObserverCollection<NodeLog>,
+        private updateObsNodeStates: IChangeObserverCollection<NodeState>,
+        private creationObsMessageStates: IChangeObserverCollection<MessageState>,
     ) { }
 
-
-    //? Initiation Simulation
+    //= Initiation Simulation
 
     public simulateInitiation(target: number): void {
         // determine initiator node
@@ -87,18 +87,19 @@ export class SimulationEngine<N extends NodeState>
         // setup environment for NodeProcess
         const env: NodeProcessEnvironment<N> = {
             up: new LoggingSystem(this.ss.logs,
-                this.observerLogsNodeProcess, scopedNodeId
+                this.creationObsNodeLogs, scopedNodeId
             ),
 
             local: new NodeStateSystem<N>(this.ss.nodeStates,
-                this.observerNodeStates, scopedNodeId
+                this.updateObsNodeStates, scopedNodeId
             ),
 
             in: new MessageDeliverySystem(null),
 
             out: new MessageSenderSystem(
-                this.ss.msgStates, this.ss.pendingMessages, this.ss.simulationTimestamp,
-                this.observerMessageStates,
+                this.ss.msgStates, this.ss.pendingMessages,
+                this.creationObsMessageStates,
+                this.ss.simulationTimestamp,
                 this.ss.edgeStates, this.worker,
                 scopedNodeId
             ),
@@ -143,18 +144,19 @@ export class SimulationEngine<N extends NodeState>
 
             const env: NodeProcessEnvironment<N> = {
                 up: new LoggingSystem(this.ss.logs,
-                    this.observerLogsNodeProcess, scopedNode
+                    this.creationObsNodeLogs, scopedNode
                 ),
 
                 local: new NodeStateSystem<N>(this.ss.nodeStates,
-                    this.observerNodeStates, scopedNode
+                    this.updateObsNodeStates, scopedNode
                 ),
 
                 in: new MessageDeliverySystem(delivery.data),
 
                 out: new MessageSenderSystem(
-                    this.ss.msgStates, this.ss.pendingMessages, this.ss.simulationTimestamp,
-                    this.observerMessageStates,
+                    this.ss.msgStates, this.ss.pendingMessages,
+                    this.creationObsMessageStates,
+                    this.ss.simulationTimestamp,
                     this.ss.edgeStates, this.worker,
                     scopedNode
                 ),

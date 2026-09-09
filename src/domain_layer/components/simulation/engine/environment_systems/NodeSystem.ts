@@ -1,7 +1,7 @@
-import { ILocalDataEnvSystem, MutableNodeStateKeys } from "../../../algorithm_plugins/api/entities/behaviour_entities/EnvironmentSystems.js";
-import { NodeState } from "../../../algorithm_plugins/api/entities/state_entities/Nodes.js";
+import { ILocalDataEnvSystem, MutableNodeStateKeys } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { NodeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { NodeStateStore } from "../../data/SimulationSnapshot.js";
-import { NodeStateObserver } from "../../presenter/SimSnapshotObserver.js";
+import { IChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";
 
 
 /**
@@ -22,7 +22,7 @@ export class NodeStateSystem<N extends NodeState>
 
     constructor(
         private store: NodeStateStore<N>, // full access
-        private updateListener: NodeStateObserver,
+        private changeObsv: IChangeObserverCollection<NodeState>,
 
         private currentNode: number,
     ) { }
@@ -33,7 +33,7 @@ export class NodeStateSystem<N extends NodeState>
      * @returns 
      */
     public get<K extends keyof N>(property: K): Readonly<N[K]> {
-        return this.store.peek(
+        return this.store.interact(
             { id: this.currentNode }
         )[property];
     }
@@ -46,11 +46,11 @@ export class NodeStateSystem<N extends NodeState>
         property: K,
         value: N[K]
     ): void {
-        this.store.peek(
+        this.store.interact(
             { id: this.currentNode }
         )[property] = value;
 
-        this.updateListener.notifyUpdate({ id: this.currentNode });
+        this.changeObsv.notifyChange({ id: this.currentNode });
     }
 
 }
