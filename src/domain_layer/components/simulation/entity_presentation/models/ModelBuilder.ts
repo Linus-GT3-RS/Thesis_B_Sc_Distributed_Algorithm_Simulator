@@ -1,19 +1,19 @@
+import type { IDetailProviderNodeState, IDetailProviderMessageData, IDetailProviderEdgeState } from "@/domain_layer/components/algorithm_plugins/plugin_api/model_enhancing/ProviderModelDetails.js";
+import type { IStyleRulesetProviderNodeState, IStyleRulesetProviderMessageState, IStyleRulesetProviderEdgeState } from "@/domain_layer/components/algorithm_plugins/plugin_api/model_enhancing/ProviderModelStyles.js";
 import { BiDirectionalEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import { LogType, NodeLog } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
-import { IDetailProviderEdgeState, IDetailProviderMessageData, IDetailProviderNodeState } from "../../../algorithm_plugins/plugin_api/model_enhancing/ProviderModelDetails.js";
-import { IStyleRulesetProviderEdgeState, IStyleRulesetProviderMessageState, IStyleRulesetProviderNodeState } from "../../../algorithm_plugins/plugin_api/model_enhancing/ProviderModelStyles.js";
 import { DetailerPresentationModel, StylistPresentationModel } from "./ModelEnhancerImpl.js";
-import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./PresentationModels.js";
+import type { PresentationModelNodeLog, PresentationModelNodeState, PresentationModelMessageState, PresentationModelEdgeState } from "./PresentationModels.js";
 
-//* Interfaces
 /**
- * For each entity group that shall be presented
- * a PresentationModelBuilder must exist
- * that gets the Entity and builds its EntityModel
+ ** For each entity group that shall be presented
+ ** a PresentationModelBuilder must exist
+ ** that gets the Entity and builds its EntityModel
  */
 
+//* Types
 export type IModelBuilderNodeLog =
     IModelBuilder<NodeLog, PresentationModelNodeLog>
 
@@ -38,11 +38,13 @@ export abstract class IModelBuilder
 export class ModelBuilderNodeLog implements IModelBuilderNodeLog {
 
     public build(log: Readonly<NodeLog>): PresentationModelNodeLog {
-        return new PresentationModelNodeLog(
-            log.id,
-            this.type2String(log.type), log.msg,
-            log.logger
-        );
+        const basemodel: PresentationModelNodeLog = {
+            id: log.id,
+            logType: this.type2String(log.type),
+            log: log.msg,
+            idLogger: log.logger
+        };
+        return basemodel;
     }
 
     private type2String(logtype: LogType): string {
@@ -69,11 +71,11 @@ export class ModelBuilderNodeState implements IModelBuilderNodeState {
 
     public build(entity: Readonly<NodeState>): PresentationModelNodeState {
         // build base
-        const basemodel: PresentationModelNodeState = new PresentationModelNodeState(
-            entity.id,
-            new Map<string, string | number | boolean>(),
-            new Map<string, string>(),
-        );
+        const basemodel: PresentationModelNodeState = {
+            id: entity.id,
+            dataDetails: new Map<string, string | number | boolean>(),
+            styles: new Map<string, string>(),
+        };
 
         // add details
         this.detailProvider.addDetails(
@@ -106,14 +108,14 @@ export class ModelBuilderMessageState implements IModelBuilderMessageState {
 
     public build(entity: Readonly<MessageState>): PresentationModelMessageState {
         // build basemodel
-        const basemodel: PresentationModelMessageState = new PresentationModelMessageState(
-            entity.id,
-            entity.sender, entity.receiver,
-            entity.sendTime, entity.destinationTime,
-            entity.data.type,
-            new Map<string, string | number | boolean>(),
-            new Map<string, string>(),
-        );
+        const basemodel: PresentationModelMessageState = {
+            id: entity.id,
+            idSender: entity.sender, idReceiver: entity.receiver,
+            sendTime: entity.sendTime, destinationTime: entity.destinationTime,
+            typePayload: entity.data.type,
+            dataDetails: new Map<string, string | number | boolean>(),
+            styles: new Map<string, string>(),
+        };
 
         // add details
         this.detailProvider.addDetails(
@@ -146,13 +148,14 @@ export class ModelBuilderEdgeState implements IModelBuilderEdgeState {
         entity: Readonly<BiDirectionalEdgeState>
     ): PresentationModelEdgeState {
         // build basemodel
-        const basemodel: PresentationModelEdgeState = new PresentationModelEdgeState(
-            entity.id,
-            entity.nodeA.id, entity.nodeB.id, "bi-directional",
-            entity.length_ms,
-            new Map<string, string | number | boolean>(),
-            new Map<string, string>(),
-        );
+        const basemodel: PresentationModelEdgeState = {
+            id: entity.id,
+            idNodeA: entity.nodeA.id, idNodeB: entity.nodeB.id,
+            edgeType: "bi-directional",
+            length_ms: entity.length_ms,
+            dataDetails: new Map<string, string | number | boolean>(),
+            styles: new Map<string, string>(),
+        };
 
         // add details
         this.detailProvider.addDetails(

@@ -1,7 +1,6 @@
-import { ReadonlyEdgeStore as ReadonlyEdgeStateStore } from "../engine/environment_systems/MsgSenderSystem.js";
-import { IndexedStore } from "../../../../common/EntityStores.js";
-import { MessageQueue, PendingMessage } from "./SimulationSnapshot.js";
+import { IndexedStore, type ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
 import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import type { MessageQueue, PendingMessage } from "./SimulationSnapshot.js";
 
 
 //* Errors
@@ -40,7 +39,7 @@ export class SnapshotDataWorker {
      * @param scopedNode 
      */
     public getNodeNeighbors(
-        edgeStates: ReadonlyEdgeStateStore,
+        edgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
         scopedNode: number,
     ): NeighborStore {
         const neighbors: NeighborStore = new IndexedStore<NodeNeighbor>();
@@ -72,7 +71,7 @@ export class SnapshotDataWorker {
      * @param scopedNode 
      */
     public getNodeEdges(
-        edgeStates: ReadonlyEdgeStateStore,
+        edgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
         scopedNode: number,
     ): Readonly<BiDirectionalEdgeState>[] {
         const adjacentEdges: Readonly<BiDirectionalEdgeState>[] = [];

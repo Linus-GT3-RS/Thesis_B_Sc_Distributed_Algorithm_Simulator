@@ -1,6 +1,6 @@
-import { PresentationModelNodeState, PresentationModelMessageState, PresentationModelEdgeState } from "../../../../simulation/entity_presentation/models/PresentationModels.js";
+import type { PresentationModelNodeState, PresentationModelMessageState, PresentationModelEdgeState } from "@/domain_layer/components/simulation/entity_presentation/models/PresentationModels.js";
 import { IStylistPresentationModel } from "../../../plugin_api/model_enhancing/EnhancerModel.js";
-import { IStyleRulesetProviderNodeState, IStyleRulesetProviderMessageState, IStyleRulesetProviderEdgeState } from "../../../plugin_api/model_enhancing/ProviderModelStyles.js";
+import type { IStyleRulesetProviderNodeState, IStyleRulesetProviderMessageState, IStyleRulesetProviderEdgeState } from "../../../plugin_api/model_enhancing/ProviderModelStyles.js";
 
 //* NodeState
 

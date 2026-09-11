@@ -1,6 +1,6 @@
-import { Identifiable } from "../../../../../common/EntityStores.js";
+import type { Identifiable } from "../../../../../common/EntityStores.js";
 import { INodeProcess } from "../../plugin_api/entities/behaviour_entities/NodeProcess.js";
-import { NodeProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
+import type { NodeProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
 import { EchoAlgorithmNodeState, InfoMessageData, EchoMessageData } from "./data/EchoAlgoEntities.js";
 

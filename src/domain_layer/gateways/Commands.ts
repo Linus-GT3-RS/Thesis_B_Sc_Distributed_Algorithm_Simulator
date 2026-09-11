@@ -28,6 +28,8 @@ export abstract class IDomainCommandHandler {
      */
     public abstract onCmdSimulateTimeAdvance(cmd: CmdSimulateTimeAdvance): void;
 
+
+    public abstract onCmdLoadGraph(): void;
 }
 
 

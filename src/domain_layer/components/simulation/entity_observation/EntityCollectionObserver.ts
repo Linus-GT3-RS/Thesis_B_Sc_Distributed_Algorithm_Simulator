@@ -1,6 +1,7 @@
-import { Identifiable } from "../../../../common/EntityStores.js";
 
 //* Interfaces
+
+import type { Identifiable } from "@/common/EntityStores";
 
 export abstract class IChangeObserverCollection
     <Entity extends Identifiable> {

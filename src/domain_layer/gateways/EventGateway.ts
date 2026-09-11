@@ -1,4 +1,4 @@
-import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, ErrorEv, EventMessage, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "./Events.js";
+import { type EventMessage, ErrorEv, CreatedNodeLogEv, CreatedNodeStateEv, UpdatedNodeStateEv, CreatedMessageStateEv, CreatedEdgeStateEv, UpdatedEdgeStateEv } from "./Events";
 
 
 export abstract class IDomainEventGateway {

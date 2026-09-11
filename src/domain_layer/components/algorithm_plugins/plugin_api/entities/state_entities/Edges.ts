@@ -1,4 +1,4 @@
-import { Identifiable } from "../../../../../../common/EntityStores.js";
+import type { Identifiable } from "../../../../../../common/EntityStores.js";
 
 export class BiDirectionalEdgeState {
     constructor(

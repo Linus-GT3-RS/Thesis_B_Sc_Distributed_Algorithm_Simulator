@@ -1,7 +1,7 @@
 
 //* Node Data
 
-import { Identifiable } from "../../../../../../common/EntityStores.js";
+import type { Identifiable } from "../../../../../../common/EntityStores.js";
 import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
 

@@ -1,4 +1,4 @@
-import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeState } from "../../../simulation/entity_presentation/models/PresentationModels.js";
+import type { PresentationModelNodeState, PresentationModelMessageState, PresentationModelEdgeState } from "@/domain_layer/components/simulation/entity_presentation/models/PresentationModels.js";
 import { IStylistPresentationModel } from "./EnhancerModel.js";
 
 //= Interface Types

@@ -1,7 +1,7 @@
 import z from "zod";
 import { IDomainEventGateway } from "./EventGateway.js";
 import { ErrorEv } from "./Events.js";
-import { IDomainCommandHandler, CommandMessage, SchemaCommandMessage, CmdSimulateAlgoInit, SchemaCmdSimulateAlgoInit, CmdSimulateTimeAdvance, SchemaCmdSimulateTimeAdvance } from "./Commands.js";
+import { IDomainCommandHandler, type CommandMessage, SchemaCommandMessage, type CmdSimulateAlgoInit, SchemaCmdSimulateAlgoInit, type CmdSimulateTimeAdvance, SchemaCmdSimulateTimeAdvance } from "./Commands.js";
 
 
 export abstract class IDomainCommandGateway {
@@ -53,6 +53,9 @@ export class DomainCommandGateway implements IDomainCommandGateway {
                 const vcmd: CmdSimulateTimeAdvance =
                     SchemaCmdSimulateTimeAdvance.parse(vmsg.command);
                 this.handler.onCmdSimulateTimeAdvance(vcmd);
+            }
+            else if (vmsg.type === "CmdLoadGraph") {
+                this.handler.onCmdLoadGraph();
             }
             //
             //? whitelist more commands here

@@ -1,9 +1,9 @@
+import type { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "@/domain_layer/gateways/Commands.js";
+import { ErrorEv } from "@/domain_layer/gateways/Events.js";
 import { ISimulationEngine } from "../../components/simulation/engine/SimulationEngine.js";
 import { IPresentationCoordinator } from "../../components/simulation/entity_presentation/PresentationCoordinator.js";
-import { CmdSimulateAlgoInit, CmdSimulateTimeAdvance } from "../../gateways/Commands.js";
 import { IDomainEventGateway } from "../../gateways/EventGateway.js";
-import { ErrorEv } from "../../gateways/Events.js";
-import { IStateBehavSimulationStopped } from "../DomainController.js";
+import type { IStateBehavSimulationStopped } from "../DomainController.js";
 
 
 /**
@@ -61,6 +61,10 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
         catch (error) {
             this.emitEvInvalidStateSimStopped(cmd, error);
         }
+    }
+
+    public onCmdLoadGraph() {
+        this.changePresenter.presentAll();
     }
 
     private emitEvInvalidStateSimStopped(cmd: unknown, error: unknown): void {

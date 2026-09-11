@@ -2,7 +2,7 @@ import { BiDirectionalEdgeState } from "../../../plugin_api/entities/state_entit
 import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
 import { IDetailerPresentationModel } from "../../../plugin_api/model_enhancing/EnhancerModel.js";
-import { IDetailProviderNodeState, DetailProviderErrorInvalidEntityType, IDetailProviderMessageData, IDetailProviderEdgeState } from "../../../plugin_api/model_enhancing/ProviderModelDetails.js";
+import { type IDetailProviderNodeState, type IDetailProviderMessageData, type IDetailProviderEdgeState, DetailProviderErrorInvalidEntityType } from "../../../plugin_api/model_enhancing/ProviderModelDetails.js";
 import { EchoAlgorithmNodeState, InfoMessageData, EchoMessageData } from "../data/EchoAlgoEntities.js";
 
 //* NodeState
