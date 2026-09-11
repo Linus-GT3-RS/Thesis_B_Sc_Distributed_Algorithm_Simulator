@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="I extends Identifiable">
+<!-- <script setup lang="ts" generic="I extends Identifiable">
 
 import { type Identifiable } from '@/common/EntityStores.js';
 import TableRow from './TableRow.vue';
@@ -48,4 +48,4 @@ defineProps<{
     overflow-y: scroll;
 }
 
-</style>
+</style> -->

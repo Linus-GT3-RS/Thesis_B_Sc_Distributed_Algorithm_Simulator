@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 
 defineProps<{
     domainState: string,
@@ -33,4 +33,4 @@ defineProps<{
     font-size: small;
 }
 
-</style>
+</style> -->

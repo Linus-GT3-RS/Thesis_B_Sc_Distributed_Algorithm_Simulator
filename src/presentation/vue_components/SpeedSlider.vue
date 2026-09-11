@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { useStore } from '../stores/Store';
+<!-- <script setup lang="ts">
+import { useStore } from '../stores/old';
 import { storeToRefs } from 'pinia';
 
 const store = useStore();
@@ -26,4 +26,4 @@ const {speedSliderSettings, sliderValue} = storeToRefs(store);
 
 <div v-else>no slider sad boi</div>
 
-</template>
+</template> -->

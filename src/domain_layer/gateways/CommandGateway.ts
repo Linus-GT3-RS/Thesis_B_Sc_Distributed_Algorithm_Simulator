@@ -54,6 +54,9 @@ export class DomainCommandGateway implements IDomainCommandGateway {
                     SchemaCmdSimulateTimeAdvance.parse(vmsg.command);
                 this.handler.onCmdSimulateTimeAdvance(vcmd);
             }
+            else if (vmsg.type === "CmdLoadGraph") {
+                this.handler.onCmdLoadGraph();
+            }
             //
             //? whitelist more commands here
             //

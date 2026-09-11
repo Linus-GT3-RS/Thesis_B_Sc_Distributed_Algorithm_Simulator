@@ -14,7 +14,7 @@ export enum DomainState {
 //* State Behaviour Interfaces
 
 export type IStateBehavSimulationStopped = Pick<IDomainCommandHandler,
-    "onCmdSimulateAlgoInit" | "onCmdSimulateTimeAdvance">
+    "onCmdSimulateAlgoInit" | "onCmdSimulateTimeAdvance" | "onCmdLoadGraph">
 
 
 
@@ -65,6 +65,10 @@ export class DomainController implements IDomainCommandHandler {
         }
     }
 
+
+    public onCmdLoadGraph(): void {
+        this.behavSimStopped.onCmdLoadGraph();
+    }
 
     private emitEvStateMachineError(cmd: unknown): void {
         this.eventGateway.emit(new ErrorEv(`

@@ -1,10 +1,11 @@
 import { IDetailerPresentationModel, IStylistPresentationModel } from "../../../algorithm_plugins/plugin_api/model_enhancing/EnhancerModel.js";
+import type { MapModelDataDetails, MapModelStyles } from "./PresentationModels.js";
 
 export class DetailerPresentationModel
     implements IDetailerPresentationModel {
 
     constructor(
-        private details: Map<string, string | number | boolean>, // full access
+        private details: MapModelDataDetails, // full access
     ) { }
 
     public setStringDetail(
@@ -36,7 +37,7 @@ export class StylistPresentationModel
     implements IStylistPresentationModel {
 
     constructor(
-        private styles: Map<string, string>, // full access
+        private styles: MapModelStyles, // full access
     ) { }
 
     public setColor(color: string): IStylistPresentationModel {

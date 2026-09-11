@@ -1,24 +1,11 @@
 <script setup lang="ts">
 import { Pane, Splitpanes } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import { useStore } from '../stores/Store';
-import { storeToRefs } from 'pinia';
-import Table from '../vue_components/Table.vue';
-import StatusBar from '../vue_components/StatusBar.vue';
 import TitleBar from '../vue_components/TitleBar.vue';
-import DetailWidget from '../vue_components/DetailWidget.vue';
-import SpeedSlider from '../vue_components/SpeedSlider.vue';
-
-const store = useStore();
-const {
-    getSortedMessageViews, buildTableRowMessageViewM,
-    getSortedNodeLogs, buildTableRowNodeLogViewM,
-    domainState, renderedSimulationTime,
-} = storeToRefs(store);
-
-function btn(): void {
-    store.changeStatusBar(4);
-}
+import NodeLogView from '../vue_components/new/NodeLogView.vue';
+import MessageView from '../vue_components/new/MessageView.vue';
+import DetailView from '../vue_components/new/DetailView.vue';
+import GraphView from '../vue_components/new/GraphView.vue';
 
 </script>
 
@@ -28,15 +15,6 @@ function btn(): void {
 <div class="cont-app">
 
     <div class="cont-header">
-        <button @click="store.addMessage">insert msg</button>
-        <button @click="store.changeMessage">change msg 1</button>
-
-        <button @click="store.addNodeLogVM">add node log</button>
-        <button @click="store.changeLog">change node log</button>
-
-        <button @click="btn">change status bar</button>
-
-        <SpeedSlider></SpeedSlider>
     </div>
 
     <Splitpanes vertical>
@@ -44,20 +22,13 @@ function btn(): void {
             <Splitpanes horizontal>
 
                 <Pane class="cont-graph-view" size="80">
-                    <div class="graph-view"></div>
-                    <StatusBar class="status-bar" 
-                        :domainState="domainState"
-                        :simulationTime="renderedSimulationTime">
-                    </StatusBar>
+                    <GraphView class="graph-view">
+                    </GraphView>
                 </Pane>
 
-                <Pane class="cont-nodelog-table" size="20">
+                <Pane class="cont-nodelog-table">
                     <TitleBar :title="'Node Log Overview'"></TitleBar>
-                    <Table
-                        :header="['Id', 'Log Type', 'Timestamp', 'Node', 'Log']"
-                        :sortedStoreItems="getSortedNodeLogs"
-                        :renderAsRow="buildTableRowNodeLogViewM"
-                    />
+                    <NodeLogView></NodeLogView>
                 </Pane>
                 
             </Splitpanes>
@@ -66,19 +37,15 @@ function btn(): void {
         <Pane class="right" size="25">
             <Splitpanes horizontal>
 
-                <Pane class="cont-message-table" size="65">
+                <Pane class="cont-message-table" min-size="0" size="70">
                     <TitleBar :title="'Message Overview'"></TitleBar>
-                    <Table 
-                        :header="['id', 'type', 'destTime', 'sendTime', 'sender', 'receiver']"
-                        :sortedStoreItems="getSortedMessageViews"
-                        :renderAsRow="buildTableRowMessageViewM" 
-                    />
+                    <MessageView></MessageView>
                 </Pane>
 
-                <Pane class="cont-property-view"  size="35">
+                <Pane class="cont-property-view">
                     <TitleBar :title="'Detail View'"></TitleBar>
-                    <DetailWidget class="detail-view"></DetailWidget>
-                </Pane>
+                    <DetailView></DetailView>
+                </Pane>                
 
             </Splitpanes>
         </Pane>
@@ -93,57 +60,57 @@ function btn(): void {
 
 :deep(.splitpanes--vertical > .splitpanes__splitter) {
     width: 8px;
+        background: #F1F5F9;
 }
 
 :deep(.splitpanes--horizontal > .splitpanes__splitter) {
     height: 8px;
+        background: #F1F5F9;
 }
 
 .cont-app {
     height: 100%;
     width: 100%;
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
-    justify-content: start;
+
+         background: #F1F5F9;
+    color: #0F172A;
 }
 
-.cont-header{
-    max-height: 9%;
+.cont-header {
+    height: 25px;
     width: 100%;
 
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-content: center;
-    gap: 25px;
+    align-items: center;
+    gap: 12px;
 
-    padding: 10px;
+    padding: 10px 16px;
 
-    background-color: rgb(55, 55, 55);
-}
-
-.cont-right {
-    display: flex;
-    flex-direction: column;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
 }
 
 .cont-graph-view {
     height: 100%;
     width: 100%;
+        min-height: 0;
     
     display: flex;
     flex-direction: column;
+        background-color: #FFFFFF;
+
+
 }
 
 .graph-view {
    flex: 1;
-    background-color: aqua;
-}
-
-.status-bar {
-    height: 3.5%;
-    background-color:  grey;
+       background-color: #FFFFFF;
 }
 
 
@@ -153,16 +120,20 @@ function btn(): void {
     
     padding: 5px;
 
-    background-color: lawngreen;
+        background: #FFFFFF;
 }
 
 .cont-message-table {
     height: 100%;
     width: 100%;
 
-    padding: 5px;
+     display: flex;
+    flex-direction: column;
+      min-height: 0;
+    min-width: 0;
+
     
-    background-color: yellow;
+        background: #FFFFFF;
 }
 
 .cont-property-view {
@@ -172,13 +143,12 @@ function btn(): void {
     display: flex;
     flex-direction: column;
 
-    background-color: chocolate;
+        background: #FFFFFF;
 }
 
 .detail-view {
     height: 100%;
     width: 100%;
 }
-
 
 </style>

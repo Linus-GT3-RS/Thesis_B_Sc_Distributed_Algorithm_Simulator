@@ -1,13 +1,13 @@
 import type { ReadonlyIndexedStore } from "@/common/EntityStores.js";
 import { IDomainEventGateway } from "../../../gateways/EventGateway.js";
-import { CreatedMessageStateEv, CreatedNodeLogEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
+import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
 import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
 import type { IModelBuilderNodeLog, IModelBuilderNodeState, IModelBuilderEdgeState, IModelBuilderMessageState } from "./models/ModelBuilder.js";
-import { PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog, PresentationModelNodeState } from "./models/PresentationModels.js";
+import type { PresentationModelNodeState, PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog } from "./models/PresentationModels.js";
 
 
 export abstract class IPresentationCoordinator {
@@ -16,6 +16,9 @@ export abstract class IPresentationCoordinator {
      * changes can be created or updated entities
      */
     public abstract presentSnapshotChanges(): void;
+
+
+    public abstract presentAll(): void;
 
 }
 
@@ -52,6 +55,24 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         //= event gateway
         private eventGateway: IDomainEventGateway,
     ) { }
+
+
+    public presentAll(): void {
+        for (const state of this.storeNodeStates.readAllValues()) {
+            const model: PresentationModelNodeState =
+                this.modelBuilderNodeState.build(state);
+
+            this.eventGateway.emit(new CreatedNodeStateEv(model));
+        }
+
+        for (const state of this.storeEdgeStates.readAllValues()) {
+            const model: PresentationModelEdgeState =
+                this.modelBuilderEdgeState.build(state);
+
+            this.eventGateway.emit(new CreatedEdgeStateEv(model));
+        }
+    }
+
 
 
     public presentSnapshotChanges(): void {

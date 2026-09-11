@@ -65,11 +65,12 @@ export function buildGraph10(): SimulationSnapshot<EchoAlgorithmNodeState> {
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 3 }, 120));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 4 }, 130));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 4 }, 140));
+    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 3 }, 40));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 6 }, 140));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 6 }, { id: 7 }, 140));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 8 }, 140));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 9 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 9 }, 140));
+    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 4 }, { id: 9 }, 140));
 
     return snapshot;
 }

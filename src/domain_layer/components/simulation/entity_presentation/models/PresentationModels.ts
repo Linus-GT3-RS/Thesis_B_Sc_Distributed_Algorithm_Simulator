@@ -1,5 +1,4 @@
-export type ModelDataDetail = Map<string, string | number | boolean>
-export type ModelStyle = Map<string, string>
+import z from "zod";
 
 //*
 /**
@@ -7,58 +6,68 @@ export type ModelStyle = Map<string, string>
  * a PresentationModel must exist
  */
 
-export class PresentationModelNodeLog {
-    constructor(
-        public idNodeLog: number,
 
-        public logType: string,
-        public log: string,
+//= Details
+export const SchemaMapDataDetails = z.map(
+    z.string(),
+    z.union([z.string(), z.number(), z.boolean()])
+);
+export type MapModelDataDetails = z.infer<typeof SchemaMapDataDetails>
 
-        public idLogger: number,
-    ) { }
-}
-
-
-export class PresentationModelNodeState {
-    constructor(
-        public idNodeState: number,
-
-        public dataDetails: ModelDataDetail,
-        public styles: ModelStyle,
-    ) { }
-}
+//= Styles
+export const SchemaMapStyleDetails = z.map(
+    z.string(), z.string()
+);
+export type MapModelStyles = z.infer<typeof SchemaMapStyleDetails>
 
 
-export class PresentationModelEdgeState {
-    constructor(
-        public idEdgeState: number,
-
-        public idNodeA: number,
-        public idNodeB: number,
-        public edgeType: string,
-
-        public length_ms: number,
-
-        public dataDetails: ModelDataDetail,
-        public styles: ModelStyle,
-    ) { }
-}
+//= NodeLog
+export const SchemaPresentationModelNodeLog = z.object({
+    id: z.number(), // id of presented NodeLog
+    logType: z.string(),
+    log: z.string(),
+    idLogger: z.number()
+});
+export type PresentationModelNodeLog = z.infer<typeof SchemaPresentationModelNodeLog>
 
 
-export class PresentationModelMessageState {
-    constructor(
-        public idMessageState: number,
+//= NodeState
+export const SchemaPresentationModelNodeState = z.object({
+    id: z.number(), // id of presented NodeState
+    dataDetails: SchemaMapDataDetails,
+    styles: SchemaMapStyleDetails,
+});
+export type PresentationModelNodeState = z.infer<typeof SchemaPresentationModelNodeState>
 
-        public idSender: number,
-        public idReceiver: number,
 
-        public sendTime: number,
-        public destinationTime: number,
+//= MessageState
+export const SchemaPresentationModelMessageState = z.object({
+    id: z.number(), // id of presented MessageState
 
-        public typePayload: string,
+    idSender: z.number(),
+    idReceiver: z.number(),
 
-        public dataDetails: ModelDataDetail,
-        public styles: ModelStyle,
-    ) { }
-}
+    sendTime: z.number(),
+    destinationTime: z.number(),
 
+    typePayload: z.string(),
+    dataDetails: SchemaMapDataDetails,
+    styles: SchemaMapStyleDetails,
+});
+export type PresentationModelMessageState = z.infer<typeof SchemaPresentationModelMessageState>
+
+
+//= EdgeState
+export const SchemaPresentationModelEdgeState = z.object({
+    id: z.number(), // id of presented EdgeState
+
+    idNodeA: z.number(),
+    idNodeB: z.number(),
+
+    edgeType: z.string(),
+    length_ms: z.number(),
+
+    dataDetails: SchemaMapDataDetails,
+    styles: SchemaMapStyleDetails,
+});
+export type PresentationModelEdgeState = z.infer<typeof SchemaPresentationModelEdgeState>

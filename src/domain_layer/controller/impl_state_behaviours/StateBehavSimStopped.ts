@@ -63,6 +63,10 @@ export class StateBehavSimulationStopped implements IStateBehavSimulationStopped
         }
     }
 
+    public onCmdLoadGraph() {
+        this.changePresenter.presentAll();
+    }
+
     private emitEvInvalidStateSimStopped(cmd: unknown, error: unknown): void {
         this.eventGateway.emit(new ErrorEv(`
             An Exception occured during the handleing of a cmd in 

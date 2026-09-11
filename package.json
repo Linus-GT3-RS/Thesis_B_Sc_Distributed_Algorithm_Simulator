@@ -11,10 +11,11 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "cytoscape": "^3.34.3",
     "pinia": "^4.0.3",
     "splitpanes": "^4.1.2",
-    "vue": "^3.5.40",
     "tinyqueue": "^3.0.0",
+    "vue": "^3.5.40",
     "yocto-queue": "^1.2.2",
     "zod": "^4.5.4"
   },
