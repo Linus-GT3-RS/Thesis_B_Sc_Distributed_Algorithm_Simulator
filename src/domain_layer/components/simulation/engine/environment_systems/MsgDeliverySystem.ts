@@ -1,4 +1,4 @@
-import { ISystemIncomingMessages, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { IEnvSystemMessageInbox, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
 import { MessageData } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 
 //* System
@@ -20,14 +20,14 @@ import { MessageData } from "../../../algorithm_plugins/plugin_api/entities/stat
  * entries, or updating the presentation.
  */
 export class MessageDeliverySystem
-    implements ISystemIncomingMessages {
+    implements IEnvSystemMessageInbox {
 
     constructor(
         private pendingMessage: Readonly<MessageData> | null,
     ) { }
 
 
-    public readPendingMessage(): Readonly<MessageData> {
+    public readFirst(): Readonly<MessageData> {
         if (this.pendingMessage === null) {
             throw new MessageSystemError('No Pending Message');
         }

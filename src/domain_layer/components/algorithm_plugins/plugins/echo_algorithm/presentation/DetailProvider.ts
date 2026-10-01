@@ -1,4 +1,4 @@
-import { BiDirectionalEdgeState } from "../../../plugin_api/entities/state_entities/Edges.js";
+import { UndirectedEdgeState } from "../../../plugin_api/entities/state_entities/Edges.js";
 import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
 import { IDetailerPresentationModel } from "../../../plugin_api/model_enhancing/EnhancerModel.js";
@@ -89,7 +89,7 @@ export class DetailProviderEdgeState
     implements IDetailProviderEdgeState {
 
     public addDetails(
-        entity: Readonly<BiDirectionalEdgeState>,
+        entity: Readonly<UndirectedEdgeState>,
         detailer: IDetailerPresentationModel
     ): void {
     }

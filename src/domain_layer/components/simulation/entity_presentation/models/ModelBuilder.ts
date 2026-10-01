@@ -1,7 +1,7 @@
 import type { IDetailProviderNodeState, IDetailProviderMessageData, IDetailProviderEdgeState } from "@/domain_layer/components/algorithm_plugins/plugin_api/model_enhancing/ProviderModelDetails.js";
 import type { IStyleRulesetProviderNodeState, IStyleRulesetProviderMessageState, IStyleRulesetProviderEdgeState } from "@/domain_layer/components/algorithm_plugins/plugin_api/model_enhancing/ProviderModelStyles.js";
-import { BiDirectionalEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
-import { LogType, NodeLog } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { UndirectedEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { LogType, ProcessLogState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { DetailerPresentationModel, StylistPresentationModel } from "./ModelEnhancerImpl.js";
@@ -15,7 +15,7 @@ import type { PresentationModelNodeLog, PresentationModelNodeState, Presentation
 
 //* Types
 export type IModelBuilderNodeLog =
-    IModelBuilder<NodeLog, PresentationModelNodeLog>
+    IModelBuilder<ProcessLogState, PresentationModelNodeLog>
 
 export type IModelBuilderNodeState =
     IModelBuilder<NodeState, PresentationModelNodeState>
@@ -24,7 +24,7 @@ export type IModelBuilderMessageState =
     IModelBuilder<MessageState, PresentationModelMessageState>
 
 export type IModelBuilderEdgeState =
-    IModelBuilder<BiDirectionalEdgeState, PresentationModelEdgeState>
+    IModelBuilder<UndirectedEdgeState, PresentationModelEdgeState>
 
 export abstract class IModelBuilder
     <Entity, EntityPresentationModel> {
@@ -37,7 +37,7 @@ export abstract class IModelBuilder
 //* Builder NodeLog
 export class ModelBuilderNodeLog implements IModelBuilderNodeLog {
 
-    public build(log: Readonly<NodeLog>): PresentationModelNodeLog {
+    public build(log: Readonly<ProcessLogState>): PresentationModelNodeLog {
         const basemodel: PresentationModelNodeLog = {
             id: log.id,
             logType: this.type2String(log.type),
@@ -145,7 +145,7 @@ export class ModelBuilderEdgeState implements IModelBuilderEdgeState {
     ) { }
 
     public build(
-        entity: Readonly<BiDirectionalEdgeState>
+        entity: Readonly<UndirectedEdgeState>
     ): PresentationModelEdgeState {
         // build basemodel
         const basemodel: PresentationModelEdgeState = {

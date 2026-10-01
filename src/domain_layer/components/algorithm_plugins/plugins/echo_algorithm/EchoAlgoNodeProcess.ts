@@ -1,6 +1,6 @@
 import type { Identifiable } from "../../../../../common/EntityStores.js";
 import { INodeProcess } from "../../plugin_api/entities/behaviour_entities/NodeProcess.js";
-import type { NodeProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
+import type { ProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
 import { EchoAlgorithmNodeState, InfoMessageData, EchoMessageData } from "./data/EchoAlgoEntities.js";
 
@@ -11,14 +11,14 @@ export class EchoAlgorithmNodeProcess
     implements INodeProcess<EchoAlgorithmNodeState> {
 
     public onInitiationInstruction(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
         // update node
         env.local.set("isInitiator", true);
         env.local.set("isInformed", true);
 
         // inform neighbors
-        for (const neighbor of env.out.getNeighborIterator()) {
+        for (const neighbor of env.out.getNeighbors()) {
             const msg: InfoMessageData =
                 new InfoMessageData({ id: env.local.get("id") });
             env.out.send(msg, neighbor.id);
@@ -27,9 +27,9 @@ export class EchoAlgorithmNodeProcess
 
 
     public onIncomingMessage(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
-        const msg: Readonly<MessageData> = env.in.readPendingMessage();
+        const msg: Readonly<MessageData> = env.in.readFirst();
 
         // check if msg can be handled
         if (msg instanceof InfoMessageData) {
@@ -47,7 +47,7 @@ export class EchoAlgorithmNodeProcess
 
     private onInfoMessage(
         msg: InfoMessageData,
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
         env.local.set("numberInformedNeighbors",
             env.local.get("numberInformedNeighbors") + 1
@@ -61,7 +61,7 @@ export class EchoAlgorithmNodeProcess
             env.local.set("parentID", parent);
 
             // inform all neighbors except parent
-            for (const neighbor of env.out.getNeighborIterator()) {
+            for (const neighbor of env.out.getNeighbors()) {
                 if (neighbor.id != parent.id) {
 
                     const infoMsgData: InfoMessageData =
@@ -77,7 +77,7 @@ export class EchoAlgorithmNodeProcess
     }
 
     private onEchoMessage(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
         env.local.set("numberInformedNeighbors",
             env.local.get("numberInformedNeighbors") + 1
@@ -92,7 +92,7 @@ export class EchoAlgorithmNodeProcess
      * Validates if all neighbors are informed
      */
     private allNeighborsInformed(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): boolean {
         return env.local.get("numberInformedNeighbors")
             >= env.out.getNeighborCount();
@@ -103,7 +103,7 @@ export class EchoAlgorithmNodeProcess
      * neighbors are informed
      */
     private handleAllNeighborsInformed(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: ProcessEnvironment<EchoAlgorithmNodeState>
     ): void {
         // if initator
         if (env.local.get("isInitiator")) {

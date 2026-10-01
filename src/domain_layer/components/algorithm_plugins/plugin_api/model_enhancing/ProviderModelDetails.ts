@@ -1,4 +1,4 @@
-import { BiDirectionalEdgeState } from "../entities/state_entities/Edges.js";
+import { UndirectedEdgeState } from "../entities/state_entities/Edges.js";
 import { MessageData } from "../entities/state_entities/Messages.js";
 import { NodeState } from "../entities/state_entities/Nodes.js";
 import { IDetailerPresentationModel } from "./EnhancerModel.js";
@@ -19,7 +19,7 @@ export type IDetailProviderNodeState = ITemplateDetailProvider<NodeState>
 
 export type IDetailProviderMessageData = ITemplateDetailProvider<MessageData>
 
-export type IDetailProviderEdgeState = ITemplateDetailProvider<BiDirectionalEdgeState>
+export type IDetailProviderEdgeState = ITemplateDetailProvider<UndirectedEdgeState>
 
 
 //= Template 

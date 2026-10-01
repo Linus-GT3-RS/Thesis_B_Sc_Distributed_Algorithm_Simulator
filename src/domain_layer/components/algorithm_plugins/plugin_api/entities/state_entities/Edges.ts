@@ -1,6 +1,9 @@
 import type { Identifiable } from "../../../../../../common/EntityStores.js";
 
-export class BiDirectionalEdgeState {
+/**
+ * Represents an edge that is bi-directional
+ */
+export class UndirectedEdgeState {
     constructor(
         public id: number,
 

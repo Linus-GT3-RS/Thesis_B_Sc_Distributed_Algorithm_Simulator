@@ -1,5 +1,5 @@
 import { NodeState } from "../state_entities/Nodes.js";
-import type { NodeProcessEnvironment } from "./NodeProcessEnv.js";
+import type { ProcessEnvironment } from "./NodeProcessEnv.js";
 
 //! todo
 // the initiation rules would also be obsolete that way
@@ -44,12 +44,12 @@ export enum AlgorithmInitiationTypes {
 export abstract class INodeProcess<N extends NodeState> {
 
     public abstract onInitiationInstruction(
-        env: NodeProcessEnvironment<N>
+        env: ProcessEnvironment<N>
     ): void;
 
 
     public abstract onIncomingMessage(
-        env: NodeProcessEnvironment<N>
+        env: ProcessEnvironment<N>
     ): void;
 
 }
