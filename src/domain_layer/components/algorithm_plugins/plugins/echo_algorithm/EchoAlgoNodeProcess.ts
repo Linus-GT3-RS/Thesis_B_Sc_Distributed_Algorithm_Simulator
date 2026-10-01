@@ -2,16 +2,16 @@ import type { Identifiable } from "../../../../../common/EntityStores.js";
 import { INodeProcess } from "../../plugin_api/entities/behaviour_entities/NodeProcess.js";
 import type { NodeProcessEnvironment } from "../../plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageData } from "../../plugin_api/entities/state_entities/Messages.js";
-import { EchoAlgorithmNodeState, InfoMessageData, EchoMessageData } from "./data/EchoAlgoEntities.js";
+import { EchoAlgorithmNodeEntity, InfoMessageData, EchoMessageData } from "./data/EchoAlgoEntities.js";
 
 /**
  * Runs Echo Algorithm Protocol
  */
 export class EchoAlgorithmNodeProcess
-    implements INodeProcess<EchoAlgorithmNodeState> {
+    implements INodeProcess<EchoAlgorithmNodeEntity> {
 
     public onInitiationInstruction(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): void {
         // update node
         env.local.set("isInitiator", true);
@@ -27,7 +27,7 @@ export class EchoAlgorithmNodeProcess
 
 
     public onIncomingMessage(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): void {
         const msg: Readonly<MessageData> = env.in.readPendingMessage();
 
@@ -47,7 +47,7 @@ export class EchoAlgorithmNodeProcess
 
     private onInfoMessage(
         msg: InfoMessageData,
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): void {
         env.local.set("numberInformedNeighbors",
             env.local.get("numberInformedNeighbors") + 1
@@ -77,7 +77,7 @@ export class EchoAlgorithmNodeProcess
     }
 
     private onEchoMessage(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): void {
         env.local.set("numberInformedNeighbors",
             env.local.get("numberInformedNeighbors") + 1
@@ -92,7 +92,7 @@ export class EchoAlgorithmNodeProcess
      * Validates if all neighbors are informed
      */
     private allNeighborsInformed(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): boolean {
         return env.local.get("numberInformedNeighbors")
             >= env.out.getNeighborCount();
@@ -103,7 +103,7 @@ export class EchoAlgorithmNodeProcess
      * neighbors are informed
      */
     private handleAllNeighborsInformed(
-        env: NodeProcessEnvironment<EchoAlgorithmNodeState>
+        env: NodeProcessEnvironment<EchoAlgorithmNodeEntity>
     ): void {
         // if initator
         if (env.local.get("isInitiator")) {

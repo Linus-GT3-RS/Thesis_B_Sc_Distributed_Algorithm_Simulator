@@ -3,13 +3,13 @@ import { IndexedStore } from "../common/EntityStores.js";
 import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import { NodeLog } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
-import { EchoAlgorithmNodeState } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/data/EchoAlgoEntities.js";
+import { EchoAlgorithmNodeEntity } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/data/EchoAlgoEntities.js";
 import type { PendingMessage } from "@/domain_layer/components/simulation/data/SimulationSnapshot.js";
 import { SimulationSnapshot } from "@/domain_layer/components/simulation/data/SimulationSnapshot.js";
 
-function buildEmptySnapshot(): SimulationSnapshot<EchoAlgorithmNodeState> {
+function buildEmptySnapshot(): SimulationSnapshot<EchoAlgorithmNodeEntity> {
     const logStore = new IndexedStore<NodeLog>();
-    const nodeStore = new IndexedStore<EchoAlgorithmNodeState>();
+    const nodeStore = new IndexedStore<EchoAlgorithmNodeEntity>();
     const edgeStore = new IndexedStore<BiDirectionalEdgeState>();
     const msgStore = new IndexedStore<MessageState>();
     const pendingMsgs = new TinyQueue(
@@ -26,14 +26,14 @@ function buildEmptySnapshot(): SimulationSnapshot<EchoAlgorithmNodeState> {
     return snapshot;
 }
 
-export function buildGraph5(): SimulationSnapshot<EchoAlgorithmNodeState> {
+export function buildGraph5(): SimulationSnapshot<EchoAlgorithmNodeEntity> {
     const snapshot = buildEmptySnapshot();
 
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(0, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(1, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(2, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(3, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(4, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(0, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(1, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(2, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(3, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(4, false, false, 0, null));
 
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(0, { id: 0 }, { id: 1 }, 100));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(1, { id: 0 }, { id: 2 }, 110));
@@ -45,20 +45,20 @@ export function buildGraph5(): SimulationSnapshot<EchoAlgorithmNodeState> {
 }
 
 
-export function buildGraph10(): SimulationSnapshot<EchoAlgorithmNodeState> {
+export function buildGraph10(): SimulationSnapshot<EchoAlgorithmNodeEntity> {
     const snapshot = buildEmptySnapshot();
 
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(0, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(1, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(2, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(3, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(4, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(0, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(1, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(2, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(3, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(4, false, false, 0, null));
 
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(5, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(6, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(7, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(8, false, false, 0, null));
-    snapshot.nodeStates.insert(new EchoAlgorithmNodeState(9, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(5, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(6, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(7, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(8, false, false, 0, null));
+    snapshot.nodeStates.insert(new EchoAlgorithmNodeEntity(9, false, false, 0, null));
 
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 1 }, 100));
     snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 2 }, 110));

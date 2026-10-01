@@ -1,6 +1,6 @@
 import { BiDirectionalEdgeState } from "../entities/state_entities/Edges.js";
 import { MessageData } from "../entities/state_entities/Messages.js";
-import { NodeState } from "../entities/state_entities/Nodes.js";
+import type { NodeState } from "../entities/state_entities/Nodes.js";
 import { IDetailerPresentationModel } from "./EnhancerModel.js";
 
 //= Interface Types

@@ -4,7 +4,7 @@ import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNod
 import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
+import type { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
 import type { IModelBuilderNodeLog, IModelBuilderNodeState, IModelBuilderEdgeState, IModelBuilderMessageState } from "./models/ModelBuilder.js";
 import type { PresentationModelNodeState, PresentationModelEdgeState, PresentationModelMessageState, PresentationModelNodeLog } from "./models/PresentationModels.js";

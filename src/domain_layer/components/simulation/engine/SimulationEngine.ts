@@ -1,7 +1,7 @@
 import { INodeProcess as INodeProcessEmulator } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcess.js";
 import type { NodeProcessEnvironment } from "../../algorithm_plugins/plugin_api/entities/behaviour_entities/NodeProcessEnv.js";
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
-import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
+import type { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { SnapshotDataWorker as SnapshotDataWorker } from "../data/SnapshotWorker.js";
 import { LoggingSystem } from "./environment_systems/LogSystem.js";
 import { MessageDeliverySystem } from "./environment_systems/MsgDeliverySystem.js";

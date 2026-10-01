@@ -1,4 +1,4 @@
-import { NodeState } from "../state_entities/Nodes.js";
+import type { NodeState } from "../state_entities/Nodes.js";
 import { ISystemIncomingMessages, IOutgoingMessageSystem, ILocalDataEnvSystem, ILoggingSystem } from "./EnvironmentSystems.js";
 
 /**

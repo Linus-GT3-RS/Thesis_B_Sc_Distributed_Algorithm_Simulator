@@ -1,4 +1,4 @@
-import { NodeState } from "../state_entities/Nodes.js";
+import type { NodeState } from "../state_entities/Nodes.js";
 import type { NodeProcessEnvironment } from "./NodeProcessEnv.js";
 
 //! todo

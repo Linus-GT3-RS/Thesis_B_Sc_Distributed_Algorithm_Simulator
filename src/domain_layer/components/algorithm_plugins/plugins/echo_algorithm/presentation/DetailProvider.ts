@@ -1,9 +1,9 @@
 import { BiDirectionalEdgeState } from "../../../plugin_api/entities/state_entities/Edges.js";
 import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
-import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
+import type { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
 import { IDetailerPresentationModel } from "../../../plugin_api/model_enhancing/EnhancerModel.js";
 import { type IDetailProviderNodeState, type IDetailProviderMessageData, type IDetailProviderEdgeState, DetailProviderErrorInvalidEntityType } from "../../../plugin_api/model_enhancing/ProviderModelDetails.js";
-import { EchoAlgorithmNodeState, InfoMessageData, EchoMessageData } from "../data/EchoAlgoEntities.js";
+import { EchoAlgorithmNodeEntity, InfoMessageData, EchoMessageData } from "../data/EchoAlgoEntities.js";
 
 //* NodeState
 
@@ -14,7 +14,7 @@ export class DetailProviderEchoAlgoNodeState
         entity: Readonly<NodeState>,
         detailer: IDetailerPresentationModel
     ): void {
-        if (entity instanceof EchoAlgorithmNodeState) {
+        if (entity instanceof EchoAlgorithmNodeEntity) {
             this.doAddDetails(entity, detailer);
         }
         else {
@@ -25,7 +25,7 @@ export class DetailProviderEchoAlgoNodeState
     }
 
     private doAddDetails(
-        entity: Readonly<EchoAlgorithmNodeState>,
+        entity: Readonly<EchoAlgorithmNodeEntity>,
         detailer: IDetailerPresentationModel
     ): void {
         detailer

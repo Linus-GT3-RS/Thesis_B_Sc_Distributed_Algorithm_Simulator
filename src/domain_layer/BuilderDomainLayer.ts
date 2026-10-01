@@ -8,7 +8,7 @@ import type { MessageState } from "./components/algorithm_plugins/plugin_api/ent
 import type { NodeState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Nodes";
 import { SnapshotDataWorker } from "./components/simulation/data/SnapshotWorker";
 import { LazyChangeObserverCollection, CascadingChangeObserverCollection } from "./components/simulation/entity_observation/EntityCollectionObserver";
-import type { EchoAlgorithmNodeState } from "./components/algorithm_plugins/plugins/echo_algorithm/data/EchoAlgoEntities";
+import type { EchoAlgorithmNodeEntity } from "./components/algorithm_plugins/plugins/echo_algorithm/data/EchoAlgoEntities";
 import { EchoAlgorithmNodeProcess } from "./components/algorithm_plugins/plugins/echo_algorithm/EchoAlgoNodeProcess";
 import { ISimulationEngine, SimulationEngine } from "./components/simulation/engine/SimulationEngine";
 import { DetailProviderEchoAlgoNodeState, DetailProviderEchoAlgoMessageData, DetailProviderEdgeState } from "./components/algorithm_plugins/plugins/echo_algorithm/presentation/DetailProvider";
@@ -51,7 +51,7 @@ export function buildDomainLayer(
         new LazyChangeObserverCollection<MessageState>(new Set<number>());
 
     //= Setup Simulation Engine
-    const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeState>(
+    const engine: ISimulationEngine = new SimulationEngine<EchoAlgorithmNodeEntity>(
         snapshot, worker, new EchoAlgorithmNodeProcess(),
         creationObsNodeLogs, updateObsNodeStates, creationObsMessageStates
     );

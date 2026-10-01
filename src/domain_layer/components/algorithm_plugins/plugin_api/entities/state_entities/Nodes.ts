@@ -1,4 +1,12 @@
-export class NodeState {
+
+//* Types
+
+export type NodeState = NodeEntity
+export type Node = NodeEntity
+
+//* Impl
+
+export class NodeEntity {
     constructor(
 
         /**
@@ -8,3 +16,5 @@ export class NodeState {
         public id: number
     ) { }
 }
+
+
