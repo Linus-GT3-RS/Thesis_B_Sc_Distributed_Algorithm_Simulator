@@ -2,8 +2,8 @@ import { buildGraph10, buildGraph5 } from "@/sandbox/graphs";
 import { DomainController, DomainState } from "./controller/DomainController";
 import { DomainCommandGateway, type IDomainCommandGateway } from "./gateways/CommandGateway";
 import { DomainEventGateway, IDomainEventGateway } from "./gateways/EventGateway";
-import type { BiDirectionalEdgeState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Edges";
-import type { NodeLog } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Logs";
+import type { UndirectedEdgeState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Edges";
+import type { ProcessLogState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Logs";
 import type { MessageState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Messages";
 import type { NodeState } from "./components/algorithm_plugins/plugin_api/entities/state_entities/Nodes";
 import { SnapshotDataWorker } from "./components/simulation/data/SnapshotWorker";
@@ -37,11 +37,11 @@ export function buildDomainLayer(
 
     //= Setup EntityCollection Observer
     const creationObsNodeLogs =
-        new LazyChangeObserverCollection<NodeLog>(new Set<number>());
+        new LazyChangeObserverCollection<ProcessLogState>(new Set<number>());
     const updateObsEdgeStates =
-        new LazyChangeObserverCollection<BiDirectionalEdgeState>(new Set<number>());
+        new LazyChangeObserverCollection<UndirectedEdgeState>(new Set<number>());
     const updateObsNodeStates =
-        new CascadingChangeObserverCollection<NodeState, BiDirectionalEdgeState>(
+        new CascadingChangeObserverCollection<NodeState, UndirectedEdgeState>(
             new Set<number>(), updateObsEdgeStates, (changedNodeState: NodeState) => {
                 // gets all Edges that depent on this NodeState
                 return worker.getNodeEdges(snapshot.edgeStates, changedNodeState.id);

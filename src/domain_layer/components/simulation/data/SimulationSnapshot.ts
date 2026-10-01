@@ -1,13 +1,13 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../../../../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
-import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { UndirectedEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { ProcessLogState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 
-export type LogStore = IndexedStore<NodeLog>;
+export type ProcessLogStateStore = IndexedStore<ProcessLogState>;
 export type NodeStateStore<N extends NodeState> = IndexedStore<N>;
-export type EdgeStateStore = IndexedStore<BiDirectionalEdgeState>;
+export type EdgeStateStore = IndexedStore<UndirectedEdgeState>;
 export type MessageStateStore = IndexedStore<MessageState>;
 
 export interface PendingMessage {
@@ -27,7 +27,7 @@ export type MessageQueue = TinyQueue<Readonly<PendingMessage>>
  */
 export class SimulationSnapshot<N extends NodeState> {
     constructor(
-        public logs: LogStore,
+        public logs: ProcessLogStateStore,
 
         public nodeStates: NodeStateStore<N>,
         public edgeStates: EdgeStateStore,

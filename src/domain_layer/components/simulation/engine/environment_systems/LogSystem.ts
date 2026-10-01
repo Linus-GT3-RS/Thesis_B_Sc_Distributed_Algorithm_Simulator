@@ -1,6 +1,6 @@
-import { ILoggingSystem } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
-import { LogType, NodeLog } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
-import type { LogStore } from "../../data/SimulationSnapshot.js";
+import { IEnvSystemLogging } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { LogType, ProcessLogState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import type { ProcessLogStateStore } from "../../data/SimulationSnapshot.js";
 import { IChangeObserverCollection } from "../../entity_observation/EntityCollectionObserver.js";
 
 /**
@@ -16,17 +16,17 @@ import { IChangeObserverCollection } from "../../entity_observation/EntityCollec
  * into simulation-specific actions, such as queuing messages, creating log
  * entries, or updating the presentation.
  */
-export class LoggingSystem implements ILoggingSystem {
+export class LoggingSystem implements IEnvSystemLogging {
 
     constructor(
-        private store: LogStore, // full access
-        private creationObs: IChangeObserverCollection<NodeLog>,
+        private store: ProcessLogStateStore, // full access
+        private creationObs: IChangeObserverCollection<ProcessLogState>,
 
         private currentNode: number,
     ) { }
 
     public logInfo(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: ProcessLogState = new ProcessLogState(
             this.store.size(),
             LogType.INFO, msg,
             this.currentNode
@@ -37,7 +37,7 @@ export class LoggingSystem implements ILoggingSystem {
     }
 
     public logWarning(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: ProcessLogState = new ProcessLogState(
             this.store.size(),
             LogType.WARNING, msg,
             this.currentNode
@@ -48,7 +48,7 @@ export class LoggingSystem implements ILoggingSystem {
     }
 
     public logError(msg: string): void {
-        const log: NodeLog = new NodeLog(
+        const log: ProcessLogState = new ProcessLogState(
             this.store.size(),
             LogType.ERROR, msg,
             this.currentNode

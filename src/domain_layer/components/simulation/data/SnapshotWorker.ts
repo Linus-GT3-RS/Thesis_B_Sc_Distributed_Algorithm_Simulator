@@ -1,5 +1,5 @@
 import { IndexedStore, type ReadonlyIndexedStore } from "../../../../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { UndirectedEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import type { MessageQueue, PendingMessage } from "./SimulationSnapshot.js";
 
 
@@ -39,7 +39,7 @@ export class SnapshotDataWorker {
      * @param scopedNode 
      */
     public getNodeNeighbors(
-        edgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
+        edgeStates: ReadonlyIndexedStore<UndirectedEdgeState>,
         scopedNode: number,
     ): NeighborStore {
         const neighbors: NeighborStore = new IndexedStore<NodeNeighbor>();
@@ -71,10 +71,10 @@ export class SnapshotDataWorker {
      * @param scopedNode 
      */
     public getNodeEdges(
-        edgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
+        edgeStates: ReadonlyIndexedStore<UndirectedEdgeState>,
         scopedNode: number,
-    ): Readonly<BiDirectionalEdgeState>[] {
-        const adjacentEdges: Readonly<BiDirectionalEdgeState>[] = [];
+    ): Readonly<UndirectedEdgeState>[] {
+        const adjacentEdges: Readonly<UndirectedEdgeState>[] = [];
 
         for (const edgeState of edgeStates.readAllValues()) {
             if (scopedNode === edgeState.nodeA.id

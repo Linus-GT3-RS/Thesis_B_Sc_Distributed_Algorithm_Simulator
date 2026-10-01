@@ -1,8 +1,8 @@
 import type { ReadonlyIndexedStore } from "@/common/EntityStores.js";
 import { IDomainEventGateway } from "../../../gateways/EventGateway.js";
 import { CreatedEdgeStateEv, CreatedMessageStateEv, CreatedNodeLogEv, CreatedNodeStateEv, UpdatedEdgeStateEv, UpdatedNodeStateEv } from "../../../gateways/Events.js";
-import { BiDirectionalEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
-import { NodeLog } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { UndirectedEdgeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { ProcessLogState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../algorithm_plugins/plugin_api/entities/state_entities/Nodes.js";
 import { IChangeReportProvider } from "../entity_observation/EntityCollectionObserver.js";
@@ -41,9 +41,9 @@ export class PresentationCoordinator implements IPresentationCoordinator {
         private creationReporterMessageStates: IChangeReportProvider,
 
         //= all stores
-        private storeNodeLogs: ReadonlyIndexedStore<NodeLog>,
+        private storeNodeLogs: ReadonlyIndexedStore<ProcessLogState>,
         private storeNodeStates: ReadonlyIndexedStore<NodeState>,
-        private storeEdgeStates: ReadonlyIndexedStore<BiDirectionalEdgeState>,
+        private storeEdgeStates: ReadonlyIndexedStore<UndirectedEdgeState>,
         private storeMessageStates: ReadonlyIndexedStore<MessageState>,
 
         //= all builder
@@ -89,7 +89,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
 
         //= present edge state collection changes
         for (const idUpdatedEdge of this.updateReporterEdgeStates.consumeChangeReports()) {
-            const updatedEdge: Readonly<BiDirectionalEdgeState> =
+            const updatedEdge: Readonly<UndirectedEdgeState> =
                 this.storeEdgeStates.read({ id: idUpdatedEdge });
 
             const model: PresentationModelEdgeState =
@@ -111,7 +111,7 @@ export class PresentationCoordinator implements IPresentationCoordinator {
 
         //= present log collection changes
         for (const idCreatedLog of this.creationReporterNodeLogs.consumeChangeReports()) {
-            const createdLog: Readonly<NodeLog> =
+            const createdLog: Readonly<ProcessLogState> =
                 this.storeNodeLogs.read({ id: idCreatedLog });
 
             const model: PresentationModelNodeLog =

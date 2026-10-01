@@ -19,42 +19,35 @@ export class MessageSystemError extends Error { }
 
 //* Incoming Messages
 
-export abstract class ISystemIncomingMessages {
+export abstract class IEnvSystemMessageInbox {
 
     /**
-    // //  * On first call marks the message as received
-    // //  * If this call does not happen, the message will be delivered
-    // //  * indefinitly
-     * 
-     * @throws {MessageSystemError} if no message is pending
+     * @throws {MessageSystemError} if no message exist
      */
-    public abstract readPendingMessage(): Readonly<MessageData>;
+    public abstract readFirst(): Readonly<MessageData>;
 
 }
 
 
 //* Outgoing Messages
 
-/**
- * Configured neighbors are assumed to be configured 
- * correctly by the system admin. 
- * 
- */
-export abstract class IOutgoingMessageSystem {
+export abstract class IEnvSystemMessageOutbox {
 
     /**
-     * sends message via udp like communication
-     * A sent message is delivered if the receiving node is online.
-    *  If the receiving node is offline, the message is lost.
-    * 
+     * sends message via tcp like communication
+     * 
      * @param msg 
      * @param receiver 
-     * @throws {MessageSystemError} if sender does not know receiver
+     * @throws {MessageSystemError} if routing table does not contain receiver
      */
     public abstract send(msg: MessageData, receiver: number): void;
 
+    /**
+     * returns routing table of node
+     */
+    public abstract getNeighbors(): MapIterator<Readonly<Identifiable>>;
+
     public abstract getNeighborCount(): number;
-    public abstract getNeighborIterator(): MapIterator<Readonly<Identifiable>>;
 
 }
 
@@ -64,7 +57,7 @@ export abstract class IOutgoingMessageSystem {
 export type MutableNodeStateKeys<N extends NodeState> =
     Exclude<keyof N, keyof NodeState> // is union
 
-export abstract class ILocalDataEnvSystem<N extends NodeState> {
+export abstract class IEnvSystemNodeState<N extends NodeState> {
 
     /**
      * Allows to read all node properties
@@ -85,7 +78,7 @@ export abstract class ILocalDataEnvSystem<N extends NodeState> {
 
 //* Logging
 
-export abstract class ILoggingSystem {
+export abstract class IEnvSystemLogging {
 
     public abstract logInfo(msg: string): void;
     public abstract logWarning(msg: string): void;

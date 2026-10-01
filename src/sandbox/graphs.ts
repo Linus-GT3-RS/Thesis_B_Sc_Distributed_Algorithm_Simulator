@@ -1,16 +1,16 @@
 import TinyQueue from "tinyqueue";
 import { IndexedStore } from "../common/EntityStores.js";
-import { BiDirectionalEdgeState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
-import { NodeLog } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
+import { UndirectedEdgeState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { ProcessLogState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Logs.js";
 import { MessageState } from "../domain_layer/components/algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import { EchoAlgorithmNodeState } from "../domain_layer/components/algorithm_plugins/plugins/echo_algorithm/data/EchoAlgoEntities.js";
 import type { PendingMessage } from "@/domain_layer/components/simulation/data/SimulationSnapshot.js";
 import { SimulationSnapshot } from "@/domain_layer/components/simulation/data/SimulationSnapshot.js";
 
 function buildEmptySnapshot(): SimulationSnapshot<EchoAlgorithmNodeState> {
-    const logStore = new IndexedStore<NodeLog>();
+    const logStore = new IndexedStore<ProcessLogState>();
     const nodeStore = new IndexedStore<EchoAlgorithmNodeState>();
-    const edgeStore = new IndexedStore<BiDirectionalEdgeState>();
+    const edgeStore = new IndexedStore<UndirectedEdgeState>();
     const msgStore = new IndexedStore<MessageState>();
     const pendingMsgs = new TinyQueue(
         [],
@@ -35,11 +35,11 @@ export function buildGraph5(): SimulationSnapshot<EchoAlgorithmNodeState> {
     snapshot.nodeStates.insert(new EchoAlgorithmNodeState(3, false, false, 0, null));
     snapshot.nodeStates.insert(new EchoAlgorithmNodeState(4, false, false, 0, null));
 
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(0, { id: 0 }, { id: 1 }, 100));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(1, { id: 0 }, { id: 2 }, 110));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(2, { id: 2 }, { id: 3 }, 120));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(3, { id: 2 }, { id: 4 }, 130));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(4, { id: 1 }, { id: 4 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(0, { id: 0 }, { id: 1 }, 100));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(1, { id: 0 }, { id: 2 }, 110));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(2, { id: 2 }, { id: 3 }, 120));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(3, { id: 2 }, { id: 4 }, 130));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(4, { id: 1 }, { id: 4 }, 140));
 
     return snapshot;
 }
@@ -60,17 +60,17 @@ export function buildGraph10(): SimulationSnapshot<EchoAlgorithmNodeState> {
     snapshot.nodeStates.insert(new EchoAlgorithmNodeState(8, false, false, 0, null));
     snapshot.nodeStates.insert(new EchoAlgorithmNodeState(9, false, false, 0, null));
 
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 1 }, 100));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 2 }, 110));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 3 }, 120));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 4 }, 130));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 4 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 3 }, 40));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 6 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 6 }, { id: 7 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 8 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 9 }, 140));
-    snapshot.edgeStates.insert(new BiDirectionalEdgeState(snapshot.edgeStates.size(), { id: 4 }, { id: 9 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 1 }, 100));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 0 }, { id: 2 }, 110));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 3 }, 120));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 4 }, 130));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 4 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 3 }, 40));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 5 }, { id: 6 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 6 }, { id: 7 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 1 }, { id: 8 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 2 }, { id: 9 }, 140));
+    snapshot.edgeStates.insert(new UndirectedEdgeState(snapshot.edgeStates.size(), { id: 4 }, { id: 9 }, 140));
 
     return snapshot;
 }

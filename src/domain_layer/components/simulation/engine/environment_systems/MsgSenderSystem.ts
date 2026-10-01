@@ -1,7 +1,7 @@
 import type { Identifiable, ReadonlyIndexedStore } from "../../../../../common/EntityStores.js";
 import { IdentifiableError } from "../../../../../common/EntityStores.js";
-import { IOutgoingMessageSystem, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
-import { BiDirectionalEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
+import { IEnvSystemMessageOutbox, MessageSystemError } from "../../../algorithm_plugins/plugin_api/entities/behaviour_entities/EnvironmentSystems.js";
+import { UndirectedEdgeState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Edges.js";
 import { MessageData, MessageState } from "../../../algorithm_plugins/plugin_api/entities/state_entities/Messages.js";
 import type { MessageQueue, MessageStateStore } from "../../data/SimulationSnapshot.js";
 import type { NeighborStore, NodeNeighbor } from "../../data/SnapshotWorker.js";
@@ -10,7 +10,7 @@ import { IChangeObserverCollection } from "../../entity_observation/EntityCollec
 
 //* Types
 
-export type ReadonlyEdgeStore = ReadonlyIndexedStore<BiDirectionalEdgeState>;
+export type ReadonlyEdgeStore = ReadonlyIndexedStore<UndirectedEdgeState>;
 
 
 //* System
@@ -28,7 +28,7 @@ export type ReadonlyEdgeStore = ReadonlyIndexedStore<BiDirectionalEdgeState>;
  * into simulation-specific actions, such as queuing messages, creating log
  * entries, or updating the presentation.
  */
-export class MessageSenderSystem implements IOutgoingMessageSystem {
+export class MessageSenderSystem implements IEnvSystemMessageOutbox {
 
     // represents neighbors of scoped node
     private scopedNeighborStore: NeighborStore | null = null;
@@ -84,7 +84,7 @@ export class MessageSenderSystem implements IOutgoingMessageSystem {
     }
 
 
-    public getNeighborIterator(): MapIterator<Readonly<Identifiable>> {
+    public getNeighbors(): MapIterator<Readonly<Identifiable>> {
         return this.getScopedNeighborStore().readAllValues();
     }
 
