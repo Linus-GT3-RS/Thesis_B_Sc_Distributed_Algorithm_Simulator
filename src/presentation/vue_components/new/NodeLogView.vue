@@ -12,13 +12,13 @@ const {storeNodeLogs} = storeToRefs(piniastore);
 <template>
 <div class="nodelog-view">
 
-    <TableRow
-        :onClick="null"
-        :isHeader="true"
-        :cells="['ID Logger', 'Log Type', 'Log']"
-    />
-    
     <div class="body">
+        <TableRow
+            :onClick="null"
+            :isHeader="true"
+            :cells="['ID Logger', 'Log Type', 'Log']"
+        />
+
         <TableRow 
             v-for="model in storeNodeLogs.readAllValues()"
             :key="model.id"
@@ -39,7 +39,7 @@ const {storeNodeLogs} = storeToRefs(piniastore);
     min-height: 0;
 
     display: grid;
-    grid-template-rows: 32px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     background: var(--panel-background);
     color: var(--text-primary);
     font-family: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -48,6 +48,26 @@ const {storeNodeLogs} = storeToRefs(piniastore);
 .body {
     min-height: 0;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #455570 var(--panel-background);
+}
+
+.body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.body::-webkit-scrollbar-track {
+    background: var(--panel-background);
+}
+
+.body::-webkit-scrollbar-thumb {
+    background: #455570;
+    border: 2px solid var(--panel-background);
+    border-radius: 5px;
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+    background: #60728e;
 }
 
 :deep(.body .table-row:nth-child(even)) {

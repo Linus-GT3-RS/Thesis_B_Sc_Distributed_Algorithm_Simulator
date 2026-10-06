@@ -50,6 +50,9 @@ defineProps<{
 }
 
 .table-row--header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     min-height: 34px;
     align-items: center;
     padding-top: 8px;

@@ -11,14 +11,14 @@ const {storeMessageStates} = storeToRefs(piniastore);
 
 <template>
 <div class="message-view">
-    
-    <TableRow
-        :onClick="null"
-        :isHeader="true"
-        :cells="['Sender ID', 'Type', 'Receiver ID', 'Send Time', 'Destination Time']"
-    />
-    
+
     <div class="body">
+        <TableRow
+            :onClick="null"
+            :isHeader="true"
+            :cells="['Sender ID', 'Type', 'Receiver ID', 'Send Time', 'Destination Time']"
+        />
+
         <TableRow 
             v-for="model in storeMessageStates.readAllValues()"
             :key="model.id"
@@ -40,7 +40,7 @@ const {storeMessageStates} = storeToRefs(piniastore);
     min-height: 0;
 
     display: grid;
-    grid-template-rows: 32px minmax(0, 1fr) 30px;
+    grid-template-rows: minmax(0, 1fr) 30px;
     background: var(--panel-background);
     color: var(--text-primary);
     font-family: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -50,7 +50,25 @@ const {storeMessageStates} = storeToRefs(piniastore);
     min-height: 0;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #455570 transparent;
+    scrollbar-color: #455570 var(--panel-background);
+}
+
+.body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.body::-webkit-scrollbar-track {
+    background: var(--panel-background);
+}
+
+.body::-webkit-scrollbar-thumb {
+    background: #455570;
+    border: 2px solid var(--panel-background);
+    border-radius: 5px;
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+    background: #60728e;
 }
 
 :deep(.body .table-row:nth-child(even)) {

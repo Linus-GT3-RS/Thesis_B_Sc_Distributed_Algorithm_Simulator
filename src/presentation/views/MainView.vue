@@ -23,7 +23,7 @@ import GraphView from '../vue_components/new/GraphView.vue';
 
                 <Pane>
                     <Splitpanes vertical>
-                        <Pane class="cont-nodelog-table">
+                        <Pane class="cont-nodelog-table" size="60">
                             <TitleBar title="Node Logs"></TitleBar>
                             <NodeLogView></NodeLogView>
                         </Pane>
