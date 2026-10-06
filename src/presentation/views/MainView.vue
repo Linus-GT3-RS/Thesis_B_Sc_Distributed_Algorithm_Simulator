@@ -13,41 +13,32 @@ import GraphView from '../vue_components/new/GraphView.vue';
 
 <template>
 <div class="cont-app">
-
-    <div class="cont-header">
-    </div>
-
     <Splitpanes vertical>
         <Pane size="75">
             <Splitpanes horizontal>
-
-                <Pane class="cont-graph-view" size="80">
+                <Pane class="cont-graph-view" size="75">
                     <GraphView class="graph-view">
                     </GraphView>
                 </Pane>
 
-                <Pane class="cont-nodelog-table">
-                    <TitleBar :title="'Node Log Overview'"></TitleBar>
-                    <NodeLogView></NodeLogView>
-                </Pane>
-                
+                <Pane>
+                    <Splitpanes vertical>
+                        <Pane class="cont-nodelog-table">
+                            <TitleBar title="Node Logs"></TitleBar>
+                            <NodeLogView></NodeLogView>
+                        </Pane>
+
+                        <Pane class="cont-property-view">
+                            <DetailView></DetailView>
+                        </Pane>
+                    </Splitpanes>
+                </Pane>                
             </Splitpanes>
         </Pane>
 
-        <Pane class="right" size="25">
-            <Splitpanes horizontal>
-
-                <Pane class="cont-message-table" min-size="0" size="70">
-                    <TitleBar :title="'Message Overview'"></TitleBar>
-                    <MessageView></MessageView>
-                </Pane>
-
-                <Pane class="cont-property-view">
-                    <TitleBar :title="'Detail View'"></TitleBar>
-                    <DetailView></DetailView>
-                </Pane>                
-
-            </Splitpanes>
+        <Pane class="cont-message-table" size="25">
+            <TitleBar title="Messages"></TitleBar>
+            <MessageView></MessageView>
         </Pane>
 
     </Splitpanes>
@@ -58,97 +49,87 @@ import GraphView from '../vue_components/new/GraphView.vue';
 
 <style scoped>
 
+:deep(.splitpanes) {
+    min-width: 0;
+    min-height: 0;
+}
+
 :deep(.splitpanes--vertical > .splitpanes__splitter) {
-    width: 8px;
-        background: #F1F5F9;
+    width: 12px;
+    background: transparent;
 }
 
 :deep(.splitpanes--horizontal > .splitpanes__splitter) {
-    height: 8px;
-        background: #F1F5F9;
+    height: 12px;
+    background: transparent;
+}
+
+:deep(.splitpanes__splitter:hover) {
+    background: #34435a;
 }
 
 .cont-app {
     height: 100%;
     width: 100%;
     min-height: 0;
-
+    min-width: 0;
     display: flex;
     flex-direction: column;
-
-         background: #F1F5F9;
-    color: #0F172A;
-}
-
-.cont-header {
-    height: 25px;
-    width: 100%;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-
-    padding: 10px 16px;
-
-    background: #FFFFFF;
-    border-bottom: 1px solid #E2E8F0;
+    padding: 12px;
+    background: var(--app-background);
+    color: var(--text-primary);
 }
 
 .cont-graph-view {
-    height: 100%;
-    width: 100%;
-        min-height: 0;
-    
-    display: flex;
-    flex-direction: column;
-        background-color: #FFFFFF;
-
-
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    background: var(--panel-background);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .graph-view {
-   flex: 1;
-       background-color: #FFFFFF;
-}
-
-
-.cont-nodelog-table {
     height: 100%;
     width: 100%;
-    
-    padding: 5px;
+    background: var(--panel-background);
+}
 
-        background: #FFFFFF;
+.cont-nodelog-table {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    background: var(--panel-background);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cont-message-table {
-    height: 100%;
-    width: 100%;
-
-     display: flex;
-    flex-direction: column;
-      min-height: 0;
     min-width: 0;
-
-    
-        background: #FFFFFF;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    background: var(--panel-background);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cont-property-view {
-    height: 100%;
-    width: 100%;
-
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-
-        background: #FFFFFF;
-}
-
-.detail-view {
-    height: 100%;
-    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    background: var(--panel-background);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 </style>

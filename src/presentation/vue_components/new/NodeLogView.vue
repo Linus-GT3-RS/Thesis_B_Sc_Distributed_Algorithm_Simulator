@@ -12,14 +12,16 @@ const {storeNodeLogs} = storeToRefs(piniastore);
 <template>
 <div class="nodelog-view">
 
-    <TableRow class="header" 
+    <TableRow
         :onClick="null"
+        :isHeader="true"
         :cells="['ID Logger', 'Log Type', 'Log']"
     />
     
     <div class="body">
         <TableRow 
             v-for="model in storeNodeLogs.readAllValues()"
+            :key="model.id"
             :onClick="null"
             :cells="[model.idLogger, model.logType, model.log]"
         />
@@ -31,31 +33,29 @@ const {storeNodeLogs} = storeToRefs(piniastore);
 <style scoped>
 
 .nodelog-view {
-    height: 100%;
+    height: 0;
     width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
 
     display: grid;
-    grid-template-rows: 40px minmax(0, 1fr);
-
-    background: #FFFFFF;
-    color: #0F172A;
-
-    font-family: Inter, sans-serif;
-}
-
-.header {
-    background: #F8FAFC;
-    color: #475569;
-
-    font-size: 12px;
-    font-weight: 600;
-
-    border-bottom: 1px solid #CBD5E1;
+    grid-template-rows: 32px minmax(0, 1fr);
+    background: var(--panel-background);
+    color: var(--text-primary);
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
 .body {
     min-height: 0;
     overflow-y: auto;
+}
+
+:deep(.body .table-row:nth-child(even)) {
+    background: #1b2738;
+}
+
+:deep(.table-row .cell:last-child) {
+    flex: 2;
 }
 
 </style>
