@@ -29,14 +29,14 @@ export class DetailProviderEchoAlgoNodeState
         detailer: IDetailerPresentationModel
     ): void {
         detailer
-            .setStringDetail("status",
+            .setStringDetail("Status",
                 entity.isInformed ? "informed" : "not informed"
             )
-            .setNumberDetail("num-informed-neighbors",
+            .setNumberDetail("Number informed Neighbors",
                 entity.numberInformedNeighbors
             );
         if (entity.isInitiator) {
-            detailer.setBooleanDetail("is-initiator", true);
+            detailer.setBooleanDetail("Is Initiator", true);
         }
     }
 

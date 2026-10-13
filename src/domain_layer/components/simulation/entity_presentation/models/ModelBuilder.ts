@@ -40,22 +40,12 @@ export class ModelBuilderNodeLog implements IModelBuilderNodeLog {
     public build(log: Readonly<ProcessLogState>): PresentationModelNodeLog {
         const basemodel: PresentationModelNodeLog = {
             id: log.id,
-            logType: this.type2String(log.type),
+            logType: LogType[log.type].toLowerCase(),
             log: log.msg,
             idLogger: log.logger
         };
-        return basemodel;
-    }
 
-    private type2String(logtype: LogType): string {
-        switch (logtype) {
-            case LogType.INFO:
-                return "log-info";
-            case LogType.WARNING:
-                return "log-warning";
-            case LogType.ERROR:
-                return "log-error";
-        }
+        return basemodel;
     }
 
 }

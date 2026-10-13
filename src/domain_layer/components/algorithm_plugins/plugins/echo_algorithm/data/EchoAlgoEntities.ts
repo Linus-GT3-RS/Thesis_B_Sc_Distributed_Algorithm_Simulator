@@ -25,13 +25,13 @@ export class InfoMessageData extends MessageData {
     constructor(
         public senderID: Identifiable,
     ) {
-        super("info-msg-payload");
+        super("Info");
     }
 }
 
 export class EchoMessageData extends MessageData {
     constructor(
     ) {
-        super("echo-msg-payload");
+        super("Echo");
     }
 }
