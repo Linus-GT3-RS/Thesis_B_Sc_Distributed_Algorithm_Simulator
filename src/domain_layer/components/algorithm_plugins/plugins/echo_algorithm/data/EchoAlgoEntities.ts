@@ -1,9 +1,8 @@
-
-//* Node Data
-
 import type { Identifiable } from "../../../../../../common/EntityStores.js";
 import { MessageData } from "../../../plugin_api/entities/state_entities/Messages.js";
 import { NodeState } from "../../../plugin_api/entities/state_entities/Nodes.js";
+
+//* Node Data
 
 export class EchoAlgorithmNodeState extends NodeState {
     constructor(
@@ -22,16 +21,13 @@ export class EchoAlgorithmNodeState extends NodeState {
 //* Message Data
 
 export class InfoMessageData extends MessageData {
-    constructor(
-        public senderID: Identifiable,
-    ) {
+    constructor(public senderID: Identifiable,) {
         super("Info");
     }
 }
 
 export class EchoMessageData extends MessageData {
-    constructor(
-    ) {
+    constructor() {
         super("Echo");
     }
 }
