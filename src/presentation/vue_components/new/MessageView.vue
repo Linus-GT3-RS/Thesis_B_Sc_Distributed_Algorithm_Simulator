@@ -16,13 +16,13 @@ const {storeMessageStates} = storeToRefs(piniastore);
         <TableRow
             :onClick="null"
             :isHeader="true"
-            :cells="['Sender ID', 'Type', 'Receiver ID', 'Send Time', 'Destination Time']"
+            :cells="['Delivery at', 'Type', 'Receiver', 'Sender', 'Sent at']"
         />
 
         <TableRow 
             v-for="model in storeMessageStates.readAllValues()"
             :key="model.id"
-            :cells="[model.idSender, model.typePayload, model.idReceiver, model.sendTime, model.destinationTime]"
+            :cells="[model.destinationTime, model.typePayload, model.idReceiver, model.idSender, model.sendTime]"
             :onClick="() => piniastore.selectedEntity = {entityType: 'MessageState', entityId: model.id}"
         />
     </div>
