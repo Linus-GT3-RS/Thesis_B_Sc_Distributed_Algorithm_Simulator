@@ -2,13 +2,13 @@
 <div class="graph-view">
     <div class="header">
         <div class="actions">
-            <button class="primary" @click="onBtnLoadGraph">Load graph</button>
-            <button @click="onBtnInit">Simulate initiation</button>
-            <button @click="onBtnAdvance">Advance time <span class="shortcut">25 ms</span></button>
-            <button class="debug" @click="testError">Test error</button>
+            <button class="primary" @click="onBtnLoadGraph">Build Simulation</button>
+            <button @click="onBtnInit">Initiate Algorithm</button>
+            <button @click="onBtnAdvance">Advance Time <span class="shortcut">25 ms</span></button>
+            <!-- <button class="debug" @click="testError">Test error</button> -->
         </div>
         
-        <button class="focus-button" @click="panAndZoomToCenter">Focus center</button>
+        <button class="focus-button" @click="panAndZoomToCenter">Focus Center</button>
     </div>
     
     <div class="body">
